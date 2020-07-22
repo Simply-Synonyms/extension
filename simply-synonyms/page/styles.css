@@ -1,0 +1,7 @@
+#popup {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    border: 1px solid black;
+    background: white;
+}

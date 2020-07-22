@@ -15,7 +15,7 @@
 
   "author": "Benjamin Ashbaugh",
   "content_scripts": [{
-    "css": ["/assets/css/styles.css"],
+    "css": ["/page/styles.css"],
     "js": ["/page/content.js"],
     "matches": ["*://*/*"]
   }]
