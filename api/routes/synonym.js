@@ -38,7 +38,7 @@ router.get('/get-synonyms', function(req, res, next) {
   let sendSynonyms = (err, thesaurusRes) => {
     if (err) return res.json({ error: err })
 
-    if (!thesaurusRes || !thesaurusRes[0].meta) {
+    if (!thesaurusRes || !thesaurusRes[0] || !thesaurusRes[0].meta) {
       return res.json({
         error: "Word not found",
         errorCode: "no-word"
