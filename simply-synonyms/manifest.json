@@ -1,7 +1,7 @@
 {
   // Required
   "manifest_version": 2,
-  "name": "Simple Synonyms",
+  "name": "Simply Synonyms",
   "version": "0.1.0",
   "description": "A simple synonym finder for Google Chrome",
   "icons": {

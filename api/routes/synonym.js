@@ -17,23 +17,41 @@ function getThesaurusResponse(word, cb) {
     res.on("end", () => {
       try {
         body = JSON.parse(body)
-        cb(body)
       } catch {
         cb('Unable to decode JSON: ' + body)
+        return
       }
+      cb(null, body)
     });
   });
 }
 
 router.get('/get-synonyms', function(req, res, next) {
+  /*
+  * Get synonyms for a word from the Thesaurus API
+  * Right now it just returns an array of arrays of synonyms, and an array of short definitions from the top word dataset returned by the API.
+  *
+  */
   let word = req.query.word
   if (!word) return res.json({ error: 'No word specified' })
 
   let sendSynonyms = (err, thesaurusRes) => {
     if (err) return res.json({ error: err })
-    return res.json(thesaurusRes)
+
+    if (!thesaurusRes || !thesaurusRes[0].meta) {
+      return res.json({
+        error: "Word not found",
+        errorCode: "no-word"
+      })
+    }
+
+    let topWord = thesaurusRes[0]
+    return res.json({
+      synonyms: topWord.meta.syns,
+      shortdefs: topWord.shortdef
+    })
   }
-  return getThesaurusResponse(word, sendSynonyms)
+  getThesaurusResponse(word, sendSynonyms)
 })
 
 router.get('*', function(req, res, next) {

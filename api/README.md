@@ -1,0 +1,3 @@
+## Api routes
+
+`get-synonyms`
