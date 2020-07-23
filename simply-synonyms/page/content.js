@@ -13,14 +13,24 @@ const popupHtml = `
 </div>
 `;
 
+
 function getSynonyms(word) {
-  fetch(`https://simply-synonyms-api.herokuapp.com/api/get-synonyms?word=${word}`)
+  return fetch(`https://simply-synonyms-api.herokuapp.com/api/get-synonyms?word=${word}`)
     .then(response => response.json())
-    .then(data => console.log(data));
+    .then(data => {
+      return(data)
+    });
 }
+
+document.body.addEventListener('dblclick', (e) => {
+  let text = ''
+  text = window.getSelection().toString()
+  getSynonyms(text)
+    .then((response) => {
+      alert(response.synonyms.toString())
+    })
+})
 
 let popupDiv = document.createElement('div')
 popupDiv.innerHTML = popupHtml
 document.body.appendChild(popupDiv)
-
-getSynonyms('cat')

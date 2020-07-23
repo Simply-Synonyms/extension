@@ -1,7 +1,7 @@
 {
-  // Required
   "manifest_version": 2,
   "name": "Simply Synonyms",
+  "author": "Benjamin Ashbaugh",
   "version": "0.1.0",
   "description": "A simple synonym finder for Google Chrome",
   "icons": {
@@ -12,8 +12,9 @@
   "browser_action": {
     "default_popup": "popup/popup.html"
   },
-
-  "author": "Benjamin Ashbaugh",
+  "permissions": [
+    "storage"
+  ],
   "content_scripts": [{
     "css": ["/page/styles.css"],
     "js": ["/page/content.js"],
