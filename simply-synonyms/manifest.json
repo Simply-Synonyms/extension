@@ -9,6 +9,12 @@
     "48": "icons/icon_48.png",
     "128": "icons/icon_128.png"
   },
+  "background": {
+    "scripts":[
+      "background/set_listeners.js"
+    ],
+    "persistent": false
+  },
   "browser_action": {
     "default_popup": "popup/popup.html"
   },
@@ -16,8 +22,8 @@
     "storage"
   ],
   "content_scripts": [{
-    "css": ["/page/styles.css"],
-    "js": ["/page/content.js"],
+    "css": ["/content/styles.css"],
+    "js": ["/content/content.js"],
     "matches": ["*://*/*"]
   }]
 }
