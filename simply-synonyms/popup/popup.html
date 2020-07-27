@@ -9,21 +9,31 @@
 </head>
 <body>
 <div id="app">
-    <h2>Simply Synonyms</h2>
+    <h2>Simply Synonyms (Beta)</h2>
     <p>A simple synonym finder. Double click any word on the page to find a definition and synonyms.</p>
-    <div class="switch-box">
-        <p>Disable Simply Synonyms Popup (will take effect after reload)</p>
-        <label class="switch">
-            <input type="checkbox" id="disable_switch">
-            <span class="slider round"></span>
-        </label>
+    <p>This is the Simply Synonyms beta. There are likely some bugs and features that don't work properly. Also, there are more features coming soon.</p>
+    <div class="settings">
+        <h3>Settings</h3>
+        <div class="switch-box">
+            <p>Disable Simply Synonyms Popup (will take effect after page reload)</p>
+            <label class="switch">
+                <input type="checkbox" id="disable_switch">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        <div class="switch-box">
+            <p>Only enable on editable text (text that you can change, such as text boxes, input fields, and google docs)</p>
+            <label class="switch">
+                <input type="checkbox" id="only_editable_text_switch">
+                <span class="slider round"></span>
+            </label>
+            <p>(This feature is in progress and coming soon)</p>
+        </div>
     </div>
-    <div class="switch-box">
-        <p>Only enable on editable text (text that you can change, such as text boxes, input fields, and google docs)</p>
-        <label class="switch">
-            <input type="checkbox" id="only_editable_text_switch">
-            <span class="slider round"></span>
-        </label>
+
+    <div class="footer">
+        <span id="version-text">loading...</span>
+        <span> &middot; <a href="https://docs.google.com/document/d/e/2PACX-1vSMR4ynlfEfIMc4hiL6PtvqxRvht-krY2qGYjoNCYI_Pr5oyD2jrZ1KNED7jcdoEvJyifJr9sr-7xyF/pub" target="_blank">Change log</a></span>
     </div>
 </div>
 <script src="popup.js"></script>

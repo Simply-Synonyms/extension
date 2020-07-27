@@ -18,3 +18,5 @@ chrome.storage.local.get(['option_popupDisabled', 'option_onlyEditableText'], (r
 
 onlyEditableText.addEventListener('click', settingsChanged)
 disablePopup.addEventListener('click', settingsChanged)
+
+document.getElementById('version-text').innerText = `V${chrome.runtime.getManifest().version}`
