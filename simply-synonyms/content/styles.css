@@ -4,6 +4,7 @@
     width: 300px;
     top: 50px;
     left: 50px;
+    overflow-y: auto;
     border: 1px solid dodgerblue;
     border-radius: 5px;
     background: white;
@@ -14,7 +15,7 @@
     font-family: 'Mulish', sans-serif;
 }
 
-#ssyn-synonyms > div {
+#ssyn-synonyms > span {
     display: inline-block;
     margin: 3px;
     padding: 2px;
@@ -46,6 +47,19 @@
 #ssyn-results-text {
     font-weight: bold;
     font-size: 1.1em;
+}
+
+.ssyn-shortdef::before {
+    content: "Synonyms for: ";
+    color: gray;
+}
+
+.ssyn-shortdef {
+    font-weight: bold;
+    border-top: 2px solid #c1c1c1;
+    margin: 10px 0 5px;
+    padding-top: 3px;
+    font-size: 0.8em;
 }
 
 /* Spinner animation from https://tobiasahlin.com/spinkit/ */
