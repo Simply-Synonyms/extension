@@ -38,23 +38,27 @@ function resetPopup() {
   document.getElementById('ssyn-popup').style.height = ''
 }
 
-function adjustPopupPosition() {
-
-}
-
-function addExtension() {
+function addExtension(options) {
   document.body.addEventListener('dblclick', (e) => {
-    let text = ''
-    text = window.getSelection().toString()
-    if (text.length < 2) return
+    const elementIsEditable = e.target.hasAttribute('contenteditable') || [ 'input', 'textarea' ].includes(e.target.nodeName.toLowerCase()) // Check if text is editable by the user
+    if (!elementIsEditable && options.option_onlyEditableText) return
 
-    resetPopup()
+    let word = ''
+    let selection = window.getSelection()
+    word = selection.toString()
+    if (word.length < 2) return
+
+
     let popup = document.getElementById('ssyn-popup')
+    // Don't set new position if user selected a word within popup
+    if (!popup.contains(e.target)) {
+      popup.style.left = `${e.clientX}px`
+      popup.style.top = `${e.clientY + 20}px`
+    }
+    resetPopup()
     popup.style.display = 'block'
-    popup.style.left = `${e.clientX}px`
-    popup.style.top = `${e.clientY + 20}px`
 
-    getSynonyms(text)
+    getSynonyms(word)
       .then((response) => {
         if (response.synonyms) {
           const synonymsDiv = document.getElementById('ssyn-synonyms')
@@ -69,10 +73,21 @@ function addExtension() {
               const synEl = document.createElement('span')
               synEl.innerText = syn
               synonymsDiv.appendChild(synEl)
+              // Add listener to replace editable text with new synonym
+              synEl.addEventListener('click', () => {
+                if (elementIsEditable) {
+                  if (e.target.hasAttribute('contenteditable')) {
+                    // TODO
+                  } else {
+                    e.target.value = e.target.value.slice(0, e.target.selectionStart) + syn + e.target.value.slice(e.target.selectionEnd)
+                  }
+                }
+                resetPopup()
+              })
             }
           }
         } else {
-          document.getElementById('ssyn-results-text').innerText = `Unable to find synonyms for "${text}"`
+          document.getElementById('ssyn-results-text').innerText = `Unable to find synonyms for "${word}"`
         }
 
         document.getElementById('ssyn-loading').style.display = 'none'
@@ -108,6 +123,6 @@ function addExtension() {
   })
 }
 
-chrome.storage.local.get(['option_popupDisabled'], (result) => {
-  if (!result.option_popupDisabled) addExtension()
+chrome.storage.local.get(['option_popupDisabled', 'option_onlyEditableText'], (result) => {
+  if (!result.option_popupDisabled) addExtension(result)
 })
