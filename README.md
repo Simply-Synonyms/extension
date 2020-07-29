@@ -2,6 +2,8 @@
 
 A simple thesaurus extension for Chrome - double click a word to find synonyms, without any other annoying features.
 
+[Get the beta](https://chrome.google.com/webstore/detail/simply-synonyms/hapeijdlgbbhjmijhmgggnakcgdcpfap)
+
 In order to keep this extension as small and simple as possible, it just uses a content script that injects the popup and double-click listener into every page. The node.js API processes data from the Dictionary API for the extension to fetch.
 
 Powered by the [Merriam-Webster dictionary API](https://dictionaryapi.com/)

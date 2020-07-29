@@ -1,6 +1,6 @@
 ## Simply Synonyms Change Log
 
-#### V0.1.1
+#### V0.1.2
  + Show short definitions above synonyms
  + Automatically adjust popup positioning after content is added so that it doesn't overflow off side or bottom of page
  + Replace text with selected synonym on textarea and input elements
