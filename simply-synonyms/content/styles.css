@@ -72,6 +72,11 @@
     font-size: 0.8em;
 }
 
+#ssyn-connecting-text {
+    text-align: center;
+    color: #585858;
+}
+
 /* Spinner animation from https://tobiasahlin.com/spinkit/ */
 
 .ssyn-spinner {

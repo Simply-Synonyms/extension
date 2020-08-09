@@ -1,5 +1,9 @@
 ## Simply Synonyms Change Log
 
+#### V0.1.3
+ + Basic google docs support
+ + Fixed some bugs
+
 #### V0.1.2
  + Show short definitions above synonyms
  + Automatically adjust popup positioning after content is added so that it doesn't overflow off side or bottom of page

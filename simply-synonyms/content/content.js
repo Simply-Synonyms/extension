@@ -1,4 +1,3 @@
-
 const popupHtml = `
 <div id="ssyn-popup">
     <div class="ssyn-header">
@@ -9,6 +8,7 @@ const popupHtml = `
             <div class="ssyn-double-bounce1"></div>
             <div class="ssyn-double-bounce2"></div>
         </div>
+        <p id="ssyn-connecting-text"></p>
     </div>
     <div id="ssyn-content">
         <p id="ssyn-results-text">
@@ -20,6 +20,7 @@ const popupHtml = `
 </div>
 `;
 
+let timeoutsToClear = []
 
 function getSynonyms(word) {
   return fetch(`https://simply-synonyms-api.herokuapp.com/api/get-synonyms?word=${word}`)
@@ -36,18 +37,27 @@ function resetPopup() {
   document.getElementById('ssyn-results-text').innerHTML = ''
   document.getElementById('ssyn-synonyms').innerHTML = ''
   document.getElementById('ssyn-popup').style.height = ''
+  document.getElementById('ssyn-connecting-text').innerText = ''
+
+  for (const timeout of timeoutsToClear) clearTimeout(timeout)
 }
 
 function addExtension(options) {
   document.body.addEventListener('dblclick', (e) => {
-    const elementIsEditable = e.target.hasAttribute('contenteditable') || [ 'input', 'textarea' ].includes(e.target.nodeName.toLowerCase()) // Check if text is editable by the user
-    if (!elementIsEditable && options.option_onlyEditableText) return
+    const elementIsEditable = e.target.hasAttribute('contenteditable') || [ 'input', 'textarea' ].includes(e.target.nodeName.toLowerCase()) // Check if text is editable by the user but NOT a google doc
+    const isGDoc = window.location.hostname === 'docs.google.com' // Check if page is Google Document
+    if (!(elementIsEditable || isGDoc) && options.option_onlyEditableText) return
 
-    let word = ''
-    let selection = window.getSelection()
-    word = selection.toString()
+    let word, selection, googleDoc
+    if (isGDoc) {
+      googleDoc = googleDocsUtil.getGoogleDocument()
+      word = googleDoc.selectedText
+    }
+    else {
+      selection = window.getSelection()
+      word = selection.toString().trim()
+    }
     if (word.length < 2) return
-
 
     let popup = document.getElementById('ssyn-popup')
     // Don't set new position if user selected a word within popup
@@ -57,6 +67,18 @@ function addExtension(options) {
     }
     resetPopup()
     popup.style.display = 'block'
+
+    // Set all connecting message timeouts
+    timeoutsToClear.push(setTimeout(() =>  {
+      let t = document.getElementById('ssyn-connecting-text')
+      t.innerText = 'Trying to reach synonym servers...'
+      timeoutsToClear.push(setTimeout(() => {
+        t.innerText = 'This is taking longer than usual...'
+        timeoutsToClear.push(setTimeout(() => {
+          t.innerText = 'It looks like there\'s an issue with our servers. Please try again later.'
+        }, 20000))
+      }, 4000))
+    }, 2000))
 
     getSynonyms(word)
       .then((response) => {
@@ -75,12 +97,24 @@ function addExtension(options) {
               synonymsDiv.appendChild(synEl)
               // Add listener to replace editable text with new synonym
               synEl.addEventListener('click', () => {
-                if (elementIsEditable) {
+                if (elementIsEditable ) {
                   if (e.target.hasAttribute('contenteditable')) {
-                    // TODO
+                    // https://stackoverflow.com/a/4812022/8748307
+                    // TODO find contenteditable selection start - still not working :(
+                    // var doc = e.target.ownerDocument || e.target.document
+                    // var win = doc.defaultView || doc.parentWindow
+                    // var sel = win.getSelection()
+                    // const range = sel.getRangeAt(0)
+                    // let preCaretRange = range.cloneRange()
+                    // preCaretRange.selectNodeContents(e.target)
+                    // preCaretRange.setEnd(range.endContainer, range.endOffset)
+                    // const caretOffset = preCaretRange.toString().length
+                    // console.log(caretOffset)
                   } else {
                     e.target.value = e.target.value.slice(0, e.target.selectionStart) + syn + e.target.value.slice(e.target.selectionEnd)
                   }
+                } else if (isGDoc) {
+                  // TODO google docs replace word
                 }
                 resetPopup()
               })
