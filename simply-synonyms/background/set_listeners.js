@@ -6,7 +6,7 @@ chrome.runtime.onInstalled.addListener((details) => {
     // Set default settings
     chrome.storage.local.set({
       option_popupDisabled: false,
-      option_onlyEditableText: true
+      option_onlyEditableText: false
     }, () => {})
   }
 })

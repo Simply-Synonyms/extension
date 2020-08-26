@@ -1,5 +1,9 @@
 ## Simply Synonyms Change Log
 
+#### V0.1.4
+ + Updated default settings
+ + Added quick search to popup
+
 #### V0.1.3
  + Basic google docs support
  + Fixed some bugs

@@ -67,7 +67,7 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
-.switch-box {
+.control-box {
     margin: 30px 0px;
 }
 
@@ -75,10 +75,29 @@ input:checked + .slider:before {
     margin-bottom: 10px;
 }
 
-.settings {
+.section {
     text-align: center;
+    border-top: 1px solid #e8e8e8;
 }
 .footer {
+    margin-top: 5px;
     font-size: 0.9em;
     color: gray;
+}
+
+a.no-highlight {
+    color: inherit;
+}
+
+input {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #000000;
+    width: 80%;
+}
+
+input:focus {
+    box-shadow: 0 0 10px #808080;
+    outline: none;
+    border: 1px solid #000000;
 }
