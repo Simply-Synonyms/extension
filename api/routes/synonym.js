@@ -48,7 +48,8 @@ router.get('/get-synonyms', function(req, res, next) {
     let topWord = thesaurusRes[0]
     return res.json({
       synonyms: topWord.meta.syns,
-      shortdefs: topWord.shortdef
+      shortdefs: topWord.shortdef,
+      antonyms: topWord.meta.ants
     })
   }
   getThesaurusResponse(word, sendSynonyms)
@@ -56,7 +57,7 @@ router.get('/get-synonyms', function(req, res, next) {
 
 router.get('*', function(req, res, next) {
   return res.status(404).json({
-    error: '404 route not found'
+    error: '404 endpoint not found'
   })
 })
 

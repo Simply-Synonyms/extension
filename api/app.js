@@ -16,4 +16,8 @@ app.use(cors()) // Allow all origins. This is necessary because every web page s
 
 app.use('/api', synonymRouter)
 
+app.get('/', (req, res) => {
+  res.redirect('https://chrome.google.com/webstore/detail/simply-synonyms/hapeijdlgbbhjmijhmgggnakcgdcpfap')
+})
+
 module.exports = app
