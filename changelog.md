@@ -1,5 +1,8 @@
 ## Simply Synonyms Change Log
 
+#### V0.2.1
+ + Get more word details buttons
+
 #### V0.2.0
  + Antonyms
  + UX improvements

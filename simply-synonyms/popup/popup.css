@@ -101,3 +101,8 @@ input:focus {
     outline: none;
     border: 1px solid #000000;
 }
+
+#dev-badge {
+    color: orange;
+    display: none;
+}

@@ -3,7 +3,7 @@ let options = {}
 let currentTab = 'synonyms'
 
 function getSynonyms(word) {
-  return fetch(`https://simply-synonyms-api.herokuapp.com/api/get-synonyms?word=${word}`)
+  return fetch(`https://simply-synonyms-api.herokuapp.com/api/get-thesaurus-data?word=${word}`)
     .then(response => response.json())
     .then(data => {
       return(data)

@@ -21,6 +21,8 @@ disablePopup.addEventListener('click', settingsChanged)
 
 document.getElementById('version-text').innerText = `V${chrome.runtime.getManifest().version}`
 
+if (!('update_url' in chrome.runtime.getManifest())) document.getElementById('dev-badge').style.display = 'block'
+
 document.getElementById('quicksearch').addEventListener('input', (e) => {
   const quicksearchPrompt = document.getElementById('quicksearch-prompt')
   if (e.target.value.length !== 0) {
