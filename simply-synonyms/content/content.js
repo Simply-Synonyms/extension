@@ -1,27 +1,6 @@
-const popupHtml = `
-<div id="ssyn-popup">
-    <div class="ssyn-header">
-      <button class="ssyn-header-button" id="ssyn-close-button">X</button>
-    </div>
-    <div id="ssyn-loading">
-        <div class="ssyn-spinner">
-            <div class="ssyn-double-bounce1"></div>
-            <div class="ssyn-double-bounce2"></div>
-        </div>
-        <p id="ssyn-connecting-text"></p>
-    </div>
-    <div id="ssyn-content">
-        <p id="ssyn-results-text">
-            
-        </p>
-        <div id="ssyn-synonyms">
-        </div>
-    </div>
-</div>
-`;
-
 let timeoutsToClear = []
 let options = {}
+let currentTab = 'synonyms'
 
 function getSynonyms(word) {
   return fetch(`https://simply-synonyms-api.herokuapp.com/api/get-synonyms?word=${word}`)
@@ -31,47 +10,139 @@ function getSynonyms(word) {
     });
 }
 
+// Function to reset synonyms popup and hide it
 function resetPopup() {
+  // We have way too many getElementByIds, TODO refactor element references
   document.getElementById('ssyn-popup').style.display = 'none'
   document.getElementById('ssyn-loading').style.display = 'block'
   document.getElementById('ssyn-content').style.display = 'none'
   document.getElementById('ssyn-results-text').innerHTML = ''
   document.getElementById('ssyn-synonyms').innerHTML = ''
+  document.getElementById('ssyn-synonyms').style.display = 'block'
+  document.getElementById('ssyn-antonyms').innerHTML = ''
+  document.getElementById('ssyn-antonyms').style.display = 'none'
   document.getElementById('ssyn-popup').style.height = ''
   document.getElementById('ssyn-connecting-text').innerText = ''
+  document.getElementById('ssyn-antonyms-button').innerText = 'Show antonyms'
+  currentTab = 'synonyms'
 
   for (const timeout of timeoutsToClear) clearTimeout(timeout)
 }
 
+// Switch between popup tabs
+function switchTabs(e) {
+  const button = document.getElementById('ssyn-antonyms-button')
+  const synonymsDiv = document.getElementById('ssyn-synonyms')
+  const antonymsDiv = document.getElementById('ssyn-antonyms')
+  if (currentTab === 'synonyms') {
+    synonymsDiv.style.display = 'none'
+    antonymsDiv.style.display = 'block'
+    button.innerText = 'Show synonyms'
+    currentTab = 'antonyms'
+    adjustPopupPosition()
+  } else {
+    synonymsDiv.style.display = 'block'
+    antonymsDiv.style.display = 'none'
+    button.innerText = 'Show antonyms'
+    currentTab = 'synonyms'
+  }
+}
+
+/* Function to add words to synonyms and antonyms div.
+ * div: div to add words to
+ * target: element with target word
+ * targetType: null if it's non-editable, else 'gdoc', 'contenteditable', or 'input'
+ * definitions: array of target word definitions
+ * words: array of arrays of synonyms or antonyms
+ * wordType: 'synonyms' or 'antonyms'
+ */
+function addWordsToDiv(div, definitions, words, wordType, target, targetType) {
+  for (const [i, def] of Object.entries(definitions)) {
+    if (!words[i]) continue
+    // Create definition labels
+    const defEl = document.createElement('div')
+    defEl.classList.add('ssyn-shortdef')
+    defEl.classList.add(wordType === 'antonyms' ? 'ssyn-shortdef-ant': 'ssyn-shortdef-syn')
+    defEl.innerText = def.toString()
+    div.appendChild(defEl)
+    // Print out synonyms for each definition
+    for (const word of words[i]) {
+      const synEl = document.createElement('span')
+      synEl.innerText = word
+      if (targetType === 'input') synEl.classList.add('ssyn-clickable-span')
+      div.appendChild(synEl)
+      // Add listener to replace editable text with new synonym
+      synEl.addEventListener('click', () => {
+        switch (targetType) {
+          case 'input':
+            target.value = target.value.slice(0, target.selectionStart) + word + target.value.slice(target.selectionEnd)
+            resetPopup()
+            break;
+          case 'contenteditable':
+            // TODO find contenteditable selection start - still not working :(
+            break;
+          case 'gdoc':
+            // TODO google docs replace word
+            break;
+        }
+      })
+    }
+  }
+}
+
+function adjustPopupPosition() {
+  const popup = document.getElementById('ssyn-popup')
+
+  // Adjust height & position
+  if (window.innerHeight - 20 - popup.offsetTop < popup.offsetHeight) {
+    // Popup is overflowing on bottom of page
+    popup.style.top = `${(window.innerHeight  - 20 - popup.offsetHeight)}px`
+    popup.style.left = `${popup.offsetLeft + 50}px`
+  }
+  if (window.innerWidth - 20 - popup.offsetLeft < popup.offsetWidth) {
+    // Popup is overflowing on right side of page
+    popup.style.left = `${popup.offsetLeft - popup.offsetWidth - 20}px`
+  }
+  if (popup.offsetHeight > window.innerHeight - 40) {
+    // popup is too tall to fit on page, enable scrolling
+    popup.style.height = `${window.innerHeight - 40}px`
+    popup.style.top = '20px'
+  }
+}
+
+// Function to find selected word, fetch synonyms and open synonym popup.
 function synonyms (e, w) {
   // Processes double clicked element, or word provided
-  const elementIsEditable = e !== null && e.target.hasAttribute('contenteditable') || [ 'input', 'textarea' ].includes(e.target.nodeName.toLowerCase()) // Check if text is editable by the user but NOT a google doc
-  const isGDoc = window.location.hostname === 'docs.google.com' // Check if page is Google Document
-  if (!(elementIsEditable || isGDoc) && options.option_onlyEditableText) return
+  let targetType = null
+  if (window.location.hostname === 'docs.google.com') targetType = 'gdoc'
+  else if (e.target.hasAttribute('contenteditable')) targetType = 'contenteditable'
+  if ([ 'input', 'textarea' ].includes(e.target.nodeName.toLowerCase())) targetType = 'input'
+
+  if (!targetType && options.option_onlyEditableText) return
 
   let word, selection, googleDoc
-  if (isGDoc) {
+  if (targetType === 'gdoc') {
     googleDoc = googleDocsUtil.getGoogleDocument()
     word = googleDoc.selectedText
-  }
-  else {
+  } else {
     selection = window.getSelection()
     word = w || selection.toString().trim()
   }
   if (word.length < 2) return
 
-  let popup = document.getElementById('ssyn-popup')
+  const popup = document.getElementById('ssyn-popup')
   // Don't set new position if user selected a word within popup
   if (e && !popup.contains(e.target)) {
     popup.style.left = `${e.clientX}px`
     popup.style.top = `${e.clientY + 20}px`
   } else if (!e) {
-    // Set arbitrary position if the word isn't on page
+    // Set arbitrary position if the word isn't in element target
     popup.style.left = `${window.innerWidth - 1000}px`
     popup.style.top = `100px`
   }
   resetPopup()
   popup.style.display = 'block'
+  adjustPopupPosition()
 
   // Set all connecting message timeouts
   timeoutsToClear.push(setTimeout(() =>  {
@@ -89,67 +160,22 @@ function synonyms (e, w) {
     .then((response) => {
       if (response.synonyms) {
         const synonymsDiv = document.getElementById('ssyn-synonyms')
-        for (const [i, def] of Object.entries(response.shortdefs)) {
-          // Create definition labels
-          const defEl = document.createElement('div')
-          defEl.classList.add('ssyn-shortdef')
-          defEl.innerText = def.toString()
-          synonymsDiv.appendChild(defEl)
-          // Print out synonyms for each definition
-          for (const syn of response.synonyms[i]) {
-            const synEl = document.createElement('span')
-            synEl.innerText = syn
-            synonymsDiv.appendChild(synEl)
-            // Add listener to replace editable text with new synonym
-            synEl.addEventListener('click', () => {
-              if (elementIsEditable) {
-                if (e.target.hasAttribute('contenteditable')) {
-                  // https://stackoverflow.com/a/4812022/8748307
-                  // TODO find contenteditable selection start - still not working :(
-                  // var doc = e.target.ownerDocument || e.target.document
-                  // var win = doc.defaultView || doc.parentWindow
-                  // var sel = win.getSelection()
-                  // const range = sel.getRangeAt(0)
-                  // let preCaretRange = range.cloneRange()
-                  // preCaretRange.selectNodeContents(e.target)
-                  // preCaretRange.setEnd(range.endContainer, range.endOffset)
-                  // const caretOffset = preCaretRange.toString().length
-                  // console.log(caretOffset)
-                } else {
-                  e.target.value = e.target.value.slice(0, e.target.selectionStart) + syn + e.target.value.slice(e.target.selectionEnd)
-                }
-              } else if (isGDoc) {
-                // TODO google docs replace word
-              }
-              resetPopup()
-            })
-          }
-        }
+        const antonymsDiv = document.getElementById('ssyn-antonyms')
+        addWordsToDiv(synonymsDiv, response.shortdefs, response.synonyms, 'synonyms', e.target, targetType)
+        addWordsToDiv(antonymsDiv, response.shortdefs, response.antonyms || [], 'antonyms', e.target, targetType)
       } else {
-        document.getElementById('ssyn-results-text').innerText = `Unable to find synonyms for "${word}"`
+        const suffixText = targetType ? 'Are you sure you spelled it correctly?' : ''
+        document.getElementById('ssyn-results-text').innerText = `Unable to find synonyms for "${word}". ${suffixText}`
       }
 
       document.getElementById('ssyn-loading').style.display = 'none'
       document.getElementById('ssyn-content').style.display = 'block'
 
-      // Adjust height & position
-      if (window.innerHeight - 20 - popup.offsetTop < popup.offsetHeight) {
-        // Popup is overflowing on bottom of page
-        popup.style.top = `${(window.innerHeight  - 20 - popup.offsetHeight)}px`
-        popup.style.left = `${popup.offsetLeft + 50}px`
-      }
-      if (window.innerWidth - 20 - popup.offsetLeft < popup.offsetWidth) {
-        // Popup is overflowing on right side of page
-        popup.style.left = `${popup.offsetLeft - popup.offsetWidth - 20}px`
-      }
-      if (popup.offsetHeight > window.innerHeight - 40) {
-        // popup is too tall to fit on page, enable scrolling
-        popup.style.height = `${window.innerHeight - 40}px`
-        popup.style.top = '20px'
-      }
+      adjustPopupPosition()
     })
 }
 
+// Add popup HTML and event listeners to page
 function addExtension() {
 
   document.body.addEventListener('dblclick', synonyms)
@@ -159,7 +185,10 @@ function addExtension() {
   document.body.appendChild(popupDiv)
 
   // Handle closing popup on clicking close button, or outside popup
-  document.getElementById('ssyn-close-button').addEventListener('mousedown', resetPopup)
+  document.getElementById('ssyn-close-button').addEventListener('click', resetPopup)
+
+  // Handle switching between synonyms and antonyms
+  document.getElementById('ssyn-antonyms-button').addEventListener('click', switchTabs)
 
   document.addEventListener('click', (e) => {
     if (!document.getElementById('ssyn-popup').contains(e.target)) resetPopup()

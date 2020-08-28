@@ -1,5 +1,10 @@
 ## Simply Synonyms Change Log
 
+#### V0.2.0
+ + Antonyms
+ + UX improvements
+ + Fixed bugs + other small improvements
+
 #### V0.1.4
  + Updated default settings
  + Added quick search to popup

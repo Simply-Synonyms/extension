@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Simply Synonyms",
   "author": "Benjamin Ashbaugh",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "A simple synonym finder for Google Chrome",
   "icons": {
     "16": "icons/icon_16.png",
@@ -23,10 +23,13 @@
     "tabs"
   ],
   "content_scripts": [{
-    "css": ["/content/styles.css"],
     "js": ["/content/content.js"],
     "matches": ["*://*/*"],
     "run_at": "document_idle"
+  }, {
+    "css": ["/content/styles.css"],
+    "js": ["/content/contentHtml.js"],
+    "matches": ["*://*/*"]
   }, {
     "js": ["/content/googleDocsUtil.js"],
     "matches": ["*://docs.google.com/*"],

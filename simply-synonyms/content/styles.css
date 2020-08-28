@@ -15,17 +15,21 @@
     font-family: 'Mulish', sans-serif;
 }
 
-#ssyn-synonyms > span {
+.ssyn-synonyms-div > span {
     display: inline-block;
     margin: 3px;
     padding: 2px;
     white-space: nowrap;
     border: 2px solid #1e90ff;
     border-radius: 4px;
+    cursor: default;
+}
+
+.ssyn-synonyms-div > .ssyn-clickable-span {
     cursor: pointer;
 }
 
-#ssyn-synonyms > span:hover {
+.ssyn-synonyms-div > .ssyn-clickable-span:hover {
     color: white;
     background: dodgerblue;
 }
@@ -50,7 +54,7 @@
     margin: 10px 25px;
 }
 
-#ssyn-content * {
+#ssyn-content p, #ssyn-content span {
     color: black;
 }
 
@@ -59,8 +63,13 @@
     font-size: 1.1em;
 }
 
-.ssyn-shortdef::before {
+.ssyn-shortdef-syn::before {
     content: "Synonyms for: ";
+    color: gray;
+}
+
+.ssyn-shortdef-ant::before {
+    content: "Antonyms for: ";
     color: gray;
 }
 
@@ -104,6 +113,21 @@
 .ssyn-double-bounce2 {
     -webkit-animation-delay: -1.0s;
     animation-delay: -1.0s;
+}
+
+.ssyn-button {
+    background: none;
+    outline: none;
+    border: 2px solid black;
+    border-radius: 3px;
+    padding: 0 5px;
+    font-size: 0.8em;
+}
+
+.ssyn-button:hover {
+    border: 2px solid dodgerblue;
+    color: dodgerblue;
+    /*font-weight: bold;*/
 }
 
 @-webkit-keyframes sk-bounce {

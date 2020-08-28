@@ -26,16 +26,15 @@ function getThesaurusResponse(word, cb) {
   });
 }
 
-router.get('/get-synonyms', function(req, res, next) {
+function sendThesaurusData(req, res) {
   /*
-  * Get synonyms for a word from the Thesaurus API
+  * Get synonyms and antonyms for a word from the Thesaurus API
   * Right now it just returns an array of arrays of synonyms, and an array of short definitions from the top word dataset returned by the API.
-  *
   */
   let word = req.query.word
   if (!word) return res.json({ error: 'No word specified' })
 
-  let sendSynonyms = (err, thesaurusRes) => {
+  let sendData = (err, thesaurusRes) => {
     if (err) return res.json({ error: err })
 
     if (!thesaurusRes || !thesaurusRes[0] || !thesaurusRes[0].meta) {
@@ -52,8 +51,11 @@ router.get('/get-synonyms', function(req, res, next) {
       antonyms: topWord.meta.ants
     })
   }
-  getThesaurusResponse(word, sendSynonyms)
-})
+  getThesaurusResponse(word, sendData)
+}
+
+router.get('/get-synonyms', sendThesaurusData)
+router.get('/get-thesaurus-data', sendThesaurusData)
 
 router.get('*', function(req, res, next) {
   return res.status(404).json({
