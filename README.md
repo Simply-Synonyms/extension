@@ -21,3 +21,4 @@ The API is powered by Node.js and the dictionary API, and hosted on Heroku.
 Deploy API to heroku with
 
     git subtree push --prefix api heroku master
+    
