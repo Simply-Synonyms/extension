@@ -1,7 +1,7 @@
 ## Simply Synonyms Change Log
 
 #### V0.2.1
- + Get more word details buttons
+ + Critical API fix - switched hosting from Heroku to Vercel Serverless Functions.
 
 #### V0.2.0
  + Antonyms

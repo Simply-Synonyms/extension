@@ -16,9 +16,4 @@ The extension doesn't use Webpack or hot reloading or anything similar, so you c
 
 ### API
 
-The API is powered by Node.js and the dictionary API, and hosted on Heroku.
-
-Deploy API to heroku with
-
-    git subtree push --prefix api heroku master
-    
+The API is powered by Node.js and the dictionary API, and hosted on Vercel Serverless Functions.
