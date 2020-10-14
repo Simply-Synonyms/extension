@@ -109,11 +109,27 @@ input:focus {
 
 button {
     cursor: pointer;
-    margin: 5px;
+    margin: 10px;
     padding: 5px 10px;
     border: 1px solid black;
     border-radius: 5px;
     outline: none;
     background: white;
-    box-shadow: lightslategray;
+}
+
+button:focus {
+    box-shadow: 0 0 10px #808080;
+}
+
+button:disabled {
+    cursor: inherit;
+    border: 1px solid grey;
+}
+
+.hidden {
+    display: none;
+}
+
+#user-welcome {
+    font-size: 1.1em;
 }
