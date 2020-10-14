@@ -1,5 +1,11 @@
 ## Simply Synonyms Change Log
 
+#### V0.3.0
+ + Migrated to Firebase
+ + Google sign in
+ + Counts how many synonyms users look up per week
+ + Optional weekly email
+
 #### V0.2.1
  + Critical API fix - switched hosting from Heroku to Vercel Serverless Functions.
 

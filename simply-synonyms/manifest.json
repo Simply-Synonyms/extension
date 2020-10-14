@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Simply Synonyms",
   "author": "Benjamin Ashbaugh",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "A simple synonym finder for Google Chrome",
   "icons": {
     "16": "icons/icon_16.png",
@@ -20,8 +20,10 @@
   },
   "permissions": [
     "storage",
-    "tabs"
+    "tabs",
+    "identity"
   ],
+  "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
   "content_scripts": [{
     "js": ["/content/content.js"],
     "matches": ["*://*/*"],
@@ -34,5 +36,13 @@
     "js": ["/content/googleDocsUtil.js"],
     "matches": ["*://docs.google.com/*"],
     "run_at": "document_idle"
-  }]
+  }],
+  "oauth2": {
+    "client_id": "538488729267-lt97t2f0np0vupuipv99aivpvlr63jvd.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAip5je2HfLpi7vYOfr02Tw86u5e7NuWQuEu8zomKPuicMaBymhar4U6yYX1l4PT97fyEDNOSeOGlXmAAnCscMB4DnEnVMXiPg4ZUQ7Kv1YD//P8iGMbnaHFH21wDODER2FlhY3oqNgU3gMclwxIv6/vDRJriSMOKzj8OZUixv8DePOEUxxgY5nkgYLFYKDp1VqqwJAcIw+kwPHm1HwE6Y8tkhmhZI5JbYMCUF8BcjwhD0n15kiHF15o6JIYvZWUJEWrcORo44MX/9B0PZN4isWRfxAifH9RO3Sf3WpIx5i4HzwosXNAbzZidn+ypCx3BK1HEaG5pw31sWfKA3IX7bGQIDAQAB"
 }

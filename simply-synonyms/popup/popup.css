@@ -106,3 +106,14 @@ input:focus {
     color: orange;
     display: none;
 }
+
+button {
+    cursor: pointer;
+    margin: 5px;
+    padding: 5px 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    outline: none;
+    background: white;
+    box-shadow: lightslategray;
+}
