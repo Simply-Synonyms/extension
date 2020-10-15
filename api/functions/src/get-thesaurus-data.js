@@ -1,5 +1,6 @@
 const https = require('https')
 const functions = require('firebase-functions')
+const setCors = require('../util/cors')
 
 // Set this with: firebase functions:config:set thesaurusapi.key="yourkey"
 // Register for an API key at https://dictionaryapi.com/
@@ -31,6 +32,8 @@ module.exports = function sendThesaurusData(req, res) {
   * Get synonyms and antonyms for a word from the Thesaurus API
   * Right now it just returns an array of arrays of synonyms, and an array of short definitions from the top word dataset returned by the API.
   */
+  setCors(req, res)
+
   let word = req.query.word
   if (!word) return res.json({ error: 'No word specified' })
 

@@ -3,7 +3,7 @@ let options = {}
 let currentTab = 'synonyms'
 
 function getSynonyms(word) {
-  return fetch(`https://simply-synonyms-api.vercel.app/api/get-thesaurus-data?word=${word}`)
+  return fetch(`https://us-central1-simply-synonyms-api.cloudfunctions.net/getThesaurusData?word=${word}`)
     .then(response => response.json())
     .then(data => {
       return(data)

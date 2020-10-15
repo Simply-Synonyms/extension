@@ -43,7 +43,7 @@ const welcomeMessages = [
   ''
 ]
 
-firebase.auth().onAuthStateChanged(function(user) {
+firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     userWelcome.innerText = `Hello, ${user.displayName}. ${welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)]}`
     signoutButton.classList.remove('hidden')
@@ -69,10 +69,10 @@ function startAuth(interactive) {
       firebase.auth().signInWithCredential(credential)
         .catch((err) => {
         // The OAuth token might have been invalidated; Remove it from cache.
-        if (err.code === 'auth/invalid-credential') {
-          chrome.identity.removeCachedAuthToken({ token }, () => startAuth(interactive));
-        }
-      });
+          if (err.code === 'auth/invalid-credential') {
+            chrome.identity.removeCachedAuthToken({ token }, () => startAuth(interactive));
+          }
+        });
     } else {
       console.error('The OAuth Token was null');
     }
@@ -87,7 +87,14 @@ googleSigninButton.addEventListener('click', (e) => {
 signoutButton.addEventListener('click', (e) => {
   firebase.auth().signOut()
   chrome.identity.getAuthToken({}, (token) => {
-    chrome.identity.removeCachedAuthToken({ token });
+    if (!chrome.runtime.lastError) {
+      chrome.identity.removeCachedAuthToken({ token })
+
+      // We have to revoke the token as well or else the select account screen won't appear at next sign in.
+      const revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token=' + token;
+      fetch(revokeUrl)
+
+    }
   })
 })
 
@@ -109,3 +116,6 @@ document.getElementById('quicksearch').addEventListener('keypress', (e) => {
     chrome.tabs.create({ url: `https://www.merriam-webster.com/thesaurus/${encodeURI(e.target.value)}`})
   }
 })
+
+// Start noninteractive auth flow once everything is loaded
+startAuth(false)

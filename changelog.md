@@ -2,9 +2,12 @@
 
 #### V0.3.0
  + Migrated to Firebase
- + Google sign in
+ + Sign in with Google Chrome identity
+ + Welcome messages in extension popup
  + Counts how many synonyms users look up per week
- + Optional weekly email
+ + Mailgun email system
+ + Welcome email on first sign in
+ + Optional weekly stats and synonyms email
 
 #### V0.2.1
  + Critical API fix - switched hosting from Heroku to Vercel Serverless Functions.
