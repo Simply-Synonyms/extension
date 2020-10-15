@@ -70,7 +70,7 @@ function startAuth(interactive) {
         .catch((err) => {
         // The OAuth token might have been invalidated; Remove it from cache.
         if (err.code === 'auth/invalid-credential') {
-          chrome.identity.removeCachedAuthToken({token: token}, () => startAuth(interactive));
+          chrome.identity.removeCachedAuthToken({ token }, () => startAuth(interactive));
         }
       });
     } else {
@@ -86,6 +86,9 @@ googleSigninButton.addEventListener('click', (e) => {
 
 signoutButton.addEventListener('click', (e) => {
   firebase.auth().signOut()
+  chrome.identity.getAuthToken({}, (token) => {
+    chrome.identity.removeCachedAuthToken({ token });
+  })
 })
 
 /* QUICK SEARCH */
