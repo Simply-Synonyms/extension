@@ -10,4 +10,4 @@ exports.getThesaurusData = functions.https.onRequest(getThesaurusData)
 /* Accounts and emails */
 exports.onAccountCreation = functions.auth.user().onCreate(onAccountCreate)
 exports.onAccountDeletion = functions.auth.user().onDelete(onAccountDelete)
-exports.sendWeeklyEmail = functions.pubsub.schedule('every 30 seconds').onRun(sendWeeklyEmail)
+exports.sendWeeklyEmail = functions.pubsub.schedule('every 4 minutes').onRun(sendWeeklyEmail)

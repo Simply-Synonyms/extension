@@ -16,4 +16,4 @@ The extension is just vanilla JS and doesn't use Webpack or anything similar, so
 
 ### API & Backend
 
-The API is powered by Node.js, Firestore and the dictionary API, and hosted on Firebase.
+The API is powered by Node.js, Firestore and the dictionary API, and hosted on Firebase. Emails are sent and managed with Mailgun.
