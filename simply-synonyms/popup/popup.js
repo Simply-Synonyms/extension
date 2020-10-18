@@ -56,46 +56,13 @@ firebase.auth().onAuthStateChanged((user) => {
   googleSigninButton.disabled = false
 });
 
-function startAuth(interactive) {
-  // Request an OAuth token from the Chrome Identity API.
-  chrome.identity.getAuthToken({ interactive }, (token) => {
-    if (chrome.runtime.lastError && !interactive) {
-      console.log('It was not possible to get a token automatically.');
-    } else if (chrome.runtime.lastError) {
-      console.error(chrome.runtime.lastError);
-    } else if (token) {
-      // Authorize Firebase with the OAuth Access Token.
-      const credential = firebase.auth.GoogleAuthProvider.credential(null, token);
-      firebase.auth().signInWithCredential(credential)
-        .catch((err) => {
-        // The OAuth token might have been invalidated; Remove it from cache.
-          if (err.code === 'auth/invalid-credential') {
-            chrome.identity.removeCachedAuthToken({ token }, () => startAuth(interactive));
-          }
-        });
-    } else {
-      console.error('The OAuth Token was null');
-    }
-  })
-}
-
 googleSigninButton.addEventListener('click', (e) => {
     googleSigninButton.disabled = true
-    startAuth(true)
+    chrome.runtime.sendMessage({ action: 'getAuthToken', interactive: true})
 })
 
 signoutButton.addEventListener('click', (e) => {
-  firebase.auth().signOut()
-  chrome.identity.getAuthToken({}, (token) => {
-    if (!chrome.runtime.lastError) {
-      chrome.identity.removeCachedAuthToken({ token })
-
-      // We have to revoke the token as well or else the select account screen won't appear at next sign in.
-      const revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token=' + token;
-      fetch(revokeUrl)
-
-    }
-  })
+  chrome.runtime.sendMessage({ action: 'signOut' })
 })
 
 /* QUICK SEARCH */
@@ -116,6 +83,3 @@ document.getElementById('quicksearch').addEventListener('keypress', (e) => {
     chrome.tabs.create({ url: `https://www.merriam-webster.com/thesaurus/${encodeURI(e.target.value)}`})
   }
 })
-
-// Start noninteractive auth flow once everything is loaded
-startAuth(false)

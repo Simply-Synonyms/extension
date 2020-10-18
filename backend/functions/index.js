@@ -1,11 +1,14 @@
 const functions = require('firebase-functions')
-const getThesaurusData = require('./src/get-thesaurus-data')
+const admin = require('firebase-admin')
+const api = require('./src/api/index')
 const onAccountCreate = require('./src/on-account-create')
 const sendWeeklyEmail = require('./src/send-weekly-email')
 const onAccountDelete = require('./src/on-account-delete')
 
-/* Synonyms */
-exports.getThesaurusData = functions.https.onRequest(getThesaurusData)
+admin.initializeApp()
+
+/* Synonyms API */
+exports.api = functions.https.onRequest(api)
 
 /* Accounts and emails */
 exports.onAccountCreation = functions.auth.user().onCreate(onAccountCreate)

@@ -1,9 +1,15 @@
 let timeoutsToClear = []
 let options = {}
 let currentTab = 'synonyms'
+let idToken
 
 function getSynonyms(word) {
-  return fetch(`https://us-central1-simply-synonyms-api.cloudfunctions.net/getThesaurusData?word=${word}`)
+  word = word.trim()
+  let headers = {}
+  if (idToken) headers = new Headers({
+    'Authorization': `Bearer ${idToken}`
+  })
+  return fetch(`https://us-central1-simply-synonyms-api.cloudfunctions.net/api/get-thesaurus-data?word=${word}`, { headers })
     .then(response => response.json())
     .then(data => {
       return(data)
@@ -195,9 +201,14 @@ function addExtension() {
   })
 }
 
+
 chrome.storage.local.get(['option_popupDisabled', 'option_onlyEditableText'], (result) => {
   options = result
   if (!result.option_popupDisabled) addExtension()
+})
+
+chrome.storage.local.get(['idToken'], (result) => {
+  idToken = result.idToken
 })
 
 // chrome.runtime.onMessage.addListener((message, sender, respond) => {
