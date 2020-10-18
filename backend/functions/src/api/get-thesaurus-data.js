@@ -1,5 +1,7 @@
 const https = require('https')
 const functions = require('firebase-functions')
+const admin = require('firebase-admin')
+
 
 // Set this with: firebase functions:config:set thesaurusapi.key="yourkey"
 // Register for an API key at https://dictionaryapi.com/

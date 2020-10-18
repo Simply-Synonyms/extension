@@ -1,20 +1,19 @@
 let timeoutsToClear = []
 let options = {}
 let currentTab = 'synonyms'
-let idToken
+let loggedIn
+let headers = {} // Request headers (for auth)
 
 function getSynonyms(word) {
   word = word.trim()
-  let headers = {}
-  if (idToken) headers = new Headers({
-    'Authorization': `Bearer ${idToken}`
-  })
-  return fetch(`https://us-central1-simply-synonyms-api.cloudfunctions.net/api/get-thesaurus-data?word=${word}`, { headers })
+  if (loggedIn) fetch(`https://us-central1-simply-synonyms-api.cloudfunctions.net/api/update-user-stats`, { headers }) // Increment user's synonym counters
+  return fetch(`https://us-central1-simply-synonyms-api.cloudfunctions.net/api/get-thesaurus-data?word=${word}`)
     .then(response => response.json())
     .then(data => {
       return(data)
     });
 }
+
 
 // Function to reset synonyms popup and hide it
 function resetPopup() {
@@ -207,8 +206,11 @@ chrome.storage.local.get(['option_popupDisabled', 'option_onlyEditableText'], (r
   if (!result.option_popupDisabled) addExtension()
 })
 
-chrome.storage.local.get(['idToken'], (result) => {
-  idToken = result.idToken
+chrome.storage.local.get(['idToken'], ({ idToken }) => {
+  loggedIn = !!idToken
+  if (idToken) headers = new Headers({
+    'Authorization': `Bearer ${idToken}`
+  })
 })
 
 // chrome.runtime.onMessage.addListener((message, sender, respond) => {
