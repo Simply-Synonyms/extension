@@ -23,14 +23,17 @@ module.exports = (ctx, preview) => {
   let week
   let recipients = {}
 
+  const emailDataRef = admin.firestore().collection('weekly-email-data').doc(today)
+
   // Get the week's email data
-  return admin.firestore().collection('weekly-email-data').doc(today).get()
+  return emailDataRef.get()
     .then((snap) => {
       week = snap.data()
 
       // Ensure that all the email data exists
       for (const key of ['wordOfWeek', 'definitionOfWeek', 'synonymOfWeek', 'synonymDefinition', 'synonymsOfWeek', 'notesOfWeek', 'authorOfWeek']) assert(Object.keys(week).includes(key))
       assert(typeof week.synonymsOfWeek[0].word === 'string')
+      assert(!week.SENT)
 
       // Get the users
       return admin.firestore().collection('users').get()
@@ -58,17 +61,31 @@ module.exports = (ctx, preview) => {
 
       send(week, recipients, date)
 
+      if (preview) return
+
+      emailDataRef.update({
+        SENT: true
+      })
+
       // Clear weekly synonym streaks
       let countClearPromises = []
 
       snap.forEach((usnap) => {
         // Add a function to clear each user's streak to the promise array
-        countClearPromises.push(() => usnap.ref.set({
+        countClearPromises.push(() => usnap.ref.update({
           weekSynonymCount: 0
-        }, { merge: true }))
+        }))
       })
 
       return Promise.all(countClearPromises)
+        .then((writeResults) => {
+          console.log('Week streaks cleared')
+        })
+        .catch((err) => {
+          return Promise.reject('Couldn\'t clear streaks')
+        })
     })
-
+    .catch((err) => {
+      mail.errorAlert('Unable to send weekly email', err)
+    })
 }

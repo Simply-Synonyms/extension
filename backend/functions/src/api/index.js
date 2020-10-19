@@ -7,13 +7,13 @@ const updateUserStats = require('./update-user-stats')
 
 const api = express()
 const cors = corsLib({
-  origin: true,
+  origin: '*',
   allowedHeaders: ['Authorization']
 })
 
 api.use(cors)
 
 api.get('/get-thesaurus-data', getThesaurusData)
-api.get('/update-user-stats', validateIdToken, updateUserStats)
+api.get('/update-user-stats', validateIdToken(), updateUserStats)
 
 module.exports = api

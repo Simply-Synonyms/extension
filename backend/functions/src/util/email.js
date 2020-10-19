@@ -18,12 +18,14 @@ exports.send = (template, data, subject, recipient, tags=[ 'standard_email' ], o
   */
 
   let recipientEmails = recipient
-  let recipientVars = ''
+  let recipientVars = {}
   if (typeof recipient === 'object') {
     // Map all emails to a recipient string and stringify recipient vars
     recipientEmails = Object.keys(recipient).join(', ')
-    recipientVars = JSON.stringify(recipient)
+    recipientVars = recipient
   }
+
+  recipientVars = JSON.stringify(recipientVars)
 
   const emaildata = ({
     from: `Synonym Robot <messages@${functions.config().mailgun.domain}>`,
@@ -48,4 +50,9 @@ exports.addUserToList = (data, list) => {
 
 exports.removeUserFromList = (email, list) => {
   mg.lists(`${list}@${functions.config().mailgun.domain}`).members(email).delete()
+}
+
+exports.errorAlert = (error, errordetails) => {
+  errordetails = errordetails.toString()
+  exports.send('error-alert', { error, errordetails }, 'PRODUCTION ERROR - Synonyms', 'error@synonyms.bweb.app', [ 'error-alert'])
 }
