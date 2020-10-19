@@ -12,7 +12,8 @@ module.exports = function updateUserStats(req, res) {
         email: req.user.email,
         name: req.user.name,
         weekSynonymCount: (snap.get('weekSynonymCount') || 0) + 1,
-        lifeSynonymCount: (snap.get('lifeSynonymCount') || 0) + 1
+        lifeSynonymCount: (snap.get('lifeSynonymCount') || 0) + 1,
+        yearSynonymCount: (snap.get('yearSynonymCount') || 0) + 1,
       })
     })
     .then((snap) => {

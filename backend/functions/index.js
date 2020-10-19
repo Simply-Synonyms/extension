@@ -6,6 +6,7 @@ const sendWeeklyEmail = require('./src/send-weekly-email')
 const onAccountDelete = require('./src/on-account-delete')
 const cloneWeeklyEmailData = require('./src/clone-weekly-email-data')
 const backupDatabase = require('./src/backup-database')
+const addSynonymsToWeekEmailData = require('./src/add-synonyms-week-email-data')
 
 admin.initializeApp()
 
@@ -21,4 +22,5 @@ exports.sendWeeklyEmail = functions.pubsub.schedule('every 4 minutes').onRun((ct
 /* Maintenance/convenience/util */
 exports.sendWeeklyPreviewEmail = functions.pubsub.schedule('every 4 minutes').onRun((ctx) => sendWeeklyEmail(ctx, true))
 exports.cloneWeeklyEmailData = functions.pubsub.topic('cloneWeeklyEmailData').onPublish(cloneWeeklyEmailData)
+exports.addSynonymsToWeekEmailData = functions.pubsub.topic('addSynonymsToWeekEmailData').onPublish(addSynonymsToWeekEmailData)
 // exports.backupDatabase = functions.pubsub.schedule('every week').onRun(backupDatabase)

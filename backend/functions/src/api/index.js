@@ -14,6 +14,6 @@ const cors = corsLib({
 api.use(cors)
 
 api.get('/get-thesaurus-data', getThesaurusData)
-api.get('/update-user-stats', validateIdToken(), updateUserStats)
+api.get('/update-user-stats', validateIdToken(true), updateUserStats)
 
 module.exports = api

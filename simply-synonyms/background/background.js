@@ -44,10 +44,17 @@ function signOut() {
   fetch(revokeUrl)
 }
 
-chrome.runtime.onMessage.addListener((msg) => {
+chrome.runtime.onMessage.addListener((msg, sender, respond) => {
   switch (msg.action) {
     case 'getAuthToken':
       getAuthToken(msg.interactive)
+      break
+    case 'refreshIdToken':
+      firebase.auth().currentUser.getIdToken()
+        .then(t => {
+          chrome.storage.local.set({ idToken: t })
+          respond(t)
+        })
       break
     case 'signOut':
       signOut()
