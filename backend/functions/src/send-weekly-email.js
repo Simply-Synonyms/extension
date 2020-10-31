@@ -67,18 +67,22 @@ module.exports = (ctx, preview) => {
         SENT: true
       })
 
+      return admin.firestore().collection('users').get() // Get the users collection again so that we can clear the streaks (using forEach twice wasn't working for some reason)
+    })
+    .then((snap) => {
+
       // Clear weekly synonym streaks
       let countClearPromises = []
 
-      snap.forEach((usnap) => {
-        // Add a function to clear each user's streak to the promise array
-        countClearPromises.push(() => usnap.ref.update({
+      for (usnap of snap.docs) {
+        console.log(`Adding ${JSON.stringify(usnap)} to array`)
+        countClearPromises.push(usnap.ref.update({
           weekSynonymCount: 0
         }))
-      })
+      }
 
       return Promise.all(countClearPromises)
-        .then((writeResults) => {
+        .then(() => {
           console.log('Week streaks cleared')
         })
         .catch((err) => {

@@ -1,5 +1,6 @@
 const admin = require('firebase-admin')
 
+// A middleware factory for checking the Firebase auth status
 const validateFirebaseIdToken = function(checkRevoked=false) {
   return (req, res, next) => {
     if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {

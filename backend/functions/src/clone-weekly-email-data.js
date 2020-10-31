@@ -10,6 +10,6 @@ module.exports = function (msg) {
     .then((snap) => {
       data = snap.data()
       if (!data.wordOfWeek) return
-      return admin.firestore().collection('weekly-email-data').doc(dest).set(data)
+      return admin.firestore().collection('weekly-email-data').doc(dest).set({ ...data, SENT: false })
     })
 }

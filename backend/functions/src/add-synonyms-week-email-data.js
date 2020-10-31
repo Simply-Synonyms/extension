@@ -1,6 +1,8 @@
 const admin = require('firebase-admin')
 const getThesaurusResponse = require('./util/thesaurus')
 
+// Convenience pubsub function for automatically adding synonyms to a week's email data
+
 module.exports = function (msg) {
   const word = msg.attributes.word
   const defIndex = parseInt(msg.attributes.defIndex) // Definition index (which definition to get synonyms for)

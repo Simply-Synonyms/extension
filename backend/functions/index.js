@@ -20,7 +20,7 @@ exports.sendWeeklyEmail = functions.pubsub.schedule('every 4 minutes').onRun((ct
 
 
 /* Maintenance/convenience/util */
-exports.sendWeeklyPreviewEmail = functions.pubsub.schedule('every 4 minutes').onRun((ctx) => sendWeeklyEmail(ctx, true))
+exports.sendWeeklyPreviewEmail = functions.pubsub.schedule('every sun 07:30').onRun((ctx) => sendWeeklyEmail(ctx, true))
 exports.cloneWeeklyEmailData = functions.pubsub.topic('cloneWeeklyEmailData').onPublish(cloneWeeklyEmailData)
 exports.addSynonymsToWeekEmailData = functions.pubsub.topic('addSynonymsToWeekEmailData').onPublish(addSynonymsToWeekEmailData)
 // exports.backupDatabase = functions.pubsub.schedule('every week').onRun(backupDatabase)
