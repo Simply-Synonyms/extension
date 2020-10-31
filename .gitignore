@@ -1,2 +1,5 @@
 .idea
 *.zip
+
+# Don't include the Firebase Config Object
+# simply-synonyms/popup/firebaseConfig.js

@@ -12,8 +12,8 @@ Powered by the [Merriam-Webster dictionary API](https://dictionaryapi.com/)
 
 ### Building
 
-The extension doesn't use Webpack or hot reloading or anything similar, so you can simply load `simply-synonyms/simply-synonyms` from the chrome://extensions page.
+The extension is just vanilla JS and doesn't use Webpack or anything similar, so you can simply load `simply-synonyms/simply-synonyms` from the chrome://extensions page.
 
-### API
+### API & Backend
 
-The API is powered by Node.js and the dictionary API, and hosted on Vercel Serverless Functions.
+The API is powered by Node.js, Firestore and the dictionary API, and hosted on Firebase. Emails are sent and managed with Mailgun.

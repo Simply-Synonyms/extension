@@ -1,0 +1,27 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+
+        <mj-text align="center" font-size="25px" color="#4287f5">Simply Synonyms</mj-text>
+
+        <mj-divider border-color="#4287f5"></mj-divider>
+
+        <mj-text font-size="15px" font-family="helvetica" line-height="1.5">Hello {{username}}, </mj-text>
+        <mj-text font-size="15px" font-family="helvetica" line-height="1.5">Thanks for signing in to Simply Synonyms!</mj-text>
+
+        <mj-text font-size="15px" font-family="helvetica" line-height="1.5">Your Simply Synonyms account has been automatically created. We will start sending you a weekly email with customized stats and helpful synonyms (if you don't want these <a href="%tag_unsubscribe_url%">click here to unsubscribe</a>). We have other great features planned for the future as well - if you have any ideas or questions don't hesitate to reply to this email! We keep an eye on the inbox for all responses to our emails, even automated ones!</mj-text>
+
+        <mj-text font-size="15px" font-family="helvetica" line-height="1.5">We hope you'll enjoy using Simply Synonyms and recieving the weekly email. It's all an experiment at this stage so don't hesitate to reach out. <br/> - The Simply Synonyms Team</mj-text>
+
+      </mj-column>
+    </mj-section>
+    <mj-section >
+      <mj-column>
+        <mj-spacer height="10px"></mj-spacer>
+      	<mj-divider border-width="1px" border-color="gray" border-style="dashed"></mj-divider>
+        <mj-text color="gray" align="center">Copyright &copy; 2020 <a href="https://synonyms.bweb.app/">Simply Synonyms</a></mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

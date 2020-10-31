@@ -1,14 +1,24 @@
 let timeoutsToClear = []
 let options = {}
 let currentTab = 'synonyms'
+let loggedIn
+let headers = {} // Request headers (for auth)
 
 function getSynonyms(word) {
-  return fetch(`https://simply-synonyms-api.vercel.app/api/get-thesaurus-data?word=${word}`)
+  word = word.trim()
+  if (loggedIn) fetch(`https://us-central1-simply-synonyms-api.cloudfunctions.net/api/update-user-stats`, { headers })// Increment user's synonym counters
+    .then(({ status }) => {
+      if (status === 401) {
+        chrome.runtime.sendMessage(null, { action: 'refreshIdToken' }, {}, setHeaders) // Check for a token refresh and reset headers when fetch is unauthorized
+      }
+    })
+  return fetch(`https://us-central1-simply-synonyms-api.cloudfunctions.net/api/get-thesaurus-data?word=${word}`)
     .then(response => response.json())
     .then(data => {
       return(data)
     });
 }
+
 
 // Function to reset synonyms popup and hide it
 function resetPopup() {
@@ -195,9 +205,21 @@ function addExtension() {
   })
 }
 
+function setHeaders(t) {
+  if (!t) return
+  headers = new Headers({
+    'Authorization': `Bearer ${t}`
+  })
+}
+
 chrome.storage.local.get(['option_popupDisabled', 'option_onlyEditableText'], (result) => {
   options = result
   if (!result.option_popupDisabled) addExtension()
+})
+
+chrome.storage.local.get(['idToken'], ({ idToken }) => {
+  loggedIn = !!idToken
+  setHeaders(idToken)
 })
 
 // chrome.runtime.onMessage.addListener((message, sender, respond) => {
