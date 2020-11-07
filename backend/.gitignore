@@ -1,3 +1,6 @@
+# Don't commit firebaserc to ensure that dev and prod projects don't get mixed up
+#.firebaserc
+
 # Logs
 logs
 *.log

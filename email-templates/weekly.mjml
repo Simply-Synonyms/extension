@@ -1,25 +1,31 @@
 <mjml>
   <mj-head>
     <mj-preview>Here are your synonym stats and weekly dispatch from Simply Synonyms</mj-preview>
+    <mj-font name="Mulish" href="https://fonts.googleapis.com/css2?family=Mulish" />
+    <mj-font name="Poppins" href="https://fonts.googleapis.com/css2?family=Poppins" />
+    <mj-font name="Josefin Sans" href="https://fonts.googleapis.com/css2?family=Josefin+Sans" />
   </mj-head>
-  <mj-body>
+  <mj-body background-color="#f5f5f5">
     <mj-section>
       <mj-column>
 
-        <mj-text align="center" font-size="25px" color="#4287f5">Simply Synonyms</mj-text>
+        <mj-text align="center" font-size="25px" color="#4287f5" font-family="Mulish, sans-serif">Simply Synonyms</mj-text>
 
-        <mj-divider border-color="#4287f5"></mj-divider>
+        <mj-image src="https://lh6.googleusercontent.com/8EmR3LJpGto5Nv4RJt02wwhRknFhKhBijP07MpLRF7ZmFmCz5PbLSYG7QcqkQcytJcUDtFTnBsNQ9InKMKDe=w1920-h949-rw"></mj-image>
 
-        <mj-text font-size="15px" font-family="helvetica" line-height="1.5">Hello %recipient.name%, we're back with your newest weekly dispatch!</mj-text>
-        <mj-text font-size="15px" font-family="helvetica" line-height="1.5" color="#ff7b00">This week, you found synonyms for a staggering <strong><u>%recipient.weekly_synonyms% words!</u></strong> </mj-text>
+        <mj-text font-size="18px" line-height="1.5" color="#575757">Hello %recipient.name%, we're back with your newest weekly dispatch!</mj-text>
 
-        <mj-text font-size="15px" font-family="helvetica" line-height="1.5">And....... </mj-text>
+        <mj-hero padding="11px 0">
+          <mj-text font-size="17px" font-family="Mulish, sans-serif" line-height="1.5" color="#38ba6e">This week, you found synonyms for <strong><u>%recipient.weekly_synonyms% words!</u></strong> </mj-text>
+        </mj-hero>
 
-        <mj-text font-size="15px" font-family="helvetica" line-height="1.5" color="#03befc">The word of the week is <strong>{{wordOfWeek}}</strong>, which means: <i>{{definitionOfWeek}}</i></mj-text>
+        <mj-text font-size="17px" line-height="1.5" color="#4287f5">The word of the week is <strong>{{wordOfWeek}}</strong>, which means: <i>{{definitionOfWeek}}</i></mj-text>
 
-        <mj-text font-size="15px" font-family="helvetica" line-height="1.5" color="#9003fc">Plus, you might want to try using these synonyms instead of <u>{{synonymOfWeek}}</u> ({{synonymDefinition}}):</mj-text>
+        <mj-spacer height="15px"></mj-spacer>
 
-        <mj-text font-size="15px" font-family="helvetica" line-height="1.5" color="#005219">
+        <mj-text font-size="17px" line-height="1.5" color="#575757">And here are some useful synonyms for <u>{{synonymOfWeek}}</u> (<i>{{synonymDefinition}}</i>):</mj-text>
+
+        <mj-text font-size="17px" font-family="Poppins, sans-serif" line-height="1.5" color="#575757">
           <ul>
             {{#each synonymsOfWeek}}
             <li>{{this.word}}</li>
@@ -29,9 +35,9 @@
 
         <mj-divider border-color="#4287f5" border-width="2px" border-style="dotted"></mj-divider>
 
-        <mj-text font-size="15px" font-family="helvetica" line-height="1.5">{{notesOfWeek}}</mj-text>
+        <mj-text font-size="15px" font-family="Josefin Sans, sans-serif" line-height="1.5">{{notesOfWeek}}</mj-text>
 
-        <mj-text font-size="15px" font-family="helvetica" line-height="1.5">And that's it for my weekly dispatch!<br/>
+        <mj-text font-size="16px" font-family="Mulish, sans-serif" line-height="1.5">And that's it for my weekly dispatch!<br/>
           <i>- The Synonym Bot & {{authorOfWeek}} from Simply Synonyms</i></mj-text>
 
       </mj-column>
