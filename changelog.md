@@ -1,5 +1,9 @@
 ## Simply Synonyms Change Log
 
+#### V0.3.1
++ Added word info button to synonym results
++ Blocklist for disabling extension on certain websites.
+
 #### V0.3.0
  + Migrated to Firebase
  + Sign in with Google Chrome identity

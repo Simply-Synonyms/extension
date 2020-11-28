@@ -16,7 +16,7 @@ exports.api = functions.https.onRequest(api)
 /* Accounts and emails */
 exports.onAccountCreation = functions.auth.user().onCreate(onAccountCreate)
 exports.onAccountDeletion = functions.auth.user().onDelete(onAccountDelete)
-exports.sendWeeklyEmail = functions.pubsub.schedule('every 24 hours').onRun((ctx) => sendWeeklyEmail(ctx))
+exports.sendWeeklyEmail = functions.pubsub.schedule('every mon 09:00').onRun((ctx) => sendWeeklyEmail(ctx))
 
 
 /* Maintenance/convenience/util */

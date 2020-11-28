@@ -33,6 +33,7 @@ module.exports = (ctx, preview) => {
       // Ensure that all the email data exists
       for (const key of ['wordOfWeek', 'definitionOfWeek', 'synonymOfWeek', 'synonymDefinition', 'synonymsOfWeek', 'notesOfWeek', 'authorOfWeek']) assert(Object.keys(week).includes(key))
       assert(typeof week.synonymsOfWeek[0].word === 'string')
+      // assert(typeof week.notesOfWeek[0].p === 'string')
       assert(!week.SENT)
 
       // Get the users
