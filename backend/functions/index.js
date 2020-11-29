@@ -18,7 +18,6 @@ exports.onAccountCreation = functions.auth.user().onCreate(onAccountCreate)
 exports.onAccountDeletion = functions.auth.user().onDelete(onAccountDelete)
 exports.sendWeeklyEmail = functions.pubsub.schedule('every mon 09:00').onRun((ctx) => sendWeeklyEmail(ctx))
 
-
 /* Maintenance/convenience/util */
 exports.sendWeeklyPreviewEmail = functions.pubsub.schedule('every sun 07:30').onRun((ctx) => sendWeeklyEmail(ctx, true))
 exports.cloneWeeklyEmailData = functions.pubsub.topic('cloneWeeklyEmailData').onPublish(cloneWeeklyEmailData)

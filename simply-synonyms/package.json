@@ -1,0 +1,31 @@
+{
+  "name": "simply-synonyms",
+  "version": "1.0.0",
+  "description": "Webpack build system for Simply Synonyms",
+  "author": "Benjamin Ashbaugh",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack --progress",
+    "start": "webpack --watch",
+    "build-zip": "rm -rf build && NODE_ENV=production yarn build && node utils/zip-build.js"
+  },
+  "dependencies": {
+    "firebase": "^8.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.12.7",
+    "archiver": "^5.1.0",
+    "babel-loader": "^8.2.2",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^6.3.2",
+    "css-loader": "^5.0.1",
+    "css-minimizer-webpack-plugin": "^1.1.5",
+    "file-loader": "^6.2.0",
+    "html-loader": "^1.3.2",
+    "html-webpack-plugin": "^4.5.0",
+    "mini-css-extract-plugin": "^1.3.1",
+    "webpack": "^5.8.0",
+    "webpack-cli": "^4.2.0"
+  }
+}

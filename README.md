@@ -1,19 +1,19 @@
 # Simply Synonyms
 
-A simple thesaurus extension for Chrome - double click a word to find synonyms, antonyms, and other useful information, without any extra annoying features.
+A lightweight thesaurus extension for Chrome - double click any word to find synonyms, antonyms, and other useful information. [Install from the Chrome Web Store](https://chrome.google.com/webstore/detail/simply-synonyms/hapeijdlgbbhjmijhmgggnakcgdcpfap).
 
-[Get Simply Synonyms for Chrome](https://chrome.google.com/webstore/detail/simply-synonyms/hapeijdlgbbhjmijhmgggnakcgdcpfap)
+The extension simply uses a content script that injects the popup and double-click listener into every page. The node.js API processes data from the Dictionary API (and other sources) for the extension to fetch.
 
-In order to keep this extension as small and simple as possible, it just uses a content script that injects the popup and double-click listener into every page. The node.js API processes data from the Dictionary API for the extension to fetch.
-
-Powered by the [Merriam-Webster dictionary API](https://dictionaryapi.com/)
+Powered by the [Merriam-Webster dictionary API](https://dictionaryapi.com/).
 
 [Feature roadmap](https://share.clickup.com/l/h/6-35841888-1/d7129f9d437b7e0)
 
-### Building
+## Folders
 
-The extension is just vanilla JS and doesn't use Webpack or anything similar, so you can simply load `simply-synonyms/simply-synonyms` from the chrome://extensions page.
++ `simply-synonyms` contains the source code for the extension. It uses Webpack and Babel to bundle the content scripts, popup and background script into a single file each and ensure that they are compatible with the latest versions of Chrome.
 
-### API & Backend
++ `backend` contains the Firebase functions and firestore config for the Simply Synonyms API.
 
-The API is powered by Node.js, Firestore and the dictionary API, and hosted on Firebase. Emails are sent and managed with Mailgun.
++ `email-templates` contains [MJML](https://mjml.io/) templates for Simply Synonyms emails. All emails are sent using [Mailgun](https://www.mailgun.com/).
+
+The [website code is here](https://github.com/Simply-Synonyms/website).

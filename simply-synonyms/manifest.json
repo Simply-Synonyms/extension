@@ -10,29 +10,22 @@
     "128": "icons/icon_128.png"
   },
   "background": {
-    "page": "background/background.html",
+    "page": "background.html",
     "persistent": false
   },
   "browser_action": {
-    "default_popup": "popup/popup.html"
+    "default_popup": "popup.html"
   },
   "permissions": [
     "storage",
     "tabs",
     "identity"
   ],
-  "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
   "content_scripts": [{
-    "js": ["/content/content.js"],
+    "js": ["content.bundle.js"],
+    "css": ["content.bundle.css"],
     "matches": ["*://*/*"],
-    "run_at": "document_idle"
-  }, {
-    "css": ["/content/styles.css"],
-    "js": ["/content/contentHtml.js"],
-    "matches": ["*://*/*"]
-  }, {
-    "js": ["/content/googleDocsUtil.js"],
-    "matches": ["*://docs.google.com/*"],
     "run_at": "document_idle"
   }],
   "oauth2": {

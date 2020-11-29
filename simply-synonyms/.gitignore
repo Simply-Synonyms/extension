@@ -1,0 +1,5 @@
+node_modules
+build
+dist.zip
+build.zip
+firebaseConfig.json
