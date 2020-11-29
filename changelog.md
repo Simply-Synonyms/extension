@@ -5,7 +5,8 @@
 + Blocklist for disabling extension on certain websites.
 
 #### V0.3.0
- + Migrated to Firebase
+ + Refactored extension with Webpack and Babel
+ + Migrated the backend to Firebase
  + Sign in with Google Chrome identity
  + Welcome messages in extension popup
  + Counts how many synonyms users look up per week, year and account
