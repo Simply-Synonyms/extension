@@ -11,7 +11,7 @@
 
         <mj-text align="center" font-size="25px" color="#4287f5" font-family="Mulish, sans-serif">Simply Synonyms</mj-text>
 
-        <mj-image src="https://lh6.googleusercontent.com/8EmR3LJpGto5Nv4RJt02wwhRknFhKhBijP07MpLRF7ZmFmCz5PbLSYG7QcqkQcytJcUDtFTnBsNQ9InKMKDe=w1920-h949-rw"></mj-image>
+        <mj-image src="https://synonyms.bweb.app/email-content/wave.png"></mj-image>
 
         <mj-text font-size="18px" line-height="1.5" color="#575757">Hello %recipient.name%, we're back with your newest weekly dispatch!</mj-text>
 
