@@ -1,5 +1,4 @@
 import firebase from 'firebase/app'
-import 'firebase/auth'
 import firebaseConfig from 'firebaseConfig'
 import setListeners from './setListeners'
 import initializeAuth from './auth'

@@ -132,7 +132,7 @@ export function addWordsToPopup(wordType, definitions, words, clickCallback) {
       // Add listener to replace editable text with new synonym
       if (typeof clickCallback !== 'function') continue
       synEl.classList.add('ssyn-clickable-span')
-      synEl.addEventListener('click', clickCallback)
+      synEl.addEventListener('click', e => clickCallback(word))
     }
   }
 }

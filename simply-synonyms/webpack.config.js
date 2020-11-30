@@ -17,6 +17,7 @@ const options = {
     popup: './src/popup/index.js',
     background: './src/background/index.js',
     content: './src/content/index.js',
+    pageScript: './src/content/pageInterfaceScript.js'
   },
   output: {
     path: path.join(__dirname, 'build'),

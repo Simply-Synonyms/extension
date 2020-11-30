@@ -1,5 +1,7 @@
 import firebase from 'firebase/app'
+import 'firebase/auth'
 import chrome from 'browserApi'
+import api from '../api/synonyms'
 
 let authToken // NOT Firebase IdToken
 
@@ -28,12 +30,15 @@ function getAuthToken(interactive) {
 }
 
 function signOut() {
-  firebase.auth().signOut()
-  chrome.identity.removeCachedAuthToken({ token: authToken })
-
-  // We have to revoke the token as well or else the select account screen won't appear at next sign in.
-  const revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token=' + authToken;
-  fetch(revokeUrl)
+  try {
+    firebase.auth().signOut()
+    chrome.identity.removeCachedAuthToken({ token: authToken })
+  } finally {
+    // We have to revoke the token as well or else the select account screen won't appear at next sign in.
+    const revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token=' + authToken;
+    fetch(revokeUrl)
+    api.setIdToken(null)
+  }
 }
 
 chrome.runtime.onMessage.addListener((msg, sender, respond) => {
@@ -60,7 +65,10 @@ export default function initializeAuth () {
     if (user) {
       // Store IdToken so it can be used by content scripts
       user.getIdToken()
-        .then(t => chrome.storage.local.set({ idToken: t }))
+        .then(t => {
+          chrome.storage.local.set({idToken: t})
+          api.setIdToken(t)
+        })
     } else {
       chrome.storage.local.remove(['idToken'])
     }

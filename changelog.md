@@ -1,6 +1,7 @@
 ## Simply Synonyms Change Log
 
 #### V0.3.1
+ + Fixed bugs
 
 #### V0.3.0
  + Refactored extension with Webpack and Babel
