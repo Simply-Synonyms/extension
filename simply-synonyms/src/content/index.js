@@ -28,22 +28,29 @@ function processDoubleClick (e, w) {
   }
   if (word.length < 2) return
 
-  // Don't set new position if user selected a word within popup
-  if (e && !getPopup().contains(e.target)) openPopup(e.clientX, e.clientY)
-  else openPopup()
+  const [synonymRequestPromise, onUserCancelledRequest] = api.getSynonyms(word)
 
-  api.getSynonyms(word)
+  // Don't set new position if user selected a word within popup
+  if (e && !getPopup().contains(e.target)) openPopup(onUserCancelledRequest, e.clientX, e.clientY)
+  else openPopup(onUserCancelledRequest)
+
+  synonymRequestPromise
     .then((response) => {
       if (response.synonyms) {
         // TODO Click callback for contenteditable and gdoc
-        const onChooseReplacementWord = (targetType !== 'input') ? null : (wordChosen) => {
+        const onChooseReplacementWord = (targetType !== 'input' && targetType !== 'gdoc') ? null : (wordChosen) => {
           switch (targetType) {
             case 'input':
               // Replace input text with a new string containing the chosen word
               e.target.value = e.target.value.slice(0, e.target.selectionStart) + wordChosen + e.target.value.slice(e.target.selectionEnd)
               break
             case 'gdoc':
-              // console.log(googleDoc.nodes)
+              for (let i = 0; i < wordChosen.length; i++) {
+                sendPageInterfaceMessage('simulateGoogleDocKeypress', { key: 'Backspace' })
+              }
+              for (let i = 0; i < wordChosen.length; i++) {
+                sendPageInterfaceMessage('simulateGoogleDocKeypress', { key: wordChosen[i]})
+              }
           }
           resetPopup()
         }

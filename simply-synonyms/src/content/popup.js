@@ -17,6 +17,8 @@ const popupElementIds = {
 
 const popup = {}
 
+let closeCallback = () => {} // Callback to call when popup closes; set by openPopup
+
 // Function to add popup to page, store references to all the elements and set up the event listeners
 export function initializePopup() {
   const popupDiv = document.createElement('div')
@@ -27,11 +29,16 @@ export function initializePopup() {
     popup[elementName] = document.getElementById(elementId)
   })
 
-  popup.closeButton.addEventListener('click', resetPopup)
+  const closePopup = () => {
+    closeCallback() // Call the closeCallback, set by the open function
+    resetPopup()
+  }
+
+  popup.closeButton.addEventListener('click', closePopup())
   popup.showAntonymsButton.addEventListener('click', switchTabs)
 
   document.addEventListener('click', (e) => {
-    if (!popup.popup.contains(e.target)) resetPopup()
+    if (!popup.popup.contains(e.target)) closePopup()
   })
 }
 
@@ -59,7 +66,9 @@ export function getPopup () {
 }
 
 // Function to open popup at specified position (or same position as before)
-export function openPopup (x, y) {
+export function openPopup (onCloseCallback, x, y) {
+  closeCallback = onCloseCallback // Will get called when popup closes
+
   if (x && y) {
     popup.popup.style.left = `${x}px`
     popup.popup.style.top = `${y}px`

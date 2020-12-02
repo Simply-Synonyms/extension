@@ -1,5 +1,11 @@
 ## Simply Synonyms Change Log
 
+[Access the source code for each version here](https://github.com/Simply-Synonyms/simply-synonyms/tags)
+
+#### V0.3.2
+ + Automatic word replacement now works on Google Docs!!!
+ + Synonym counter now doesn't increment if user closes popup before the synonyms load
+
 #### V0.3.1
  + Fixed bugs
 

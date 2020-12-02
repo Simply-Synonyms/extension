@@ -14,17 +14,25 @@ const synonymsApi = {
   idToken: null,
   setIdToken: t => { this.idToken = t },
   getSynonyms (word) {
+    let userCancelledRequest = false // We don't actually cancel the request, but if the user closes the dialog before receiving synonym data, it doesn't increment the synonym counter.
+    const onUserCancelledRequest = () => userCancelledRequest = true
+
     word = word.trim()
-    if (!!this.idToken) GET('update-user-stats') // Increment user's synonym counters
-      .then(({ status }) => {
-        if (status === 401) {
-          browser.runtime.sendMessage(null, { action: 'refreshIdToken' }, {}, t => {
-            this.idToken = t
-          }) // Check for a token refresh and update token when fetch is unauthorized
-        }
-      })
-    return GET(`get-thesaurus-data?word=${word}`)
+    const synonymRequestPromise = GET(`get-thesaurus-data?word=${word}`)
       .then(response => response.json())
+      .then(data => {
+        if (!!this.idToken && !userCancelledRequest) GET('update-user-stats') // Increment user's synonym counters once they recieve the synonym data
+          .then(({ status }) => {
+            if (status === 401) {
+              browser.runtime.sendMessage(null, { action: 'refreshIdToken' }, {}, t => {
+                this.idToken = t
+              }) // Check for a token refresh and update token when fetch is unauthorized
+            }
+          })
+        return data
+      })
+
+    return [synonymRequestPromise, onUserCancelledRequest]
   }
 }
 

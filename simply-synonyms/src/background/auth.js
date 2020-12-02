@@ -57,6 +57,7 @@ chrome.runtime.onMessage.addListener((msg, sender, respond) => {
       signOut()
       break
   }
+  return true
 })
 
 export default function initializeAuth () {
