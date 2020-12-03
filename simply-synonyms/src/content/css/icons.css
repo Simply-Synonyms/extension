@@ -1,0 +1,32 @@
+/* Icons from https://css.gg */
+
+.ssyn-icon-info {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs,1));
+    width: 20px;
+    height: 20px;
+    border: 2px solid white;
+    border-radius: 40px
+}
+.ssyn-icon-info::after,
+.ssyn-icon-info::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    border-radius: 3px;
+    width: 2px;
+    background: currentColor;
+    color: white;
+    left: 7px
+}
+.ssyn-icon-info::after {
+    bottom: 2px;
+    height: 8px
+}
+.ssyn-icon-info::before {
+    height: 2px;
+    top: 2px
+}

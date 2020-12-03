@@ -18,3 +18,19 @@ export default `
     </div>
 </div>
 `
+
+export const wordDivHtml = `
+  <span class="ssyn-word"></span>
+  <span class="ssyn-word-details-hover-container">
+    <span class="ssyn-word-details-button">
+      <i class="ssyn-icon-info"></i>
+    </span>
+  </span>
+  <div class="ssyn-word-details-container">
+    <div class="ssyn-word-details">
+      A WORD
+      <h5>aaa</h5>
+      yes, a word.
+    </div>
+  </div>
+`

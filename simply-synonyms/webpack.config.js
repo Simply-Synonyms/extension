@@ -38,7 +38,10 @@ const options = {
                 }
               }
             ]
-          ]
+          ],
+          plugins: [[
+              "@babel/plugin-proposal-class-properties"
+          ]]
         }
       },
       {

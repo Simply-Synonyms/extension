@@ -1,6 +1,7 @@
 ## Simply Synonyms Change Log
 
-[Access the source code for each version here](https://github.com/Simply-Synonyms/simply-synonyms/tags)
+#### V0.3.3
+ + Fixed popup closing bug
 
 #### V0.3.2
  + Automatic word replacement now works on Google Docs!!!

@@ -1,4 +1,4 @@
-import popupHtml from './popupHtml'
+import popupHtml, {wordDivHtml} from './popupHtml'
 
 let currentTab = 'synonyms'
 let loadingTextTimeouts = []
@@ -30,11 +30,11 @@ export function initializePopup() {
   })
 
   const closePopup = () => {
-    closeCallback() // Call the closeCallback, set by the open function
     resetPopup()
+    closeCallback() // Call the closeCallback, set by the open function
   }
 
-  popup.closeButton.addEventListener('click', closePopup())
+  popup.closeButton.addEventListener('click', closePopup)
   popup.showAntonymsButton.addEventListener('click', switchTabs)
 
   document.addEventListener('click', (e) => {
@@ -66,10 +66,13 @@ export function getPopup () {
 }
 
 // Function to open popup at specified position (or same position as before)
+
+let popupX
 export function openPopup (onCloseCallback, x, y) {
   closeCallback = onCloseCallback // Will get called when popup closes
 
   if (x && y) {
+    popupX = x
     popup.popup.style.left = `${x}px`
     popup.popup.style.top = `${y}px`
   }
@@ -117,6 +120,52 @@ export function stopLoading () {
   adjustPopupPosition()
 }
 
+const wordDivClasses = {
+  word: 'ssyn-word',
+  detailsButton: 'ssyn-word-details-button',
+  details: 'ssyn-word-details'
+}
+
+class PopupWord {
+  static currentWithDetailsOpen // Word with details popup open (if there is one)
+
+  constructor(word, clickCallback) {
+
+    const wordEl = document.createElement('div')
+    wordEl.classList.add('ssyn-word-container')
+    wordEl.innerHTML = wordDivHtml
+
+    this.element = wordEl // the root word element
+    this.el = {}
+    Object.entries(wordDivClasses).forEach(([elementName, elementClass]) => {
+      this.el[elementName] = wordEl.querySelector(`.${elementClass}`) // This.el is an object containing all important elements in each word div
+    })
+
+    this.el.word.innerText = word
+
+    this.el.detailsButton.addEventListener('click', e => this.wordDetailsToggle())
+
+    if (typeof clickCallback === 'function') {
+      // Add listener to replace editable text with new synonym
+      this.element.classList.add('ssyn-clickable')
+      this.element.querySelector('.ssyn-word').addEventListener('click', e => clickCallback(word))
+    }
+  }
+
+  wordDetailsToggle() {
+    this.wordDetailsOpen = !this.wordDetailsOpen
+    this.el.details.classList.toggle('open')
+
+    if (this.wordDetailsOpen) {
+      if (PopupWord.currentWithDetailsOpen) PopupWord.currentWithDetailsOpen.wordDetailsToggle() // if another word details dialog is open, close it.
+      PopupWord.currentWithDetailsOpen = this
+      setTimeout(() => {
+        popup.popup.scrollTop = this.el.details.offsetTop
+      }, 200) // Wait for animation to finish before scrolling
+    } else PopupWord.currentWithDetailsOpen = null
+  }
+}
+
 /* Function to add words to synonyms or antonyms div.
  * definitions: array of target word definitions
  * words: array of arrays of synonyms or antonyms
@@ -135,13 +184,7 @@ export function addWordsToPopup(wordType, definitions, words, clickCallback) {
     div.appendChild(defEl)
     // Print out synonyms for each definition
     for (const word of words[index]) {
-      const synEl = document.createElement('span')
-      synEl.innerText = word
-      div.appendChild(synEl)
-      // Add listener to replace editable text with new synonym
-      if (typeof clickCallback !== 'function') continue
-      synEl.classList.add('ssyn-clickable-span')
-      synEl.addEventListener('click', e => clickCallback(word))
+      div.appendChild(new PopupWord(word, clickCallback).element)
     }
   }
 }

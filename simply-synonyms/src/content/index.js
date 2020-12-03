@@ -3,7 +3,8 @@ import googleDocsUtil from './siteLibs/googleDocsUtil'
 import api from '../api/synonyms'
 import { initializePopup, resetPopup, openPopup, getPopup, addWordsToPopup, setResultsText, stopLoading } from './popup'
 import injectPageScript, { sendPageInterfaceMessage } from './util/pageInterface'
-import './styles.css'
+import './css/styles.css'
+import './css/icons.css'
 
 let options = {}
 
@@ -45,9 +46,7 @@ function processDoubleClick (e, w) {
               e.target.value = e.target.value.slice(0, e.target.selectionStart) + wordChosen + e.target.value.slice(e.target.selectionEnd)
               break
             case 'gdoc':
-              for (let i = 0; i < wordChosen.length; i++) {
-                sendPageInterfaceMessage('simulateGoogleDocKeypress', { key: 'Backspace' })
-              }
+              // Replace selected word by typing out letters in new word
               for (let i = 0; i < wordChosen.length; i++) {
                 sendPageInterfaceMessage('simulateGoogleDocKeypress', { key: wordChosen[i]})
               }
