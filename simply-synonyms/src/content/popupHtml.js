@@ -35,7 +35,7 @@ export const wordDivHtml = `
           <div class="ssyn-cube4 ssyn-sk-cube"></div>
           <div class="ssyn-cube3 ssyn-sk-cube"></div>
         </div>
-        <p class="ssyn-word-details-connecting-text">Loading...</p>
+        <p class="ssyn-word-details-connecting-text">Loading word data...</p>
       </div>
       <div class="ssyn-word-details-content">
         A WORD

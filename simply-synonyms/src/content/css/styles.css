@@ -133,13 +133,14 @@
     transform: translateY(-50%);
 }
 
-.ssyn-word-container:hover .ssyn-word-details-button {
+#ssyn-content:not(.word-hover-disabled) .ssyn-word-container:hover .ssyn-word-details-button {
     width: 25px;
 }
 
 .ssyn-word-details {
     display: block;
     position: absolute;
+    z-index: 100001;
     background: #ffffff;
     border-top: 2px solid black;
     border-bottom: 2px solid black;

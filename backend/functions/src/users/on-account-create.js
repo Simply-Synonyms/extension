@@ -1,4 +1,4 @@
-const mail = require('./util/email')
+const mail = require('../util/email')
 
 module.exports = (user) => {
   mail.send('welcome', {

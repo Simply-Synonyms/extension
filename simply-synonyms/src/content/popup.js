@@ -159,10 +159,10 @@ class PopupWord {
     if (this.wordDetailsOpen) {
       if (PopupWord.currentWithDetailsOpen) PopupWord.currentWithDetailsOpen.wordDetailsToggle() // if another word details dialog is open, close it.
       PopupWord.currentWithDetailsOpen = this
-      // setTimeout(() => {
-      //   popup.popup.scrollTop = this.element.offsetTop // Scroll down to above details
-      // }, 100) // Wait for animation to finish before scrolling
-    } else PopupWord.currentWithDetailsOpen = null
+      console.log(popup.content.classList)
+    } else {
+      PopupWord.currentWithDetailsOpen = null
+    }
   }
 }
 

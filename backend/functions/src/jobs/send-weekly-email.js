@@ -1,4 +1,4 @@
-const mail = require('./util/email')
+const mail = require('../util/email')
 const admin = require('firebase-admin')
 const assert = require('assert')
 

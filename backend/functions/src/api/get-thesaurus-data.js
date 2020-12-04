@@ -10,7 +10,7 @@ module.exports = function sendThesaurusData(req, res) {
   if (!word) return res.json({ error: 'No word specified' })
 
   let sendData = (err, thesaurusRes) => {
-    if (err) return res.json({ error: err })
+    if (err) return res.json({ error: 'Error accessing dictionary API' })
 
     if (!thesaurusRes || !thesaurusRes[0] || !thesaurusRes[0].meta) {
       return res.json({
