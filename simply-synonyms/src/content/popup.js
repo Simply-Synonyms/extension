@@ -1,4 +1,6 @@
-import popupHtml, {wordDivHtml} from './popupHtml'
+import popupHtml, {wordDivHtml, wordDetailDetailHtml} from './popupHtml'
+import api from '../api/synonyms'
+import {sendPageInterfaceMessage} from './util/pageInterface'
 
 let currentTab = 'synonyms'
 let loadingTextTimeouts = []
@@ -120,16 +122,43 @@ export function stopLoading () {
   adjustPopupPosition()
 }
 
+const wordDetailClasses = {
+  detailSummary: 'ssyn-detail-summary'
+}
+
+class PopupWordDetail {
+  constructor(hg) {
+    /* Homograph: "each of two or more words spelled the same but not necessarily pronounced the same and having different meanings and origins." */
+    this.homograph = hg
+
+    const detailEl = document.createElement('details')
+    detailEl.classList.add('ssyn-detail')
+    detailEl.innerHTML = wordDetailDetailHtml
+
+    this.element = detailEl // the root word element
+    this.el = {} // An object to hold each sub-element
+    Object.entries(wordDetailClasses).forEach(([elementName, elementClass]) => {
+      this.el[elementName] = detailEl.querySelector(`.${elementClass}`) // This.el is an object containing all important elements in each word div
+    })
+
+    this.el.detailSummary.innerText = hg.word.replace('*', '') // remove syllable markers
+  }
+}
+
 const wordDivClasses = {
   word: 'ssyn-word',
   detailsButton: 'ssyn-word-details-button',
-  details: 'ssyn-word-details'
+  details: 'ssyn-word-details',
+  content: 'ssyn-word-details-content',
+  loading: 'ssyn-word-details-loading',
+  statusText: 'ssyn-word-details-status-text'
 }
 
 class PopupWord {
   static currentWithDetailsOpen // Word with details popup open (if there is one)
 
   constructor(word, clickCallback) {
+    this.word = word
 
     const wordEl = document.createElement('div')
     wordEl.classList.add('ssyn-word-container')
@@ -159,10 +188,30 @@ class PopupWord {
     if (this.wordDetailsOpen) {
       if (PopupWord.currentWithDetailsOpen) PopupWord.currentWithDetailsOpen.wordDetailsToggle() // if another word details dialog is open, close it.
       PopupWord.currentWithDetailsOpen = this
-      console.log(popup.content.classList)
+      if (!this.el.statusText.innerText) this.getWordDetails()
     } else {
       PopupWord.currentWithDetailsOpen = null
     }
+  }
+
+  getWordDetails () {
+    const [wordDetailsRequestPromise, onUserCancelledRequest] = api.getWordDetails(this.word)
+
+    wordDetailsRequestPromise
+      .then((response) => {
+        if (response.homographs) {
+          for (const homograph of response.homographs) {
+            const detail = new PopupWordDetail(homograph)
+            this.el.content.appendChild(detail.element)
+          }
+          this.el.statusText.innerText = `Found ${response.homographs.length} homographs for ${this.word}`
+        } else {
+          this.el.statusText.innerText = `Couldn't find word details for ${this.word}`
+        }
+
+        this.el.loading.style.display = 'none';
+        this.el.content.style.display = 'block';
+      })
   }
 }
 
@@ -202,6 +251,10 @@ export function adjustPopupPosition() {
   if (window.innerWidth - 20 - popupEl.offsetLeft < popupEl.offsetWidth) {
     // Popup is overflowing on right side of page
     popupEl.style.left = `${popupEl.offsetLeft - popupEl.offsetWidth - 20}px`
+  }
+  if (popupEl.offsetHeight < 500) {
+    // Popup is short, make it taller
+    popupEl.style.height = `500px`
   }
   if (popupEl.offsetHeight > window.innerHeight - 40) {
     // popup is too tall to fit on page, enable scrolling

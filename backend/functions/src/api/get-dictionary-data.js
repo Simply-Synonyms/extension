@@ -42,7 +42,7 @@ export default function sendDictionaryData(req, res) {
       }
     })
 
-    return res.json(response)
+    return res.json({ homographs: response })
   }
 
   getDictionaryResponse(word, sendData)

@@ -38,10 +38,17 @@ export const wordDivHtml = `
         <p class="ssyn-word-details-connecting-text">Loading word data...</p>
       </div>
       <div class="ssyn-word-details-content">
-        A WORD
-        <h5>aaa</h5>
-        yes, a word.
+        <p class="ssyn-word-details-status-text"></p>
+        
       </div>
     </div>
   </div>
+`
+
+export const wordDetailDetailHtml = `
+  <summary class="ssyn-detail-summary"></summary>
+  <div class="ssyn-detail-pronunciation">
+  <span class="ssyn-detail-pronunciation-text"></span>
+  <span class="ssyn-detail-"
+</div>
 `
