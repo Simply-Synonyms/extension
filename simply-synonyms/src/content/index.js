@@ -4,6 +4,7 @@ import api from '../api/synonyms'
 import { initializePopup, resetPopup, openPopup, getPopup, addWordsToPopup, setResultsText, stopLoading } from './popup'
 import injectPageScript, { sendPageInterfaceMessage } from './util/pageInterface'
 import './css/styles.css'
+import './css/animation.css'
 import './css/icons.css'
 
 let options = {}

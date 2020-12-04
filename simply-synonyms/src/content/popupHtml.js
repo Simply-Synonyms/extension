@@ -28,9 +28,20 @@ export const wordDivHtml = `
   </span>
   <div class="ssyn-word-details-container">
     <div class="ssyn-word-details">
-      A WORD
-      <h5>aaa</h5>
-      yes, a word.
+      <div class="ssyn-word-details-loading">
+        <div class="ssyn-folding-cube">
+          <div class="ssyn-cube1 ssyn-sk-cube"></div>
+          <div class="ssyn-cube2 ssyn-sk-cube"></div>
+          <div class="ssyn-cube4 ssyn-sk-cube"></div>
+          <div class="ssyn-cube3 ssyn-sk-cube"></div>
+        </div>
+        <p class="ssyn-word-details-connecting-text">Loading...</p>
+      </div>
+      <div class="ssyn-word-details-content">
+        A WORD
+        <h5>aaa</h5>
+        yes, a word.
+      </div>
     </div>
   </div>
 `

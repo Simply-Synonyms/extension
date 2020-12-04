@@ -86,38 +86,9 @@
     font-size: 0.8em;
 }
 
-#ssyn-connecting-text {
+#ssyn-connecting-text, .ssyn-word-details-connecting-text {
     text-align: center;
     color: #585858;
-}
-
-/* Spinner animation from https://tobiasahlin.com/spinkit/ */
-
-.ssyn-spinner {
-    width: 40px;
-    height: 40px;
-
-    position: relative;
-    margin: 50px auto;
-}
-
-.ssyn-double-bounce1, .ssyn-double-bounce2 {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background-color: dodgerblue;
-    opacity: 0.6;
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
-    animation: sk-bounce 2.0s infinite ease-in-out;
-}
-
-.ssyn-double-bounce2 {
-    -webkit-animation-delay: -1.0s;
-    animation-delay: -1.0s;
 }
 
 .ssyn-button {
@@ -133,22 +104,6 @@
     border: 2px solid dodgerblue;
     color: dodgerblue;
     /*font-weight: bold;*/
-}
-
-
-@-webkit-keyframes sk-bounce {
-    0%, 100% { -webkit-transform: scale(0.0) }
-    50% { -webkit-transform: scale(1.0) }
-}
-
-@keyframes sk-bounce {
-    0%, 100% {
-        transform: scale(0.0);
-        -webkit-transform: scale(0.0);
-    } 50% {
-          transform: scale(1.0);
-          -webkit-transform: scale(1.0);
-      }
 }
 
 .ssyn-word-details-hover-container {
@@ -186,7 +141,9 @@
     display: block;
     position: absolute;
     background: #ffffff;
-    box-shadow: inset 0 0 10px 2px #aeaeae;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    box-shadow: inset 0 0 4px #aeaeae;
     left: 0;
     right: 0;
     height: 0;
@@ -200,4 +157,8 @@
     opacity: 100%;
     overflow-y: scroll;
     padding: 15px;
+}
+
+.ssyn-word-details-content {
+    display: none;
 }
