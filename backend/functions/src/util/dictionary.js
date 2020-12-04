@@ -1,11 +1,11 @@
-const https = require('https')
-const functions = require('firebase-functions')
+import * as functions from 'firebase-functions'
+import https from 'https'
 
 // Set this with: firebase functions:config:set dictionaryapi.key="yourkey"
 // Register for an API key at https://dictionaryapi.com/
 const dictionaryAPIKey = functions.config().dictionaryapi.key
 
-module.exports = function getDictionaryResponse(word, cb) {
+export default function getDictionaryResponse(word, cb) {
   const url = `https://dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=${dictionaryAPIKey}`
 
   https.get(url, res => {

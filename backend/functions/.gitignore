@@ -1,3 +1,4 @@
 node_modules/
 firebase-debug.log
 build
+.runtimeconfig.json

@@ -1,6 +1,7 @@
 import browser from 'browserApi'
 
-const apiURL = 'https://us-central1-simply-synonyms-api.cloudfunctions.net/api/'
+// Set this env var if you're working on the API locally with a firebase emulator
+const apiURL = process.env.DEV_API ? process.env.DEV_API : 'https://us-central1-simply-synonyms-api.cloudfunctions.net/api/'
 
 const GET = (route) => {
   return fetch(apiURL + route, {

@@ -72,7 +72,8 @@ const options = {
   plugins: [
     new CleanWebpackPlugin(),
     new webpack.EnvironmentPlugin({
-      'NODE_ENV': 'development'
+      'NODE_ENV': 'development',
+      'DEV_API': false
     }),
     new CopyWebpackPlugin({
       patterns: [{

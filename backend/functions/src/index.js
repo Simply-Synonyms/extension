@@ -1,12 +1,12 @@
-const functions = require('firebase-functions')
-const admin = require('firebase-admin')
-const api = require('./api')
-const onAccountCreate = require('./users/on-account-create')
-const sendWeeklyEmail = require('./jobs/send-weekly-email')
-const onAccountDelete = require('./users/on-account-delete')
-const cloneWeeklyEmailData = require('./tools/clone-weekly-email-data')
-const backupDatabase = require('./jobs/backup-database')
-const addSynonymsToWeekEmailData = require('./tools/add-synonyms-week-email-data')
+import admin from 'firebase-admin'
+import * as functions from 'firebase-functions'
+import onAccountCreate from './users/on-account-create'
+import api from './api'
+import sendWeeklyEmail from './jobs/send-weekly-email'
+import onAccountDelete from './users/on-account-delete'
+import cloneWeeklyEmailData from './tools/clone-weekly-email-data'
+import backupDatabase from './jobs/backup-database'
+import addSynonymsToWeekEmailData from './tools/add-synonyms-week-email-data'
 
 admin.initializeApp()
 

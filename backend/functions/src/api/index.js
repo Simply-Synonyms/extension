@@ -1,9 +1,10 @@
-const express = require('express')
-const corsLib = require('cors')
-const validateIdToken = require('../util/auth')
+import express from 'express'
+import corsLib from 'cors'
+import validateIdToken from '../util/auth'
 
-const getThesaurusData = require('./get-thesaurus-data')
-const updateUserStats = require('./update-user-stats')
+import getThesaurusData from './get-thesaurus-data'
+import getDictionaryData from './get-dictionary-data'
+import updateUserStats from './update-user-stats'
 
 const api = express()
 const cors = corsLib({
@@ -14,6 +15,7 @@ const cors = corsLib({
 api.use(cors)
 
 api.get('/get-thesaurus-data', getThesaurusData)
+api.get('/get-dictionary-data', getDictionaryData)
 api.get('/update-user-stats', validateIdToken(true), updateUserStats)
 
 module.exports = api
