@@ -1,6 +1,7 @@
 import popupHtml, {wordDivHtml, wordDetailDetailHtml} from './popupHtml'
 import api from '../api/synonyms'
 import {sendPageInterfaceMessage} from './util/pageInterface'
+import browser from 'browserApi'
 
 let currentTab = 'synonyms'
 let loadingTextTimeouts = []
@@ -14,7 +15,8 @@ const popupElementIds = {
   antonyms: 'ssyn-antonyms',
   loadingText: 'ssyn-connecting-text',
   showAntonymsButton: 'ssyn-antonyms-button',
-  closeButton: 'ssyn-close-button'
+  closeButton: 'ssyn-close-button',
+  audioPlayer: 'ssyn-audio'
 }
 
 const popup = {}
@@ -123,13 +125,19 @@ export function stopLoading () {
 }
 
 const wordDetailClasses = {
-  detailSummary: 'ssyn-detail-summary'
+  detailSummary: 'ssyn-detail-summary',
+  wordHeading: 'ssyn-detail-word',
+  offensiveWarning: 'ssyn-detail-offensive',
+  pronunciationText: 'ssyn-detail-pronunciation-text',
+  pronunciationPlayButton: 'ssyn-detail-play-button',
+  definitions: 'ssyn-detail-definitions'
 }
 
 class PopupWordDetail {
-  constructor(hg) {
+  constructor(hg, hgIndex) {
     /* Homograph: "each of two or more words spelled the same but not necessarily pronounced the same and having different meanings and origins." */
     this.homograph = hg
+    this.hid = hgIndex
 
     const detailEl = document.createElement('details')
     detailEl.classList.add('ssyn-detail')
@@ -141,13 +149,36 @@ class PopupWordDetail {
       this.el[elementName] = detailEl.querySelector(`.${elementClass}`) // This.el is an object containing all important elements in each word div
     })
 
-    this.el.detailSummary.innerText = hg.word.replace('*', '') // remove syllable markers
+    this.el.detailSummary.innerText = `${this.hid + 1}. ${hg.word.replaceAll(/\*/g, '')} (${hg.functionalType})`
+
+    this.populateDetail(hg)
+  }
+
+  populateDetail(hg) {
+    this.el.wordHeading.innerText = hg.word
+    if (hg.offensive) this.el.offensive.style.display = 'block'
+    if (hg.pronunciation) this.el.pronunciationText.innerText = `pronounced ${hg.pronunciation}`
+    if (hg.audio) {
+      this.el.pronunciationPlayButton.style.display = 'inline'
+      this.el.pronunciationPlayButton.addEventListener('click', _ => {
+        browser.runtime.sendMessage(null, { action: 'playAudio', url: hg.audio })
+      })
+    }
+    for (const [i, def] of hg.shortdefs.entries()) {
+      const defEl = document.createElement('p')
+      defEl.classList.add('ssyn-detail-definition')
+      // string.fromcharcode allows to get a letter starting at A for each index
+      defEl.innerText = `${String.fromCharCode(97 + i)}. ${def}`
+
+      this.el.definitions.appendChild(defEl)
+    }
   }
 }
 
 const wordDivClasses = {
   word: 'ssyn-word',
   detailsButton: 'ssyn-word-details-button',
+  buttonIcon: 'ssyn-word-details-button-icon',
   details: 'ssyn-word-details',
   content: 'ssyn-word-details-content',
   loading: 'ssyn-word-details-loading',
@@ -185,13 +216,17 @@ class PopupWord {
     this.wordDetailsOpen = !this.wordDetailsOpen
     this.el.details.classList.toggle('open')
 
+    // Change open/close icon and add stay-open class to button
+    this.el.buttonIcon.classList.add(!this.wordDetailsOpen ? 'ssyn-icon-info' : 'ssyn-close-o')
+    this.el.buttonIcon.classList.remove(this.wordDetailsOpen ? 'ssyn-icon-info' : 'ssyn-close-o')
+    this.element.classList.toggle('details-button-open')
+
     if (this.wordDetailsOpen) {
       if (PopupWord.currentWithDetailsOpen) PopupWord.currentWithDetailsOpen.wordDetailsToggle() // if another word details dialog is open, close it.
-      PopupWord.currentWithDetailsOpen = this
       if (!this.el.statusText.innerText) this.getWordDetails()
-    } else {
-      PopupWord.currentWithDetailsOpen = null
     }
+
+    PopupWord.currentWithDetailsOpen = this.wordDetailsOpen ? this : null
   }
 
   getWordDetails () {
@@ -200,15 +235,20 @@ class PopupWord {
     wordDetailsRequestPromise
       .then((response) => {
         if (response.homographs) {
-          for (const homograph of response.homographs) {
-            const detail = new PopupWordDetail(homograph)
+          for (const [index, homograph] of response.homographs.entries()) {
+            const detail = new PopupWordDetail(homograph, index)
             this.el.content.appendChild(detail.element)
           }
-          this.el.statusText.innerText = `Found ${response.homographs.length} homographs for ${this.word}`
+          this.el.statusText.innerText = `Found ${response.homographs.length} homographs for "${this.word}"`
         } else {
           this.el.statusText.innerText = `Couldn't find word details for ${this.word}`
         }
-
+      })
+      .catch(err => {
+        console.error(err)
+        this.el.statusText.innerText = `We couldn't reach our servers. Please try again later.`
+      })
+      .finally(() => {
         this.el.loading.style.display = 'none';
         this.el.content.style.display = 'block';
       })
@@ -245,16 +285,12 @@ export function adjustPopupPosition() {
   // Adjust height & position
   if (window.innerHeight - 20 - popupEl.offsetTop < popupEl.offsetHeight) {
     // Popup is overflowing on bottom of page
-    popupEl.style.top = `${(window.innerHeight  - 20 - popupEl.offsetHeight)}px`
+    popupEl.style.top = `${(window.innerHeight  - 40 - popupEl.offsetHeight)}px`
     popupEl.style.left = `${popupEl.offsetLeft + 50}px`
   }
   if (window.innerWidth - 20 - popupEl.offsetLeft < popupEl.offsetWidth) {
     // Popup is overflowing on right side of page
     popupEl.style.left = `${popupEl.offsetLeft - popupEl.offsetWidth - 20}px`
-  }
-  if (popupEl.offsetHeight < 500) {
-    // Popup is short, make it taller
-    popupEl.style.height = `500px`
   }
   if (popupEl.offsetHeight > window.innerHeight - 40) {
     // popup is too tall to fit on page, enable scrolling

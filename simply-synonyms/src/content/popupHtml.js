@@ -1,5 +1,6 @@
 export default `
 <div id="ssyn-popup">
+    <audio id="ssyn-audio-player" style="display: none;" type="audio/mp3"></audio>
     <div class="ssyn-header">
       <button class="ssyn-header-button" id="ssyn-close-button">X</button>
     </div>
@@ -23,7 +24,7 @@ export const wordDivHtml = `
   <span class="ssyn-word"></span>
   <span class="ssyn-word-details-hover-container">
     <span class="ssyn-word-details-button">
-      <i class="ssyn-icon-info"></i>
+      <i class="ssyn-word-details-button-icon ssyn-icon-info"></i>
     </span>
   </span>
   <div class="ssyn-word-details-container">
@@ -47,8 +48,16 @@ export const wordDivHtml = `
 
 export const wordDetailDetailHtml = `
   <summary class="ssyn-detail-summary"></summary>
-  <div class="ssyn-detail-pronunciation">
-  <span class="ssyn-detail-pronunciation-text"></span>
-  <span class="ssyn-detail-"
-</div>
+  <div>
+    <h4 class="ssyn-detail-word"></h4>
+    <p class="ssyn-detail-offensive">This word may offend some people.</p>
+    <div class="ssyn-detail-pronunciation">
+        <span class="ssyn-detail-pronunciation-text"></span>
+        <span class="ssyn-detail-play-button"> (Play recording)</span>
+    </div>
+    <div class="ssyn-detail-definitions">
+    
+    </div>
+    <hr/>
+  </div>
 `

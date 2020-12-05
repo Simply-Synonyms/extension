@@ -32,9 +32,9 @@ function processDoubleClick (e, w) {
 
   const [synonymRequestPromise, onUserCancelledRequest] = api.getSynonyms(word)
 
-  // Don't set new position if user selected a word within popup
+  // Don't open popup again if user selected a word within popup
   if (e && !getPopup().contains(e.target)) openPopup(onUserCancelledRequest, e.clientX, e.clientY)
-  else openPopup(onUserCancelledRequest)
+  else return
 
   synonymRequestPromise
     .then((response) => {
@@ -60,7 +60,12 @@ function processDoubleClick (e, w) {
         const suffixText = targetType ? 'Are you sure you spelled it correctly?' : '' // Only show this text if the target is editable
         setResultsText(`Unable to find synonyms for "${word}". ${suffixText}`)
       }
-
+    })
+    .catch(err => {
+      console.error(err)
+      setResultsText(`An error occurred and we couldn't reach our servers. Please try again later.`)
+    })
+    .finally(() => {
       stopLoading()
     })
 }

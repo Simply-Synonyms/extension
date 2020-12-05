@@ -30,3 +30,33 @@
     height: 2px;
     top: 2px
 }
+
+.ssyn-close-o {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs,1));
+    width: 22px;
+    height: 22px;
+    border: 2px solid;
+    border-radius: 40px;
+    color: white;
+}
+.ssyn-close-o::after,
+.ssyn-close-o::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 12px;
+    height: 2px;
+    background: currentColor;
+    transform: rotate(45deg);
+    border-radius: 5px;
+    top: 8px;
+    left: 3px;
+    color: white;
+}
+.ssyn-close-o::after {
+    transform: rotate(-45deg)
+}

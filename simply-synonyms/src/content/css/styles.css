@@ -2,6 +2,7 @@
     display: none;
     position: fixed;
     width: 300px;
+    min-height: 500px;
     top: 50px;
     left: 50px;
     overflow-y: auto;
@@ -59,7 +60,7 @@
     margin: 10px 25px;
 }
 
-#ssyn-content p, #ssyn-content span {
+#ssyn-content p, .ssyn-word {
     color: black;
 }
 
@@ -133,17 +134,15 @@
     transform: translateY(-50%);
 }
 
-#ssyn-content:not(.word-hover-disabled) .ssyn-word-container:hover .ssyn-word-details-button {
+#ssyn-content:not(.word-hover-disabled) .ssyn-word-container:hover .ssyn-word-details-button, .ssyn-word-container.details-button-open .ssyn-word-details-button {
     width: 25px;
 }
 
 .ssyn-word-details {
     display: block;
     position: absolute;
-    z-index: 100001;
+    z-index: 110000;
     background: #ffffff;
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
     box-shadow: inset 0 0 4px #aeaeae;
     left: 0;
     right: 0;
@@ -154,12 +153,42 @@
 }
 
 .ssyn-word-details.open {
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
     height: 200px;
-    opacity: 100%;
+    opacity: 1;
     overflow-y: scroll;
     padding: 15px;
 }
 
 .ssyn-word-details-content {
+    display: none;
+}
+
+.ssyn-detail summary {
+    outline: none;
+    cursor: pointer;
+    color: #00366d;
+}
+
+.ssyn-detail-offensive {
+    color: red;
+    display: none;
+}
+
+.ssyn-detail-pronunciation, .ssyn-detail-pronunciation span {
+    margin: 0;
+    padding: 0;
+}
+
+.ssyn-detail-pronunciation-text {
+    color: #323232;
+}
+
+.ssyn-detail-play-button {
+    text-decoration: underline;
+    color: dodgerblue;
+    user-select: none;
+    cursor: pointer;
     display: none;
 }

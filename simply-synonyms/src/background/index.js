@@ -11,3 +11,13 @@ setListeners()
 
 // Init auth
 initializeAuth()
+
+browser.runtime.onMessage.addListener((msg, sender, respond) => {
+  switch (msg.action) {
+    case 'playAudio':
+      // We have to play audio files from the background so that websites' CSP headers don't interfere
+      new Audio(msg.url).play()
+      break
+  }
+  // return true
+})

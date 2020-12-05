@@ -1,7 +1,7 @@
 ## Simply Synonyms Change Log
 
 #### V0.3.3
- + New feature: word info button
+ + New feature: synonym info button with basic dictionary lookup
  + Fixed popup closing bug
 
 #### V0.3.2

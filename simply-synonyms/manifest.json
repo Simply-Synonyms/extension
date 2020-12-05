@@ -21,7 +21,7 @@
     "tabs",
     "identity"
   ],
-  "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'; media-src https://media.merriam-webster.com/",
   "web_accessible_resources": ["pageScript.bundle.js"],
   "content_scripts": [{
     "js": ["content.bundle.js"],
