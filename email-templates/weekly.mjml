@@ -11,15 +11,26 @@
 
         <mj-text align="center" font-size="25px" color="#4287f5" font-family="Mulish, sans-serif">Simply Synonyms</mj-text>
 
-        <mj-image src="https://synonyms.bweb.app/email-content/wave.png"></mj-image>
+        <mj-image href="#" src="https://synonyms.bweb.app/email-content/wave.png"></mj-image>
 
         <mj-text font-size="18px" line-height="1.5" color="#575757">Hello %recipient.name%, we're back with your newest weekly dispatch!</mj-text>
 
-        <mj-hero padding="11px 0">
-          <mj-text font-size="17px" font-family="Mulish, sans-serif" line-height="1.5" color="#38ba6e">This week, you found synonyms for <strong><u>%recipient.weekly_synonyms% words!</u></strong> </mj-text>
+        <mj-hero padding="20px 0">
+          <mj-text font-size="20px" align="center" color="#4287f5" font-family="Courier New, sans-serif">The Week in Synonyms</mj-text>
+          <mj-text font-size="17px" font-family="Mulish, sans-serif" line-height="1.5" color="#38ba6e">This week, you found synonyms for <strong><u>%recipient.weekly_synonyms% words</u></strong>, and you also learned the definitions for <strong><u>%recipient.weekly_synonym_definitions%</u></strong> of those synonyms!</mj-text>
         </mj-hero>
 
-        <mj-text font-size="17px" line-height="1.5" color="#4287f5">The word of the week is <strong>{{wordOfWeek}}</strong>, which means: <i>{{definitionOfWeek}}</i></mj-text>
+        <mj-text font-size="20px" align="center" font-family="Mulish, sans-serif">Words of the Week</mj-text>
+        <mj-divider border-color="#8905ff" border-width="2px"></mj-divider>
+
+        <mj-text font-size="17px" line-height="1.5" color="#575757">The word of the week is...</mj-text>
+
+        <mj-hero padding="5px 0">
+          <mj-text font-size="20px" align="center" font-weight="bold" font-family="Trebuchet MS, sans-serif">{{wordOfWeek}}</mj-text>
+          <mj-text font-size="17px" font-family="Mulish, sans-serif" line-height="1.5" color="#575757">This week, you found synonyms for <strong><u>%recipient.weekly_synonyms% words</u></strong>, and you also learned the definitions for <strong><u>%recipient.weekly_synonym_definitions%</u></strong> of those synonyms!</mj-text>
+        </mj-hero>
+
+        <mj-text font-size="17px" line-height="1.5" color="#575757">The word of the week is <strong>{{wordOfWeek}}</strong>, which means: <i>{{definitionOfWeek}}</i></mj-text>
 
         <mj-spacer height="15px"></mj-spacer>
 
