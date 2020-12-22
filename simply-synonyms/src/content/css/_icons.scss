@@ -1,4 +1,6 @@
-/* Icons from https://css.gg */
+/* Some icons from https://css.gg */
+
+@use '../../common/theme';
 
 @mixin icons {
     .icon {
@@ -58,6 +60,42 @@
             }
             &::after {
                 transform: rotate(-45deg)
+            }
+        }
+
+        &-close-x {
+            box-sizing: border-box;
+            position: relative;
+            display: block;
+            width: 25px;
+            height: 25px;
+            padding: 5px;
+            background: white;
+            transition: 0.1s;
+
+            &::after, &::before {
+                content: "";
+                display: block;
+                box-sizing: border-box;
+                position: absolute;
+                width: 18px;
+                height: 3px;
+                top: 14px;
+                background: currentColor;
+                transform: rotate(45deg);
+                border-radius: 5px;
+                color: theme.$warning-color;
+            }
+            &::after {
+                transform: rotate(-45deg)
+            }
+
+            &:hover {
+                transform: scale(1.2);
+            }
+            &:focus {
+                outline: none;
+                border: none;
             }
         }
     }

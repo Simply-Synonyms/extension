@@ -84,11 +84,14 @@ const options = {
         from: './manifest.json',
         to: 'manifest.json'
       }, {
+        from: '../LICENSE',
+        to: 'LICENSE.txt'
+      }, {
         from: './icons',
         to: 'icons'
       }, {
-        from: '../LICENSE',
-        to: 'LICENSE.txt'
+        from: './fonts',
+        to: 'fonts'
       }]
     }),
     new MiniCssExtractPlugin({

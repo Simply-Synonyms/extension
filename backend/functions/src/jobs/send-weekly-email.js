@@ -78,7 +78,8 @@ module.exports = (ctx, preview) => {
       for (usnap of snap.docs) {
         console.log(`Adding ${JSON.stringify(usnap)} to array`)
         countClearPromises.push(usnap.ref.update({
-          weekSynonymCount: 0
+          weekSynonymCount: 0,
+          weekDictionaryCount: 0
         }))
       }
 

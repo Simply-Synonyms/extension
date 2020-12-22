@@ -3,6 +3,7 @@
 #### V0.3.4
  + More consistent, refreshed style across sites
  + Small improvements including better detection of situations when popup shouldn't open
+ + Server bug fixes (more coming soon)
 
 #### V0.3.3
  + New feature: synonym info button with basic dictionary lookup

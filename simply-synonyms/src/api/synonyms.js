@@ -50,7 +50,7 @@ const synonymsApi = {
                 this.idToken = t
               }) // Check for a token refresh and update token when fetch is unauthorized
             }
-          })
+          }).catch(console.error)
         return data
       })
 

@@ -9,7 +9,8 @@ import updateUserStats from './update-user-stats'
 const api = express()
 const cors = corsLib({
   origin: '*',
-  allowedHeaders: ['Authorization']
+  allowedHeaders: ['Authorization'],
+  maxAge: 7200
 })
 
 api.use(cors)

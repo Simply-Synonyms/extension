@@ -2,7 +2,7 @@ export default `
 <div id="ssyne-popup">
     <audio class="audio-player" style="display: none;" type="audio/mp3"></audio>
     <div class="header">
-      <button class="header-button close-button">X</button>
+      <button class="header-button close-button" title="close"><i class="icon-close-x"></i></button>
     </div>
     <div class="loading">
         <div class="spinner">

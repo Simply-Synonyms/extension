@@ -2,6 +2,9 @@
 @use 'icons';
 @use '../../common/theme';
 
+// Include font faces
+@include theme.font-Mulish;
+
 #ssyne-popup {
     /* Revert everything in the popup back to user-agent stylesheet */
     all: initial;
@@ -26,8 +29,7 @@
     z-index: 100000;
 
     * {
-        //font-family: 'Mulish', sans-serif;
-        font-family: sans-serif;
+        font-family: 'Mulish', sans-serif;
     }
 
     .synonyms-div {
@@ -56,19 +58,14 @@
         }
     }
 
-    .header {
-        text-align: center;
-    }
+    //.header {
+    //    text-align: center;
+    //}
 
     .header-button {
-        margin: 5px;
-        font-size: 15px;
-        font-weight: bold;
-        background: theme.$primary-color;
-        color: white;
-        border-radius: 50%;
+        margin: 0;
         border: none;
-        padding: 2px 7px;
+        padding: 0;
         cursor: pointer;
     }
 
@@ -113,6 +110,7 @@
         font-size: 0.8em;
 
         &:hover {
+            cursor: pointer;
             border: 2px solid theme.$primary-color;
             color: theme.$primary-color;
             /*font-weight: bold;*/
@@ -132,7 +130,7 @@
         /* cancel margin of word text span and border radius, but remain behind word text span */
         left: -5px;
         top: -3px;
-        bottom: -4px;
+        bottom: -3px;
         z-index: 99000;
         transition: 0.2s;
         border-radius: 0 10px 10px 0;
