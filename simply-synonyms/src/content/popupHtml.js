@@ -1,21 +1,21 @@
 export default `
 <div id="ssyne-popup">
-    <audio id="audio-player" style="display: none;" type="audio/mp3"></audio>
+    <audio class="audio-player" style="display: none;" type="audio/mp3"></audio>
     <div class="header">
-      <button class="header-button" id="close-button">X</button>
+      <button class="header-button close-button">X</button>
     </div>
-    <div id="loading">
+    <div class="loading">
         <div class="spinner">
             <div class="double-bounce1"></div>
             <div class="double-bounce2"></div>
         </div>
-        <p id="connecting-text"></p>
+        <p class="connecting-text"></p>
     </div>
-    <div id="content">
-        <p id="results-text"></p>
-        <button class="button" id="antonyms-button">Show antonyms</button>
-        <div class="synonyms-div" id="synonyms"></div>
-        <div class="synonyms-div" id="antonyms"></div>
+    <div class="content">
+        <p class="results-text"></p>
+        <button class="button antonyms-button">Show antonyms</button>
+        <div class="synonyms-div synonyms"></div>
+        <div class="synonyms-div antonyms"></div>
     </div>
 </div>
 `

@@ -15,3 +15,16 @@ onPageInterfaceMessage('simulateGoogleDocKeypress', data => {
   document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement
     .dispatchEvent(keyEvent)
 })
+
+// Dev tools
+window.simplySynonyms = {
+  hello () {
+    console.log('Hello! You found the Simply Synonyms developer interface. You can call these functions from the dev tools or from your own website\'s JS ;)')
+  },
+  closePopup () {
+    sendPageInterfaceMessage('closePopup')
+  },
+  // openWithWord (word) {
+  //   sendPageInterfaceMessage('openPopup', { word })
+  // }
+}

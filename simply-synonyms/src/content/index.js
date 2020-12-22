@@ -2,7 +2,7 @@ import chrome from 'browserApi'
 import googleDocsUtil from './siteLibs/googleDocsUtil'
 import api from '../api/synonyms'
 import { initializePopup, resetPopup, openPopup, getPopup, addWordsToPopup, setResultsText, stopLoading } from './popup'
-import injectPageScript, { sendPageInterfaceMessage } from './util/pageInterface'
+import injectPageScript, { sendPageInterfaceMessage, onPageInterfaceMessage } from './util/pageInterface'
 import './css/styles.scss'
 
 let options = {}
@@ -33,8 +33,10 @@ function processDoubleClick (e, w) {
   const [synonymRequestPromise, onUserCancelledRequest] = api.getSynonyms(word)
 
   // Don't open popup again if user selected a word within popup
-  if (e && !getPopup().contains(e.target)) openPopup(onUserCancelledRequest, e.clientX, e.clientY)
-  else return
+  if (!e || getPopup().contains(e.target)) return
+
+  openPopup(onUserCancelledRequest, e.clientX, e.clientY)
+  onPageInterfaceMessage('closePopup', _ => resetPopup())
 
   synonymRequestPromise
     .then((response) => {

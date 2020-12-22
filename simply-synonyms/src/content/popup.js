@@ -6,8 +6,7 @@ import browser from 'browserApi'
 let currentTab = 'synonyms'
 let loadingTextTimeouts = []
 
-const popupElementIds = {
-  popup: 'ssyne-popup',
+const popupElementClasses = {
   loader: 'loading',
   content: 'content',
   resultsText: 'results-text',
@@ -29,8 +28,10 @@ export function initializePopup() {
   popupDiv.innerHTML = popupHtml
   document.body.appendChild(popupDiv)
 
-  Object.entries(popupElementIds).forEach(([elementName, elementId]) => {
-    popup[elementName] = document.getElementById(elementId)
+  popup.popup = document.getElementById('ssyne-popup')
+
+  Object.entries(popupElementClasses).forEach(([elementName, elementId]) => {
+    popup[elementName] = popup.popup.querySelector(`.${elementId}`)
   })
 
   const closePopup = () => {

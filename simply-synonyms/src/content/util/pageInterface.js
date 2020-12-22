@@ -4,7 +4,7 @@
 import browser from 'browserApi'
 
 // Function to send a jsonified message to either the content script or injected function
-export function sendPageInterfaceMessage (type, data) {
+export function sendPageInterfaceMessage (type, data = {}) {
   document.dispatchEvent(new CustomEvent('SimplySynonymsPageInterface', { detail: { type, data: JSON.stringify(data) }}))
 }
 
