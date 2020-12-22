@@ -1,0 +1,209 @@
+@use 'animations';
+@use 'icons';
+@use '../../common/theme';
+
+#ssyne-popup {
+    /* Revert everything in the popup back to user-agent stylesheet */
+    all: initial;
+    * {
+        all: revert;
+    }
+
+    /* We have to include these as mixins so that they are nested in #ssyne-popup and work properly with the all: revert */
+    @include animations.animations;
+    @include icons.icons;
+
+    display: none;
+    position: fixed;
+    width: 300px;
+    min-height: 500px;
+    top: 50px;
+    left: 50px;
+    overflow-y: auto;
+    border: 1px solid theme.$primary-color;
+    border-radius: 5px;
+    background: white;
+    z-index: 100000;
+
+    * {
+        //font-family: 'Mulish', sans-serif;
+        font-family: sans-serif;
+    }
+
+    .ssyn-synonyms-div .ssyn-word-container {
+        display: inline-block;
+    }
+
+    .ssyn-synonyms-div .ssyn-word {
+        display: inline-block;
+        margin: 3px;
+        padding: 2px;
+        white-space: nowrap;
+        background: white;
+        border: 1px solid #1e90ff;
+        border-radius: 4px;
+        cursor: default;
+    }
+
+    .ssyn-word-container.ssyn-clickable .ssyn-word {
+        cursor: pointer;
+    }
+
+    .ssyn-word-container.ssyn-clickable .ssyn-word:hover {
+        color: white;
+        background: theme.$primary-color;
+    }
+
+    .ssyn-header {
+        text-align: center;
+    }
+
+    .ssyn-header-button {
+        margin: 5px;
+        font-size: 15px;
+        font-weight: bold;
+        background: theme.$primary-color;
+        color: white;
+        border-radius: 50%;
+        border: none;
+        padding: 2px 7px;
+        cursor: pointer;
+    }
+
+    #ssyn-content {
+        margin: 10px 25px;
+    }
+
+    #ssyn-content p, .ssyn-word {
+        color: black;
+    }
+
+    #ssyn-results-text {
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+
+    .ssyn-shortdef-syn::before {
+        content: "Synonyms for: ";
+        color: gray;
+    }
+
+    .ssyn-shortdef-ant::before {
+        content: "Antonyms for: ";
+        color: gray;
+    }
+
+    .ssyn-shortdef {
+        font-weight: bold;
+        border-top: 2px solid #c1c1c1;
+        margin: 10px 0 5px;
+        padding-top: 3px;
+        font-size: 0.8em;
+    }
+
+    #ssyn-connecting-text, .ssyn-word-details-connecting-text {
+        text-align: center;
+        color: #585858;
+    }
+
+    .ssyn-button {
+        background: none;
+        outline: none;
+        border: 2px solid black;
+        border-radius: 3px;
+        padding: 0 5px;
+        font-size: 0.8em;
+    }
+
+    .ssyn-button:hover {
+        border: 2px solid theme.$primary-color;
+        color: theme.$primary-color;
+        /*font-weight: bold;*/
+    }
+
+    .ssyn-word-details-hover-container {
+        position: relative;
+        top: 0;
+        bottom: 0;
+    }
+
+    .ssyn-word-details-button {
+        position: absolute;
+        background: theme.$primary-color;
+        width: 0;
+        /* cancel margin of word text span and border radius, but remain behind word text span */
+        left: -5px;
+        top: -4px;
+        bottom: -4px;
+        z-index: 99000;
+        transition: 0.2s;
+        border-radius: 0 10px 10px 0;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .ssyn-word-details-button i {
+        margin: 0 auto;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    #ssyn-content:not(.word-hover-disabled) .ssyn-word-container:hover .ssyn-word-details-button, .ssyn-word-container.details-button-open .ssyn-word-details-button {
+        width: 25px;
+    }
+
+    .ssyn-word-details {
+        display: block;
+        position: absolute;
+        z-index: 110000;
+        background: #ffffff;
+        box-shadow: inset 0 0 4px #aeaeae;
+        left: 0;
+        right: 0;
+        height: 0;
+        opacity: 0;
+        transition: 0.2s;
+        overflow: hidden;
+    }
+
+    .ssyn-word-details.open {
+        border-top: 2px solid black;
+        border-bottom: 2px solid black;
+        height: 200px;
+        opacity: 1;
+        overflow-y: scroll;
+        padding: 15px;
+    }
+
+    .ssyn-word-details-content {
+        display: none;
+    }
+
+    .ssyn-detail summary {
+        outline: none;
+        cursor: pointer;
+        color: #00366d;
+    }
+
+    .ssyn-detail-offensive {
+        color: red;
+        display: none;
+    }
+
+    .ssyn-detail-pronunciation, .ssyn-detail-pronunciation span {
+        margin: 0;
+        padding: 0;
+    }
+
+    .ssyn-detail-pronunciation-text {
+        color: #323232;
+    }
+
+    .ssyn-detail-play-button {
+        text-decoration: underline;
+        color: theme.$primary-color;
+        user-select: none;
+        cursor: pointer;
+        display: none;
+    }
+}

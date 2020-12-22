@@ -1,5 +1,5 @@
 export default `
-<div id="ssyn-popup">
+<div id="ssyne-popup">
     <audio id="ssyn-audio-player" style="display: none;" type="audio/mp3"></audio>
     <div class="ssyn-header">
       <button class="ssyn-header-button" id="ssyn-close-button">X</button>

@@ -3,9 +3,7 @@ import googleDocsUtil from './siteLibs/googleDocsUtil'
 import api from '../api/synonyms'
 import { initializePopup, resetPopup, openPopup, getPopup, addWordsToPopup, setResultsText, stopLoading } from './popup'
 import injectPageScript, { sendPageInterfaceMessage } from './util/pageInterface'
-import './css/styles.css'
-import './css/animation.css'
-import './css/icons.css'
+import './css/styles.scss'
 
 let options = {}
 
@@ -23,12 +21,14 @@ function processDoubleClick (e, w) {
   let word, selection, googleDoc
   if (targetType === 'gdoc') {
     googleDoc = googleDocsUtil.getGoogleDocument()
-    word = googleDoc.selectedText
+    word = googleDoc.selectedText.trim()
   } else {
     selection = window.getSelection()
     word = w || selection.toString().trim()
   }
+
   if (word.length < 2) return
+  if (word.includes(' ')) return
 
   const [synonymRequestPromise, onUserCancelledRequest] = api.getSynonyms(word)
 

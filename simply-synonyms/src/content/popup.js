@@ -7,7 +7,7 @@ let currentTab = 'synonyms'
 let loadingTextTimeouts = []
 
 const popupElementIds = {
-  popup: 'ssyn-popup',
+  popup: 'ssyne-popup',
   loader: 'ssyn-loading',
   content: 'ssyn-content',
   resultsText: 'ssyn-results-text',

@@ -1,17 +1,17 @@
 /* Keyframes and animation classes for loaders, etc. */
 
-
 /* Loading animations from https://tobiasahlin.com/spinkit/ */
 
-.ssyn-spinner {
+@mixin animations {
+  .ssyn-spinner {
     width: 40px;
     height: 40px;
 
     position: relative;
     margin: 50px auto;
-}
+  }
 
-.ssyn-double-bounce1, .ssyn-double-bounce2 {
+  .ssyn-double-bounce1, .ssyn-double-bounce2 {
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -23,38 +23,38 @@
 
     -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
     animation: sk-bounce 2.0s infinite ease-in-out;
-}
+  }
 
-.ssyn-double-bounce2 {
+  .ssyn-double-bounce2 {
     -webkit-animation-delay: -1.0s;
     animation-delay: -1.0s;
-}
+  }
 
-@-webkit-keyframes sk-bounce {
+  @-webkit-keyframes sk-bounce {
     0%, 100% { -webkit-transform: scale(0.0) }
     50% { -webkit-transform: scale(1.0) }
-}
+  }
 
-@keyframes sk-bounce {
+  @keyframes sk-bounce {
     0%, 100% {
-        transform: scale(0.0);
-        -webkit-transform: scale(0.0);
+      transform: scale(0.0);
+      -webkit-transform: scale(0.0);
     } 50% {
-          transform: scale(1.0);
-          -webkit-transform: scale(1.0);
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
       }
-}
+  }
 
-.ssyn-folding-cube {
+  .ssyn-folding-cube {
     margin: 20px auto;
     width: 40px;
     height: 40px;
     position: relative;
     -webkit-transform: rotateZ(45deg);
     transform: rotateZ(45deg);
-}
+  }
 
-.ssyn-folding-cube .ssyn-sk-cube {
+  .ssyn-folding-cube .ssyn-sk-cube {
     float: left;
     width: 50%;
     height: 50%;
@@ -62,8 +62,8 @@
     -webkit-transform: scale(1.1);
     -ms-transform: scale(1.1);
     transform: scale(1.1);
-}
-.ssyn-folding-cube .ssyn-sk-cube:before {
+  }
+  .ssyn-folding-cube .ssyn-sk-cube:before {
     content: '';
     position: absolute;
     top: 0;
@@ -76,59 +76,60 @@
     -webkit-transform-origin: 100% 100%;
     -ms-transform-origin: 100% 100%;
     transform-origin: 100% 100%;
-}
-.ssyn-folding-cube .ssyn-cube2 {
+  }
+  .ssyn-folding-cube .ssyn-cube2 {
     -webkit-transform: scale(1.1) rotateZ(90deg);
     transform: scale(1.1) rotateZ(90deg);
-}
-.ssyn-folding-cube .ssyn-cube3 {
+  }
+  .ssyn-folding-cube .ssyn-cube3 {
     -webkit-transform: scale(1.1) rotateZ(180deg);
     transform: scale(1.1) rotateZ(180deg);
-}
-.ssyn-folding-cube .ssyn-cube4 {
+  }
+  .ssyn-folding-cube .ssyn-cube4 {
     -webkit-transform: scale(1.1) rotateZ(270deg);
     transform: scale(1.1) rotateZ(270deg);
-}
-.ssyn-folding-cube .ssyn-cube2:before {
+  }
+  .ssyn-folding-cube .ssyn-cube2:before {
     -webkit-animation-delay: 0.3s;
     animation-delay: 0.3s;
-}
-.ssyn-folding-cube .ssyn-cube3:before {
+  }
+  .ssyn-folding-cube .ssyn-cube3:before {
     -webkit-animation-delay: 0.6s;
     animation-delay: 0.6s;
-}
-.ssyn-folding-cube .ssyn-cube4:before {
+  }
+  .ssyn-folding-cube .ssyn-cube4:before {
     -webkit-animation-delay: 0.9s;
     animation-delay: 0.9s;
-}
-@-webkit-keyframes sk-foldCubeAngle {
+  }
+  @-webkit-keyframes sk-foldCubeAngle {
     0%, 10% {
-        -webkit-transform: perspective(140px) rotateX(-180deg);
-        transform: perspective(140px) rotateX(-180deg);
-        opacity: 0;
+      -webkit-transform: perspective(140px) rotateX(-180deg);
+      transform: perspective(140px) rotateX(-180deg);
+      opacity: 0;
     } 25%, 75% {
-          -webkit-transform: perspective(140px) rotateX(0deg);
-          transform: perspective(140px) rotateX(0deg);
-          opacity: 1;
+        -webkit-transform: perspective(140px) rotateX(0deg);
+        transform: perspective(140px) rotateX(0deg);
+        opacity: 1;
       } 90%, 100% {
-            -webkit-transform: perspective(140px) rotateY(180deg);
-            transform: perspective(140px) rotateY(180deg);
-            opacity: 0;
+          -webkit-transform: perspective(140px) rotateY(180deg);
+          transform: perspective(140px) rotateY(180deg);
+          opacity: 0;
         }
-}
+  }
 
-@keyframes sk-foldCubeAngle {
+  @keyframes sk-foldCubeAngle {
     0%, 10% {
-        -webkit-transform: perspective(140px) rotateX(-180deg);
-        transform: perspective(140px) rotateX(-180deg);
-        opacity: 0;
+      -webkit-transform: perspective(140px) rotateX(-180deg);
+      transform: perspective(140px) rotateX(-180deg);
+      opacity: 0;
     } 25%, 75% {
-          -webkit-transform: perspective(140px) rotateX(0deg);
-          transform: perspective(140px) rotateX(0deg);
-          opacity: 1;
+        -webkit-transform: perspective(140px) rotateX(0deg);
+        transform: perspective(140px) rotateX(0deg);
+        opacity: 1;
       } 90%, 100% {
-            -webkit-transform: perspective(140px) rotateY(180deg);
-            transform: perspective(140px) rotateY(180deg);
-            opacity: 0;
+          -webkit-transform: perspective(140px) rotateY(180deg);
+          transform: perspective(140px) rotateY(180deg);
+          opacity: 0;
         }
+  }
 }
