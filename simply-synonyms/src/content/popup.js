@@ -1,6 +1,6 @@
 import popupHtml, {wordDivHtml, wordDetailDetailHtml} from './popupHtml'
 import api from '../api/synonyms'
-import {sendPageInterfaceMessage} from './util/pageInterface'
+import { sendPageInterfaceMessage } from './util/pageInterface'
 import browser from 'browserApi'
 
 let currentTab = 'synonyms'
@@ -8,15 +8,15 @@ let loadingTextTimeouts = []
 
 const popupElementIds = {
   popup: 'ssyne-popup',
-  loader: 'ssyn-loading',
-  content: 'ssyn-content',
-  resultsText: 'ssyn-results-text',
-  synonyms: 'ssyn-synonyms',
-  antonyms: 'ssyn-antonyms',
-  loadingText: 'ssyn-connecting-text',
-  showAntonymsButton: 'ssyn-antonyms-button',
-  closeButton: 'ssyn-close-button',
-  audioPlayer: 'ssyn-audio'
+  loader: 'loading',
+  content: 'content',
+  resultsText: 'results-text',
+  synonyms: 'synonyms',
+  antonyms: 'antonyms',
+  loadingText: 'connecting-text',
+  showAntonymsButton: 'antonyms-button',
+  closeButton: 'close-button',
+  audioPlayer: 'audio'
 }
 
 const popup = {}
@@ -125,12 +125,12 @@ export function stopLoading () {
 }
 
 const wordDetailClasses = {
-  detailSummary: 'ssyn-detail-summary',
-  wordHeading: 'ssyn-detail-word',
-  offensiveWarning: 'ssyn-detail-offensive',
-  pronunciationText: 'ssyn-detail-pronunciation-text',
-  pronunciationPlayButton: 'ssyn-detail-play-button',
-  definitions: 'ssyn-detail-definitions'
+  detailSummary: 'detail-summary',
+  wordHeading: 'detail-word',
+  offensiveWarning: 'detail-offensive',
+  pronunciationText: 'detail-pronunciation-text',
+  pronunciationPlayButton: 'detail-play-button',
+  definitions: 'detail-definitions'
 }
 
 class PopupWordDetail {
@@ -140,7 +140,7 @@ class PopupWordDetail {
     this.hid = hgIndex
 
     const detailEl = document.createElement('details')
-    detailEl.classList.add('ssyn-detail')
+    detailEl.classList.add('detail')
     detailEl.innerHTML = wordDetailDetailHtml
 
     this.element = detailEl // the root word element
@@ -166,7 +166,7 @@ class PopupWordDetail {
     }
     for (const [i, def] of hg.shortdefs.entries()) {
       const defEl = document.createElement('p')
-      defEl.classList.add('ssyn-detail-definition')
+      defEl.classList.add('detail-definition')
       // string.fromcharcode allows to get a letter starting at A for each index
       defEl.innerText = `${String.fromCharCode(97 + i)}. ${def}`
 
@@ -176,13 +176,13 @@ class PopupWordDetail {
 }
 
 const wordDivClasses = {
-  word: 'ssyn-word',
-  detailsButton: 'ssyn-word-details-button',
-  buttonIcon: 'ssyn-word-details-button-icon',
-  details: 'ssyn-word-details',
-  content: 'ssyn-word-details-content',
-  loading: 'ssyn-word-details-loading',
-  statusText: 'ssyn-word-details-status-text'
+  word: 'word',
+  detailsButton: 'word-details-button',
+  buttonIcon: 'word-details-button-icon',
+  details: 'word-details',
+  content: 'word-details-content',
+  loading: 'word-details-loading',
+  statusText: 'word-details-status-text'
 }
 
 class PopupWord {
@@ -192,7 +192,7 @@ class PopupWord {
     this.word = word
 
     const wordEl = document.createElement('div')
-    wordEl.classList.add('ssyn-word-container')
+    wordEl.classList.add('word-container')
     wordEl.innerHTML = wordDivHtml
 
     this.element = wordEl // the root word element
@@ -207,8 +207,8 @@ class PopupWord {
 
     if (typeof clickCallback === 'function') {
       // Add listener to replace editable text with new synonym
-      this.element.classList.add('ssyn-clickable')
-      this.element.querySelector('.ssyn-word').addEventListener('click', e => clickCallback(word))
+      this.element.classList.add('clickable')
+      this.element.querySelector('.word').addEventListener('click', e => clickCallback(word))
     }
   }
 
@@ -217,8 +217,9 @@ class PopupWord {
     this.el.details.classList.toggle('open')
 
     // Change open/close icon and add stay-open class to button
-    this.el.buttonIcon.classList.add(!this.wordDetailsOpen ? 'ssyn-icon-info' : 'ssyn-close-o')
-    this.el.buttonIcon.classList.remove(this.wordDetailsOpen ? 'ssyn-icon-info' : 'ssyn-close-o')
+    // TODO use .replace instead
+    this.el.buttonIcon.classList.add(!this.wordDetailsOpen ? 'icon-info' : 'icon-close')
+    this.el.buttonIcon.classList.remove(this.wordDetailsOpen ? 'icon-info' : 'icon-close')
     this.element.classList.toggle('details-button-open')
 
     if (this.wordDetailsOpen) {
@@ -267,8 +268,8 @@ export function addWordsToPopup(wordType, definitions, words, clickCallback) {
     if (!words[index]) continue
     // Create definition labels
     const defEl = document.createElement('div')
-    defEl.classList.add('ssyn-shortdef')
-    defEl.classList.add(wordType === 'antonyms' ? 'ssyn-shortdef-ant': 'ssyn-shortdef-syn')
+    defEl.classList.add('shortdef')
+    defEl.classList.add(wordType === 'antonyms' ? 'shortdef-ant': 'shortdef-syn')
     defEl.innerText = def.toString()
     div.appendChild(defEl)
     // Print out synonyms for each definition

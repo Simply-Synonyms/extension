@@ -30,35 +30,37 @@
         font-family: sans-serif;
     }
 
-    .ssyn-synonyms-div .ssyn-word-container {
-        display: inline-block;
+    .synonyms-div {
+        .word-container {
+            display: inline-block;
+
+            &.clickable .word {
+                cursor: pointer;
+            }
+
+            &.clickable .word:hover {
+                color: white;
+                background: theme.$primary-color;
+            }
+        }
+
+        .word {
+            display: inline-block;
+            margin: 3px;
+            padding: 2px;
+            white-space: nowrap;
+            background: white;
+            border: 1px solid #1e90ff;
+            border-radius: 4px;
+            cursor: default;
+        }
     }
 
-    .ssyn-synonyms-div .ssyn-word {
-        display: inline-block;
-        margin: 3px;
-        padding: 2px;
-        white-space: nowrap;
-        background: white;
-        border: 1px solid #1e90ff;
-        border-radius: 4px;
-        cursor: default;
-    }
-
-    .ssyn-word-container.ssyn-clickable .ssyn-word {
-        cursor: pointer;
-    }
-
-    .ssyn-word-container.ssyn-clickable .ssyn-word:hover {
-        color: white;
-        background: theme.$primary-color;
-    }
-
-    .ssyn-header {
+    .header {
         text-align: center;
     }
 
-    .ssyn-header-button {
+    .header-button {
         margin: 5px;
         font-size: 15px;
         font-weight: bold;
@@ -70,30 +72,26 @@
         cursor: pointer;
     }
 
-    #ssyn-content {
+    #content {
         margin: 10px 25px;
     }
 
-    #ssyn-content p, .ssyn-word {
-        color: black;
-    }
-
-    #ssyn-results-text {
+    #results-text {
         font-weight: bold;
         font-size: 1.1em;
     }
 
-    .ssyn-shortdef-syn::before {
+    .shortdef-syn::before {
         content: "Synonyms for: ";
         color: gray;
     }
 
-    .ssyn-shortdef-ant::before {
+    .shortdef-ant::before {
         content: "Antonyms for: ";
         color: gray;
     }
 
-    .ssyn-shortdef {
+    .shortdef {
         font-weight: bold;
         border-top: 2px solid #c1c1c1;
         margin: 10px 0 5px;
@@ -101,58 +99,58 @@
         font-size: 0.8em;
     }
 
-    #ssyn-connecting-text, .ssyn-word-details-connecting-text {
+    #connecting-text, .word-details-connecting-text {
         text-align: center;
         color: #585858;
     }
 
-    .ssyn-button {
+    .button {
         background: none;
         outline: none;
         border: 2px solid black;
         border-radius: 3px;
         padding: 0 5px;
         font-size: 0.8em;
+
+        &:hover {
+            border: 2px solid theme.$primary-color;
+            color: theme.$primary-color;
+            /*font-weight: bold;*/
+        }
     }
 
-    .ssyn-button:hover {
-        border: 2px solid theme.$primary-color;
-        color: theme.$primary-color;
-        /*font-weight: bold;*/
-    }
-
-    .ssyn-word-details-hover-container {
+    .word-details-hover-container {
         position: relative;
         top: 0;
         bottom: 0;
     }
 
-    .ssyn-word-details-button {
+    .word-details-button {
         position: absolute;
         background: theme.$primary-color;
         width: 0;
         /* cancel margin of word text span and border radius, but remain behind word text span */
         left: -5px;
-        top: -4px;
+        top: -3px;
         bottom: -4px;
         z-index: 99000;
         transition: 0.2s;
         border-radius: 0 10px 10px 0;
         overflow: hidden;
         cursor: pointer;
+
+        i {
+            margin: 0 auto;
+            top: 50%;
+            transform: translateY(-50%);
+        }
     }
 
-    .ssyn-word-details-button i {
-        margin: 0 auto;
-        top: 50%;
-        transform: translateY(-50%);
+    #content:not(.word-hover-disabled) .word-container:hover .word-details-button, .word-container.details-button-open .word-details-button {
+        width: 26px;
     }
 
-    #ssyn-content:not(.word-hover-disabled) .ssyn-word-container:hover .ssyn-word-details-button, .ssyn-word-container.details-button-open .ssyn-word-details-button {
-        width: 25px;
-    }
-
-    .ssyn-word-details {
+    .word-details {
         display: block;
         position: absolute;
         z-index: 110000;
@@ -164,42 +162,42 @@
         opacity: 0;
         transition: 0.2s;
         overflow: hidden;
+
+        &.open {
+            border-top: 2px solid black;
+            border-bottom: 2px solid black;
+            height: 200px;
+            opacity: 1;
+            overflow-y: scroll;
+            padding: 15px;
+        }
     }
 
-    .ssyn-word-details.open {
-        border-top: 2px solid black;
-        border-bottom: 2px solid black;
-        height: 200px;
-        opacity: 1;
-        overflow-y: scroll;
-        padding: 15px;
-    }
-
-    .ssyn-word-details-content {
+    .word-details-content {
         display: none;
     }
 
-    .ssyn-detail summary {
+    .detail summary {
         outline: none;
         cursor: pointer;
         color: #00366d;
     }
 
-    .ssyn-detail-offensive {
+    .detail-offensive {
         color: red;
         display: none;
     }
 
-    .ssyn-detail-pronunciation, .ssyn-detail-pronunciation span {
+    .detail-pronunciation, .detail-pronunciation span {
         margin: 0;
         padding: 0;
     }
 
-    .ssyn-detail-pronunciation-text {
+    .detail-pronunciation-text {
         color: #323232;
     }
 
-    .ssyn-detail-play-button {
+    .detail-play-button {
         text-decoration: underline;
         color: theme.$primary-color;
         user-select: none;
