@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Simply Synonyms",
   "author": "Benjamin Ashbaugh",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "A simple synonym finder for Google Chrome",
   "icons": {
     "16": "icons/icon_16.png",
@@ -19,7 +19,8 @@
   "permissions": [
     "storage",
     "tabs",
-    "identity"
+    "identity",
+    "contextMenus"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'; media-src https://media.merriam-webster.com/",
   "web_accessible_resources": [

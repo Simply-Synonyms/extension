@@ -1,6 +1,6 @@
 import chrome from 'browserApi'
 
-export default function setListeners() {
+export default function () {
   if ('update_url' in chrome.runtime.getManifest()) chrome.runtime.setUninstallURL('https://forms.gle/5eR4sC3rW9UV93hUA')
 
   chrome.runtime.onInstalled.addListener((details) => {

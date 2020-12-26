@@ -47,8 +47,8 @@ chrome.runtime.onMessage.addListener((msg, sender, respond) => {
       getAuthToken(msg.interactive)
       break
     case 'refreshIdToken':
-      firebase.auth().currentUser.getIdToken()
-        .then(t => {
+      firebase.auth().currentUser?.getIdToken()
+        ?.then(t => {
           chrome.storage.local.set({ idToken: t })
           respond(t)
         })

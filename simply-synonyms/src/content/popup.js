@@ -1,4 +1,4 @@
-import popupHtml, {wordDivHtml, wordDetailDetailHtml} from './popupHtml'
+import popupHtml, {wordDivHtml, wordDetailDetailHtml} from './html/popupHtml'
 import api from '../api/synonyms'
 import { sendPageInterfaceMessage } from './util/pageInterface'
 import browser from 'browserApi'
@@ -42,6 +42,9 @@ export function initializePopup() {
   popup.closeButton.addEventListener('click', closePopup)
   popup.showAntonymsButton.addEventListener('click', switchTabs)
 
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closePopup()
+  })
   document.addEventListener('click', (e) => {
     if (!popup.popup.contains(e.target)) closePopup()
   })

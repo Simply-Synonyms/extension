@@ -1,8 +1,8 @@
-import './styles.css'
+import './styles.scss'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import firebaseConfig from 'firebaseConfig'
-import chrome from 'browserApi'
+import browser from 'browserApi'
 
 firebase.initializeApp(firebaseConfig)
 
@@ -11,7 +11,7 @@ let disablePopup = document.getElementById('disable_switch')
 
 /* SETTINGS AND OPTIONS */
 function settingsChanged() {
-  chrome.storage.local.set({
+  browser.storage.local.set({
     option_popupDisabled: disablePopup.checked,
     option_onlyEditableText: onlyEditableText.checked
   }, () => {
@@ -19,7 +19,7 @@ function settingsChanged() {
   })
 }
 
-chrome.storage.local.get(['option_popupDisabled', 'option_onlyEditableText'], (result) => {
+browser.storage.local.get(['option_popupDisabled', 'option_onlyEditableText'], (result) => {
   disablePopup.checked = result.option_popupDisabled
   onlyEditableText.checked = result.option_onlyEditableText
 })
@@ -27,9 +27,9 @@ chrome.storage.local.get(['option_popupDisabled', 'option_onlyEditableText'], (r
 onlyEditableText.addEventListener('click', settingsChanged)
 disablePopup.addEventListener('click', settingsChanged)
 
-document.getElementById('version-text').innerText = `V${chrome.runtime.getManifest().version}`
+document.getElementById('version-text').innerText = `V${browser.runtime.getManifest().version}`
 
-if (!('update_url' in chrome.runtime.getManifest())) document.getElementById('dev-badge').style.display = 'block'
+if (!('update_url' in browser.runtime.getManifest())) document.getElementById('dev-badge').style.display = 'block'
 
 /* AUTHENTICATION */
 const googleSigninButton = document.getElementById('google-signin')
@@ -65,29 +65,19 @@ firebase.auth().onAuthStateChanged((user) => {
 
 googleSigninButton.addEventListener('click', (e) => {
   googleSigninButton.disabled = true
-  chrome.runtime.sendMessage({ action: 'getAuthToken', interactive: true})
+  browser.runtime.sendMessage({ action: 'getAuthToken', interactive: true})
 })
 
 signoutButton.addEventListener('click', (e) => {
-  chrome.runtime.sendMessage({ action: 'signOut' })
+  browser.runtime.sendMessage({ action: 'signOut' })
 })
 
 /* QUICK SEARCH */
-document.getElementById('quicksearch').addEventListener('input', (e) => {
-  const quicksearchPrompt = document.getElementById('quicksearch-prompt')
-  if (e.target.value.length !== 0) {
-    quicksearchPrompt.style.visibility = 'visible'
-  } else {
-    quicksearchPrompt.style.visibility = 'hidden'
-  }
-})
-
-document.getElementById('quicksearch').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
-    // chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-    //   chrome.tabs.sendMessage(tabs[0].id, { action: 'search', word: e.target.value });
-    // })
-    chrome.tabs.create({ url: `https://www.merriam-webster.com/thesaurus/${encodeURI(e.target.value)}`})
-  }
+document.getElementById('open-quicksearch').addEventListener('click', _ => {
+  browser.tabs.query({ active: true, currentWindow: true}, ([tab]) => {
+    if (tab.url === 'chrome://newtab/') {
+      browser.tabs.update(tab.id, { url: `https://www.merriam-webster.com/` })
+    } else browser.tabs.sendMessage(tab.id, { action: "openQuickSearch" })
+  })
 })
 

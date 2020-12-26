@@ -5,21 +5,18 @@
 // Include font faces
 @include theme.font-Mulish;
 
-#ssyne-popup {
-    /* Revert everything in the popup back to user-agent stylesheet */
+#ssyne-popup, #ssyne-qs-popup {
+    /* Revert everything in the popups back to user-agent stylesheet */
     all: initial;
     * {
         all: revert;
     }
+}
 
-    /* We have to include these as mixins so that they are nested in #ssyne-popup and work properly with the all: revert */
-    @include animations.animations;
-    @include icons.icons;
-
+@mixin defaultPopupStyles {
     display: none;
     position: fixed;
     width: 300px;
-    min-height: 500px;
     top: 50px;
     left: 50px;
     overflow-y: auto;
@@ -31,6 +28,15 @@
     * {
         font-family: 'Mulish', sans-serif;
     }
+}
+
+#ssyne-popup {
+    /* We have to include these as mixins so that they are nested in #ssyne-popup and work properly with the all: revert */
+    @include animations.animations;
+    @include icons.icons;
+
+    @include defaultPopupStyles;
+    min-height: 500px;
 
     .synonyms-div {
         .word-container {
@@ -201,5 +207,28 @@
         user-select: none;
         cursor: pointer;
         display: none;
+    }
+}
+
+/* The quick search popup */
+#ssyne-qs-popup {
+
+    @include defaultPopupStyles;
+    text-align: center;
+
+    h3 {
+        font-size: 1.1em;
+    }
+
+    input {
+        @include theme.styled-input;
+    }
+
+    select {
+        @include theme.styled-select;
+    }
+
+    .press-enter-prompt {
+        visibility: hidden;
     }
 }

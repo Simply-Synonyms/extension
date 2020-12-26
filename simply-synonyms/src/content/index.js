@@ -1,7 +1,8 @@
-import chrome from 'browserApi'
+import browser from 'browserApi'
 import googleDocsUtil from './siteLibs/googleDocsUtil'
 import api from '../api/synonyms'
 import { initializePopup, resetPopup, openPopup, getPopup, addWordsToPopup, setResultsText, stopLoading } from './popup'
+import QuickSearchPopup from './quickSearch'
 import injectPageScript, { sendPageInterfaceMessage, onPageInterfaceMessage } from './util/pageInterface'
 import './css/styles.scss'
 
@@ -72,13 +73,23 @@ function processDoubleClick (e, w) {
     })
 }
 
-function addExtension() {
+function addExtension(enablePopup) {
+  QuickSearchPopup.initialize()
+
+  if (!enablePopup) return
   injectPageScript()
   initializePopup()
   document.body.addEventListener('dblclick', processDoubleClick)
 }
 
-chrome.storage.local.get(['option_popupDisabled', 'option_onlyEditableText'], (result) => {
+browser.runtime.onMessage.addListener(msg => {
+  switch (msg.action) {
+    case 'openQuickSearch':
+      QuickSearchPopup.open()
+  }
+})
+
+browser.storage.local.get(['option_popupDisabled', 'option_onlyEditableText'], (result) => {
   options = result
-  if (!result.option_popupDisabled) addExtension()
+  addExtension(!options.option_popupDisabled)
 })

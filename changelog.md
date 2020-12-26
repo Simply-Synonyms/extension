@@ -1,5 +1,9 @@
 ## Simply Synonyms Change Log
 
+#### V0.3.5
+ + Quick search added context menu and removed from browser action popup
+ + `Esc` now closes popups
+
 #### V0.3.4
  + More consistent, refreshed style across sites
  + Small improvements including better detection of situations when popup shouldn't open

@@ -1,3 +1,7 @@
+@use '../common/theme';
+
+@include theme.font-Mulish;
+
 #app {
     width: 400px;
     margin: 20px;
@@ -45,11 +49,11 @@
 }
 
 input:checked + .slider {
-    background-color: #2196F3;
+    background-color: theme.$primary-color;
 }
 
 input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px theme.$primary-color;
 }
 
 input:checked + .slider:before {
@@ -90,16 +94,7 @@ a.no-highlight {
 }
 
 input {
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #000000;
-    width: 80%;
-}
-
-input:focus {
-    box-shadow: 0 0 10px #808080;
-    outline: none;
-    border: 1px solid #000000;
+    @include theme.styled-input
 }
 
 #dev-badge {
@@ -116,11 +111,6 @@ button {
     outline: none;
     background: white;
 }
-
-/*button:hover {*/
-/*    border-color: dodgerblue;*/
-/*    color: dodgerblue;*/
-/*}*/
 
 button:focus {
     box-shadow: 0 0 10px #808080;

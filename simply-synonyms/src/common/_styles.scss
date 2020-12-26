@@ -1,0 +1,24 @@
+
+@mixin _input {
+  border-radius: 8px;
+  border: 1px solid #000000;
+  margin: 5px;
+
+  &:focus {
+    box-shadow: 0 0 10px #808080;
+    outline: none;
+    border: 1px solid #000000;
+  }
+}
+
+@mixin input {
+  @include _input;
+  padding: 10px;
+  width: 80%;
+}
+
+@mixin select {
+  @include _input;
+  background: white;
+  padding: 4px;
+}

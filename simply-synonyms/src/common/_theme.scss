@@ -2,6 +2,10 @@
 // Fonts
 @forward 'fontFaces' as font-*;
 
+// Elements and other styles and stuff
+@forward 'styles' as styled-*;
+
 // Colors
 $primary-color: #1e90ff;
 $warning-color: #fc8c03;
+$gray-color: #808080;
