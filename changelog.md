@@ -3,6 +3,7 @@
 #### V0.3.5
  + Quick search added context menu and removed from browser action popup
  + `Esc` now closes popups
+ + "Open dictionary" button on popup opens dictionay in new tab
 
 #### V0.3.4
  + More consistent, refreshed style across sites

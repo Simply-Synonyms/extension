@@ -6,26 +6,15 @@ import browser from 'browserApi'
 
 firebase.initializeApp(firebaseConfig)
 
-let onlyEditableText = document.getElementById('only_editable_text_switch')
-let disablePopup = document.getElementById('disable_switch')
+let disablePopupSwitch = document.getElementById('disable_switch')
 
-/* SETTINGS AND OPTIONS */
-function settingsChanged() {
-  browser.storage.local.set({
-    option_popupDisabled: disablePopup.checked,
-    option_onlyEditableText: onlyEditableText.checked
-  }, () => {
-
-  })
-}
-
-browser.storage.local.get(['option_popupDisabled', 'option_onlyEditableText'], (result) => {
-  disablePopup.checked = result.option_popupDisabled
-  onlyEditableText.checked = result.option_onlyEditableText
+browser.storage.local.get(['option_popupDisabled'], (result) => {
+  disablePopupSwitch.checked = result.option_popupDisabled
 })
 
-onlyEditableText.addEventListener('click', settingsChanged)
-disablePopup.addEventListener('click', settingsChanged)
+disablePopupSwitch.addEventListener('click', () => browser.storage.local.set({
+  option_popupDisabled: disablePopupSwitch.checked
+}))
 
 document.getElementById('version-text').innerText = `V${browser.runtime.getManifest().version}`
 

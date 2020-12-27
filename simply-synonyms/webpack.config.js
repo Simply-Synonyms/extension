@@ -9,15 +9,14 @@ const webpack = require("webpack"),
 
 const devMode = process.env.NODE_ENV !== "production"
 
-const fileExtensions = ["jpg", "jpeg", "png", "gif", "eot", "otf", "svg", "ttf", "woff", "woff2"]
-
 const options = {
   mode: process.env.NODE_ENV || "development",
   entry: {
     popup: './src/popup/index.js',
     background: './src/background/index.js',
     content: './src/content/index.js',
-    pageScript: './src/content/pageInterfaceScript.js'
+    pageScript: './src/content/pageInterfaceScript.js',
+    internalPage: './src/pages/extensionPage.js'
   },
   output: {
     path: path.join(__dirname, 'build'),
@@ -54,7 +53,7 @@ const options = {
         exclude: /node_modules/
       },
       {
-        test: new RegExp('.(' + fileExtensions.join('|') + ')$'),
+        test: new RegExp('.(' + ["jpg", "jpeg", "png", "gif", "svg"].join('|') + ')$'),
         use: "file-loader?name=[name].[ext]",
         exclude: /node_modules|icons/
       },
@@ -108,8 +107,25 @@ const options = {
       filename: 'background.html',
       chunks: ['background'],
       cache: false
-    })
+    }),
+    ...generateInternalPageHtmlPlugins()
   ]
+}
+
+function generateInternalPageHtmlPlugins () {
+  const templateFiles = fs.readdirSync(path.resolve('./src/pages/'))
+  return templateFiles
+    .filter(item => item.endsWith('.html'))
+    .map(item => {
+      console.log(item)
+      const name = item.split('.')[0]
+      return new HtmlWebpackPlugin({
+        template: `src/pages/${name}.html`,
+        filename: `page/${name}.html`,
+        chunks: ['internalPage'],
+        cache: false
+      })
+    })
 }
 
 if (devMode) {

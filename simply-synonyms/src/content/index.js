@@ -36,7 +36,7 @@ function processDoubleClick (e, w) {
   // Don't open popup again if user selected a word within popup
   if (!e || getPopup().contains(e.target)) return
 
-  openPopup(onUserCancelledRequest, e.clientX, e.clientY)
+  openPopup(word, onUserCancelledRequest, e.clientX, e.clientY)
   onPageInterfaceMessage('closePopup', _ => resetPopup())
 
   synonymRequestPromise

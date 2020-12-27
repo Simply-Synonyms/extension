@@ -1,0 +1,40 @@
+@use '../common/theme';
+
+@include theme.font-Mulish;
+
+#page {
+  text-align: center;
+  width: 80%;
+  margin: 40px auto;
+  font-family: 'Mulish', sans-serif;
+}
+
+p {
+  font-size: 1.2em;
+}
+
+.faq {
+  width: 500px;
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 15px;
+  font-size: 1.2em;
+
+  summary {
+    font-weight: bold;
+    background: #f8f8f8;
+    border-bottom: 1px solid #3b3b3b;
+    padding: 5px;
+    margin: 10px 0;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      background: #e5e5e5;
+    }
+  }
+}
+
+.switch {
+  @include theme.styled-switch
+}

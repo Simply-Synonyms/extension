@@ -14,6 +14,7 @@ const popupElementClasses = {
   antonyms: 'antonyms',
   loadingText: 'connecting-text',
   showAntonymsButton: 'antonyms-button',
+  openDictionaryButton: 'open-dictionary-button',
   closeButton: 'close-button',
   audioPlayer: 'audio'
 }
@@ -21,6 +22,8 @@ const popupElementClasses = {
 const popup = {}
 
 let closeCallback = () => {} // Callback to call when popup closes; set by openPopup
+
+let onOpenDictionary = () => {}
 
 // Function to add popup to page, store references to all the elements and set up the event listeners
 export function initializePopup() {
@@ -41,6 +44,7 @@ export function initializePopup() {
 
   popup.closeButton.addEventListener('click', closePopup)
   popup.showAntonymsButton.addEventListener('click', switchTabs)
+  popup.openDictionaryButton.addEventListener('click', () => onOpenDictionary())
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closePopup()
@@ -76,8 +80,11 @@ export function getPopup () {
 // Function to open popup at specified position (or same position as before)
 
 let popupX
-export function openPopup (onCloseCallback, x, y) {
+export function openPopup (word, onCloseCallback, x, y) {
   closeCallback = onCloseCallback // Will get called when popup closes
+  onOpenDictionary = () => {
+    browser.runtime.sendMessage(null, { action: 'doQuickSearch', searchDictionary: true, word })
+  }
 
   if (x && y) {
     popupX = x

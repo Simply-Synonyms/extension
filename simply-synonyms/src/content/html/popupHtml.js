@@ -14,6 +14,7 @@ export default `
     <div class="content">
         <p class="results-text"></p>
         <button class="button antonyms-button">Show antonyms</button>
+        <button class="button open-dictionary-button">Open dictionary</button>
         <div class="synonyms-div synonyms"></div>
         <div class="synonyms-div antonyms"></div>
     </div>

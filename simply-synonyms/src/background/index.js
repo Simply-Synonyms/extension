@@ -18,7 +18,7 @@ browser.runtime.onMessage.addListener((msg, sender, respond) => {
       // We have to play audio files from the background so that websites' CSP headers don't interfere
       new Audio(msg.url).play()
       break
-    case 'openQuickSearch':
+    case 'doQuickSearch':
       let searchUrl
       switch (msg.dictionaryProvider) {
         case 'dictionary.com':
