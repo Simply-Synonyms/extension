@@ -1,6 +1,15 @@
 ## Simply Synonyms Browser Extension
 Check `src` to find the source files for the content script, popup and background page.
 
+### Folders
+
++ `src/api` contains utility functions for accessing the API
++ `src/background` contains the extension's background script which sets the install/uninstall listeners, context menu items, keyboard shortcut listeners, messaging listeners, etc.
++ `src/common` contains JS and SCSS modules used by more than one of either the content script, background page, popup, internal pages, etc. This includes utility functions for storing user settings and the common CSS theme.
++ **`src/content`** contains the bulk of the extension: the actual synonym popups. It contains the content script(s), "page interface" script and HTML/CSS that is injected into each web page. 
++ `src/pages` contains the internal extension pages such as the help page and settings page. Each HTML file in this folder is automatically bundled by webpack to `/page/*.html` and `extensionPage.js` and `pageStyles.scss` are automatically added to each HTML file.
++ `src/popup` just contains the HTML/JS/CSS for the browser action (popup that opens when you click the extension icon).
+
 ### Commands
 
 Install dependencies with `yarn`.
