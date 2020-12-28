@@ -11,7 +11,8 @@ if (settingsDiv) {
     disabled: settingsDiv.querySelector('#option_disable'),
     onlyEditable: settingsDiv.querySelector('#option_only-editable'),
     disableList: settingsDiv.querySelector('#option_disable-list'),
-    disableListSave: settingsDiv.querySelector('#option_disable-list + button'),
+    disableListSave: settingsDiv.querySelector('#disable-list-save'),
+    disableListClear: settingsDiv.querySelector('#disable-list-clear'),
     shortcutsDiv: settingsDiv.querySelector('#keyboard-shortcuts'),
     openShortcutsLink: settingsDiv.querySelector('#open-shortcuts-link')
   }
@@ -44,5 +45,10 @@ if (settingsDiv) {
   controls.disableListSave.addEventListener('click', e => {
     saveSettings({ siteDisableList: controls.disableList.value.split('\n')})
       .then(_ => controls.disableListSave.classList.add('saved'))
+  })
+  controls.disableListClear.addEventListener('click', e => {
+    controls.disableList.value = ''
+    controls.disableListSave.click()
+    controls.disableListSave.focus()
   })
 }

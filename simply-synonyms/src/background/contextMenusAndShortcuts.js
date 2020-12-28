@@ -60,7 +60,7 @@ export default function () {
           // Remove or add the site to the disable list
           saveSettings({
             siteDisableList: doEnable ? options.siteDisableList.filter(site => site !== siteHost) : options.siteDisableList.concat([siteHost])
-          }).then(_ => updateSiteDisableOptionsForTab(tab))
+          }).then(_ => updateSiteDisableOptionsFromUrl(tab.url))
 
           browser.tabs.sendMessage(tab.id, { action: 'enableDoubleClickPopup', enable: doEnable })
         })
@@ -68,7 +68,9 @@ export default function () {
     }
   })
 
-  function updateSiteDisableOptionsForTab({ url }) {
+  const tabURLs = {}
+
+  function updateSiteDisableOptionsFromUrl(url) {
     getSettings().then(({siteDisableList}) => {
       const siteHost = new URL(url).host
       const tabDisabled = siteDisableList.includes(siteHost)
@@ -78,8 +80,16 @@ export default function () {
     })
   }
 
+  // Keep track of the URL in every tab
+  browser.tabs.onUpdated.addListener((tabId, info, tab) => {
+    tabURLs[tabId] = tab.url
+    if (tab.active) updateSiteDisableOptionsFromUrl(tab.url) // If the active tab changed update the site disable options
+  })
+
+  // Switch tab disable options when active tab changes
   browser.tabs.onActivated.addListener(({ tabId }) => {
-    browser.tabs.get(tabId, updateSiteDisableOptionsForTab)
+    if (!tabURLs[tabId]) browser.tabs.get(tabId, tab => { updateSiteDisableOptionsFromUrl(tab.url) })
+    else updateSiteDisableOptionsFromUrl(tabURLs[tabId])
   })
 
   /* Keyboard shortcut handlers */

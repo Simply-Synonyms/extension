@@ -30,7 +30,7 @@ const qsPopup = {
     // Open search when user presses enter
     popup.popup.addEventListener('keypress', (e) => {
       if (e.key === 'Enter' && this.isOpen) {
-        browser.runtime.sendMessage(null, { action: 'doQuickSearch', dictionaryProvider: this.dictionaryProvider, searchDictionary: this.searchDictionary, word: e.target.value })
+        browser.runtime.sendMessage(null, { action: 'doQuickSearch', dictionaryProvider: this.dictionaryProvider, searchDictionary: this.searchDictionary, word: popup.input.value })
         this.reset()
       }
     })

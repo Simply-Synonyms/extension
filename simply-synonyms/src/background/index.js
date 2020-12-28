@@ -10,14 +10,13 @@ firebase.initializeApp(firebaseConfig)
 if ('update_url' in browser.runtime.getManifest()) browser.runtime.setUninstallURL('https://forms.gle/5eR4sC3rW9UV93hUA')
 
 browser.runtime.onInstalled.addListener((details) => {
-  createContextMenus()
-
   if (details.reason === 'install' || browser.runtime.getManifest().version === '0.3.5') {
     // Set default settings
     resetSettings()
   }
 })
 
+createContextMenus()
 initializeAuth()
 
 browser.runtime.onMessage.addListener((msg, sender, respond) => {
