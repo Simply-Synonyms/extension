@@ -142,7 +142,7 @@ if (devMode) {
     ],
   }
   options.plugins.push(new webpack.BannerPlugin({
-    banner: 'For additional license information please see /LICENSE.txt. Simply Synonyms is also available open-source on Github at https://github.com/Simply-Synonyms'
+    banner: `The Simply Synonyms extension is licensed under the GNU General Public License (please see /LICENSE.txt). The Simply Synonyms source is available open-source on Github at https://github.com/Simply-Synonyms`
   }))
 }
 

@@ -1,3 +1,6 @@
+// Copyright (C) 2020 Benjamin Ashbaugh
+// licensed under GPL-3 at /LICENSE
+
 import browser from 'browserApi'
 import googleDocsUtil from './siteLibs/googleDocsUtil'
 import api from '../api/synonyms'
@@ -5,11 +8,15 @@ import { initializePopup, resetPopup, openPopup, getPopup, addWordsToPopup, setR
 import QuickSearchPopup from './quickSearch'
 import injectPageScript, { sendPageInterfaceMessage, onPageInterfaceMessage } from './util/pageInterface'
 import './css/styles.scss'
+import {getSettings, saveSettings} from '../common/settings'
 
 let options = {}
 
+let enableDoubleClickPopup = true
+
 // Function to find selected word, fetch synonyms and open synonym popup.
 function processDoubleClick (e, w) {
+  if (!enableDoubleClickPopup) return
 
   // Figure out which type of element the word is in (the target). Null means the the text isn't editable
   let targetType = null
@@ -17,7 +24,7 @@ function processDoubleClick (e, w) {
   else if (e.target.hasAttribute('contenteditable')) targetType = 'contenteditable'
   if ([ 'input', 'textarea' ].includes(e.target.nodeName.toLowerCase())) targetType = 'input'
 
-  if (!targetType && options.option_onlyEditableText) return
+  if (!targetType && options.onlyEditableText) return
 
   let word, selection, googleDoc
   if (targetType === 'gdoc') {
@@ -86,10 +93,17 @@ browser.runtime.onMessage.addListener(msg => {
   switch (msg.action) {
     case 'openQuickSearch':
       QuickSearchPopup.open()
+      break
+    case 'enableDoubleClickPopup':
+      enableDoubleClickPopup = !!msg.enable
+      break
   }
 })
 
-browser.storage.local.get(['option_popupDisabled', 'option_onlyEditableText'], (result) => {
-  options = result
-  addExtension(!options.option_popupDisabled)
+getSettings().then(settings => {
+  options = settings
+
+  if (settings.siteDisableList.includes(window.location.host)) enableDoubleClickPopup = false
+
+  addExtension(!settings.popupDisabled)
 })

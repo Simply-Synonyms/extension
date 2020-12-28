@@ -1,4 +1,7 @@
-import popupHtml, {wordDivHtml, wordDetailDetailHtml} from './html/popupHtml'
+// Copyright (C) 2020 Benjamin Ashbaugh
+// licensed under GPL-3 at /LICENSE
+
+import popupHtml, { wordDivHtml, wordDetailDetailHtml } from './html/popupHtml'
 import api from '../api/synonyms'
 import { sendPageInterfaceMessage } from './util/pageInterface'
 import browser from 'browserApi'

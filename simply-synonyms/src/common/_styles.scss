@@ -1,4 +1,13 @@
+// Copyright (C) 2020 Benjamin Ashbaugh
+// licensed under GPL-3 at /LICENSE
+
 @use 'colors';
+
+.fine-print {
+  font-size: 0.9em;
+  color: grey;
+  margin-top: 0;
+}
 
 @mixin _input {
   border-radius: 8px;
@@ -22,6 +31,36 @@
   @include _input;
   background: white;
   padding: 4px;
+}
+
+@mixin textarea {
+  @include _input;
+  padding: 5px;
+}
+
+@mixin button {
+  cursor: pointer;
+  margin: 10px;
+  padding: 5px 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  outline: none;
+  background: white;
+  transition: 0.2s;
+
+  &:hover, &:focus {
+    border-radius: 8px;
+    background: colors.$faded-primary;
+  }
+
+  &:focus {
+    box-shadow: 0 0 10px #808080;
+  }
+
+  &:disabled {
+    cursor: inherit;
+    border: 1px solid grey;
+  }
 }
 
 @mixin switch {

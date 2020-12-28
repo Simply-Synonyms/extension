@@ -1,20 +1,18 @@
+// Copyright (C) 2020 Benjamin Ashbaugh
+// licensed under GPL-3 at /LICENSE
+
 import './styles.scss'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import firebaseConfig from 'firebaseConfig'
 import browser from 'browserApi'
+import { getSettings, saveSettings } from '../common/settings'
 
 firebase.initializeApp(firebaseConfig)
 
 let disablePopupSwitch = document.getElementById('disable_switch')
-
-browser.storage.local.get(['option_popupDisabled'], (result) => {
-  disablePopupSwitch.checked = result.option_popupDisabled
-})
-
-disablePopupSwitch.addEventListener('click', () => browser.storage.local.set({
-  option_popupDisabled: disablePopupSwitch.checked
-}))
+getSettings().then(({ popupDisabled }) => disablePopupSwitch.checked = popupDisabled)
+disablePopupSwitch.addEventListener('click', () => saveSettings({ popupDisabled: disablePopupSwitch.checked }))
 
 document.getElementById('version-text').innerText = `V${browser.runtime.getManifest().version}`
 

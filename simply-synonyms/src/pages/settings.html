@@ -7,9 +7,43 @@
 <body>
 <div id="page">
     <h1>Simply Synonyms Settings</h1>
-    <p>Settings on this page are saved only to your browser profile, not to your Simply Synonyms account.</p>
+    <p class="centered-slim-text">Settings on this page are saved only to your local browser profile, not to your Simply Synonyms account. You'll have to reload each page after changing a setting for the setting to take effect!</p>
 
-    <span id="version-text">loading...</span> &middot; <a href="/page/help.html">Help</a>
+    <div id="settings">
+        <div>
+            <h3>Disable Simply Synonyms</h3>
+            <label class="switch">
+                <input type="checkbox" id="option_disable">
+                <span class="slider round"></span>
+            </label>
+            <p>Enabling this option will disable the double-click synonym popup.</p>
+        </div>
+        <div>
+            <h3>Only Enable on Editable Text</h3>
+            <label class="switch">
+                <input type="checkbox" id="option_only-editable">
+                <span class="slider round"></span>
+            </label>
+            <p>Enabling this option will disable the double-click popup on all text that is read-only. It will still be enabled on inputs, documents, text boxes, etc.</p>
+        </div>
+        <div>
+            <h3>Disabled Sites List</h3>
+            <p>Add one website per line like "mail.google.com" or "github.com". Simply Synonyms will be automatically disabled for each website on this list (You can also disable it for an individual domain through the right-click menu on any site).</p>
+            <textarea id="option_disable-list" rows="7"></textarea>
+            <button>Save List</button>
+        </div>
+        <div>
+            <h3>Keyboard Shortcuts</h3>
+            <div id="keyboard-shortcuts">
+
+            </div>
+            <p><a href="#" id="open-shortcuts-link">Edit Keyboard Shortcuts</a></p>
+        </div>
+    </div>
+
+    <span id="version-text">loading...</span>
+    &middot; <a href="https://synonyms.bweb.app/changelog">Changelog</a>
+    &middot; <a href="/page/help.html">Help</a>
 </div>
 </body>
 </html>

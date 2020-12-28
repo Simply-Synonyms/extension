@@ -1,15 +1,23 @@
 import firebase from 'firebase/app'
 import firebaseConfig from 'firebaseConfig'
-import setListeners from './setListeners'
 import initializeAuth from './auth'
-import createContextMenus from './contextMenus'
+import createContextMenus from './contextMenusAndShortcuts'
 import browser from 'browserApi'
+import { resetSettings } from '../common/settings'
 
 firebase.initializeApp(firebaseConfig)
 
-// Initialize auth, uninstall/install listeners, context menus, etc.
-setListeners()
-createContextMenus()
+if ('update_url' in browser.runtime.getManifest()) browser.runtime.setUninstallURL('https://forms.gle/5eR4sC3rW9UV93hUA')
+
+browser.runtime.onInstalled.addListener((details) => {
+  createContextMenus()
+
+  if (details.reason === 'install' || browser.runtime.getManifest().version === '0.3.5') {
+    // Set default settings
+    resetSettings()
+  }
+})
+
 initializeAuth()
 
 browser.runtime.onMessage.addListener((msg, sender, respond) => {

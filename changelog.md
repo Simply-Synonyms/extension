@@ -1,9 +1,11 @@
 ## Simply Synonyms Change Log
 
 #### V0.3.5
- + Quick search added context menu and removed from browser action popup
+ + Quick search added to context menu and keyboard shortcuts and removed from browser action popup
  + `Esc` now closes popups
  + "Open dictionary" button on popup opens dictionay in new tab
+ + New help and settings pages
+ + "Disable on this site" and domain disable-list feature
 
 #### V0.3.4
  + More consistent, refreshed style across sites

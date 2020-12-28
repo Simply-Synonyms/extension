@@ -34,6 +34,14 @@
     "matches": ["*://*/*"],
     "run_at": "document_idle"
   }],
+  "commands": {
+    "openQuickSearch": {
+      "suggested_key": {
+        "default": "Alt+S"
+      },
+      "description": "Open the quick thesaurus search dialog"
+    }
+  },
   "oauth2": {
     "client_id": "538488729267-lt97t2f0np0vupuipv99aivpvlr63jvd.apps.googleusercontent.com",
     "scopes": [
