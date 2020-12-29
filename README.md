@@ -8,7 +8,7 @@ Powered by the [Merriam-Webster dictionary API](https://dictionaryapi.com/).
 
 [Feature roadmap](https://share.clickup.com/l/h/6-35841888-1/d7129f9d437b7e0)
 
-## Folders
+## Structure
 
 + `simply-synonyms` contains the source code for the extension. It uses Webpack and Babel to bundle the content scripts, popup and background script into a single file each and ensure that they are compatible with the latest versions of Chrome.
 
@@ -17,3 +17,11 @@ Powered by the [Merriam-Webster dictionary API](https://dictionaryapi.com/).
 + `email-templates` contains [MJML](https://mjml.io/) templates for Simply Synonyms emails. All emails are sent using [Mailgun](https://www.mailgun.com/).
 
 The [website code is here](https://github.com/Simply-Synonyms/website).
+
+### Contributing
+
+Contributions are always welcomed! Please see [CONTRIBUTING.md](/CONTRIBUTING.md) for details.
+
+### Legal
+
+Simply Synonyms is licensed under GPL-3.0 and as such, usage/modifcation/distribution of any files in this extension must be in accordance with [`/LICENSE`](/LICENSE). The extension itself will remain open-source for the foreseeable future (probably forever), and the core API will likely remain open-source as well. 
