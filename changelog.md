@@ -1,5 +1,8 @@
 ## Simply Synonyms Change Log
 
+#### V0.3.8
+ + 
+
 #### V0.3.7
  + Small patch to make sure the new options system doesn't break the extension for people who skipped from v0.3.4 to v0.3.6
 
