@@ -3,7 +3,7 @@ import firebaseConfig from 'firebaseConfig'
 import initializeAuth from './auth'
 import createContextMenus from './contextMenusAndShortcuts'
 import browser from 'browserApi'
-import { resetSettings } from '../common/settings'
+import { resetSettings } from '../shared/settings'
 
 firebase.initializeApp(firebaseConfig)
 

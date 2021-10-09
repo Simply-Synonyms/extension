@@ -1,7 +1,7 @@
 /* Keyframes and animation classes for loaders, etc. */
 
 /* Loading animations from https://tobiasahlin.com/spinkit/ */
-@use '../../common/theme';
+@use '../../shared/theme';
 
 @mixin animations {
   .spinner {

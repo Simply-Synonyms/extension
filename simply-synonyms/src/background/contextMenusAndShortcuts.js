@@ -1,5 +1,5 @@
 import browser from 'browserApi'
-import { saveSettings, getSettings } from '../common/settings'
+import { saveSettings, getSettings } from '../shared/settings'
 
 export default function () {
   browser.contextMenus.create({

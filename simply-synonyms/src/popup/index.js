@@ -6,7 +6,7 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import firebaseConfig from 'firebaseConfig'
 import browser from 'browserApi'
-import { getSettings, saveSettings } from '../common/settings'
+import { getSettings, saveSettings } from '../shared/settings'
 
 firebase.initializeApp(firebaseConfig)
 
@@ -67,4 +67,3 @@ document.getElementById('open-quicksearch').addEventListener('click', _ => {
     } else browser.tabs.sendMessage(tab.id, { action: "openQuickSearch" })
   })
 })
-

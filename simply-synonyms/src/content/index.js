@@ -8,7 +8,7 @@ import { initializePopup, resetPopup, openPopup, getPopup, addWordsToPopup, setR
 import QuickSearchPopup from './quickSearch'
 import injectPageScript, { sendPageInterfaceMessage, onPageInterfaceMessage } from './util/pageInterface'
 import './css/styles.scss'
-import {getSettings, saveSettings} from '../common/settings'
+import {getSettings, saveSettings} from '../shared/settings'
 
 let options = {}
 
