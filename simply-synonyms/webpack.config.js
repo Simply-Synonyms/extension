@@ -25,23 +25,9 @@ const options = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        options: {
-          presets: [
-            [
-              "@babel/preset-env",
-              {
-                "targets": {
-                  "chrome": "80"
-                }
-              }
-            ]
-          ],
-          plugins: [[
-              "@babel/plugin-proposal-class-properties"
-          ]]
-        }
+        test: /\.(js|tsx?)$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
       },
       {
         test: /\.(css|scss)$/,
@@ -65,6 +51,7 @@ const options = {
     ]
   },
   resolve: {
+    extensions: [".ts", ".tsx", ".js"],
     alias: {
       firebaseConfig: path.join(__dirname, "firebaseConfig.json") // Path to file that contains firebase config object
     }

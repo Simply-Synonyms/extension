@@ -6,11 +6,13 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack --progress",
+    "build-prod": "NODE_ENV=production webpack --progress",
     "start": "webpack --watch",
-    "build-zip": "rm -rf build && NODE_ENV=production yarn build && node utils/zip-build.js"
+    "build-zip": "rm -rf build && yarn build-prod && node utils/zip-build.js"
   },
   "dependencies": {
-    "firebase": "^8.1.1"
+    "firebase": "^8.1.1",
+    "html-webpack-plugin": "^5.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -23,11 +25,12 @@
     "css-minimizer-webpack-plugin": "^1.1.5",
     "file-loader": "^6.2.0",
     "html-loader": "^1.3.2",
-    "html-webpack-plugin": "^4.5.0",
     "mini-css-extract-plugin": "^1.3.1",
     "sass": "^1.30.0",
     "sass-loader": "^10.1.0",
-    "webpack": "^5.8.0",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.4.3",
+    "webpack": "^5.58.1",
     "webpack-cli": "^4.2.0"
   }
 }
