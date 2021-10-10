@@ -21,16 +21,16 @@ onPageInterfaceMessage('simulateGoogleDocKeypress', (data) => {
 })
 
 // Dev tools
-window.simplySynonyms = {
-  hello() {
-    console.log(
-      "Hello! You found the Simply Synonyms developer interface. You can call these functions from the dev tools or from your own website's JS ;)"
-    )
-  },
-  closePopup() {
-    sendPageInterfaceMessage('closePopup')
-  },
-  // openWithWord (word) {
-  //   sendPageInterfaceMessage('openPopup', { word })
-  // }
-}
+// window.simplySynonyms = {
+//   hello() {
+//     console.log(
+//       "Hello! You found the Simply Synonyms developer interface. You can call these functions from the dev tools or from your own website's JS ;)"
+//     )
+//   },
+//   closePopup() {
+//     sendPageInterfaceMessage('closePopup')
+//   },
+//   // openWithWord (word) {
+//   //   sendPageInterfaceMessage('openPopup', { word })
+//   // }
+// }

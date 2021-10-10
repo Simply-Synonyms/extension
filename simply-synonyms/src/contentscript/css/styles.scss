@@ -1,6 +1,6 @@
 @use 'animations';
 @use 'icons';
-@use '../../shared/theme';
+@use '../../styles/theme';
 
 // Include font faces
 @include theme.font-Mulish;
@@ -14,7 +14,6 @@
 }
 
 @mixin defaultPopupStyles {
-    display: none;
     position: fixed;
     width: 300px;
     top: 50px;

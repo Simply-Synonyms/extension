@@ -1,4 +1,4 @@
-@use '../shared/theme';
+@use '../styles/theme';
 
 @include theme.font-Mulish;
 
@@ -36,7 +36,6 @@ input {
 
 #dev-badge {
     color: orange;
-    display: none;
 }
 
 button {

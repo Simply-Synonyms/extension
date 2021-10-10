@@ -9,12 +9,12 @@ const webpack = require('webpack'),
 
 const devMode = process.env.NODE_ENV !== 'production'
 
-const options = {
+const config = {
   mode: process.env.NODE_ENV || 'development',
   entry: {
-    popup: './src/popup/index.js',
+    popup: './src/popup/index.tsx',
     background: './src/background/index.js',
-    content: './src/contentscript/index.ts',
+    content: './src/contentscript/index.tsx',
     pageScript: './src/contentscript/pageInterfaceScript.js',
     internalPage: './src/pages/extensionPage.js',
   },
@@ -26,7 +26,23 @@ const options = {
     rules: [
       {
         test: /\.(js|tsx?)$/,
-        use: 'ts-loader',
+        use: [
+          // {
+          //   loader: 'babel-loader',
+          //   options: {
+          //     presets: [
+
+          //         ["@babel/preset-react"],
+
+          //     ], plugins: [
+          //       ["@emotion/babel-plugin"]
+          //     ]
+          //   }
+          // },
+          {
+            loader: 'ts-loader',
+          },
+        ],
         exclude: /node_modules/,
       },
       {
@@ -64,7 +80,7 @@ const options = {
   plugins: [
     new CleanWebpackPlugin(),
     new webpack.EnvironmentPlugin({
-      NODE_ENV: 'development',
+      NODE_ENV: 'development', // default
       DEV_API: false,
     }),
     new CopyWebpackPlugin({
@@ -123,23 +139,23 @@ function generateInternalPageHtmlPlugins() {
 }
 
 if (devMode) {
-  options.devtool = 'eval-cheap-module-source-map'
-  options.watchOptions = {
+  config.devtool = 'eval-cheap-module-source-map'
+  config.watchOptions = {
     ignored: /node_modules/,
   }
 } else {
-  options.optimization = {
+  config.optimization = {
     minimize: true,
     minimizer: [
       '...', // This tells webpack to still include the default js minimizer
       new CssMinimizerPlugin(),
     ],
   }
-  options.plugins.push(
+  config.plugins.push(
     new webpack.BannerPlugin({
       banner: `The Simply Synonyms extension is licensed under the GNU General Public License (please see /LICENSE.txt). The Simply Synonyms source is available open-source on Github at https://github.com/Simply-Synonyms`,
     })
   )
 }
 
-module.exports = options
+module.exports = config

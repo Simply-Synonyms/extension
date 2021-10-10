@@ -20,9 +20,6 @@ render(<PopupApp />, document.getElementById('app'))
 //   saveSettings({ popupDisabled: disablePopupSwitch.checked })
 // )
 
-// if (!('update_url' in browser.runtime.getManifest()))
-//   document.getElementById('dev-badge').style.display = 'block'
-
 // /* AUTHENTICATION */
 // const googleSigninButton = document.getElementById('google-signin')
 // const signinDiv = document.getElementById('signin-div')

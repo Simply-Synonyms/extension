@@ -2,7 +2,7 @@
 // licensed under GPL-3 at /LICENSE
 
 import popupHtml, { wordDivHtml, wordDetailDetailHtml } from './html/popupHtml'
-import api from '../api/synonyms'
+import api from '../api'
 import { sendPageInterfaceMessage } from './util/pageInterface'
 import browser from 'browserApi'
 
@@ -48,13 +48,6 @@ export function initializePopup() {
   popup.closeButton.addEventListener('click', closePopup)
   popup.showAntonymsButton.addEventListener('click', switchTabs)
   popup.openDictionaryButton.addEventListener('click', () => onOpenDictionary())
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closePopup()
-  })
-  document.addEventListener('click', (e) => {
-    if (!popup.popup.contains(e.target)) closePopup()
-  })
 }
 
 // Function to reset synonyms popup and hide it

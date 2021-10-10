@@ -1,13 +1,21 @@
 import browser from 'browserApi'
 
-const DEFAULT_SETTINGS = {
+export interface UserSettings {
+  popupDisabled: boolean
+  /** Only enable popup on editable text */
+  onlyEditableText: boolean
+  /** List of sites to disable popup on */
+  siteDisableList: string[]
+}
+
+const DEFAULT_SETTINGS: UserSettings = {
   popupDisabled: false,
-  onlyEditableText: false,
+  onlyEditableText: true,
   siteDisableList: [],
 }
 
 export function resetSettings() {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     browser.storage.local.set({
       extension_options: JSON.stringify(DEFAULT_SETTINGS),
     })
@@ -16,7 +24,7 @@ export function resetSettings() {
 }
 
 export function getSettings() {
-  return new Promise((resolve, reject) => {
+  return new Promise<UserSettings>((resolve, reject) => {
     browser.storage.local.get(
       ['extension_options'],
       ({ extension_options }) => {
@@ -27,8 +35,8 @@ export function getSettings() {
 }
 
 // TODO reject on error
-export function saveSettings(newSettings) {
-  return new Promise((resolve, reject) => {
+export function saveSettings(newSettings: Partial<UserSettings>) {
+  return new Promise<void>((resolve, reject) => {
     browser.storage.local.get(
       ['extension_options'],
       ({ extension_options }) => {

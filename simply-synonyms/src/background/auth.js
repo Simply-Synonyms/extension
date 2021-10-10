@@ -1,7 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import chrome from 'browserApi'
-import api from '../api/synonyms'
+import api from '../api'
 
 let authToken // NOT Firebase IdToken
 

@@ -1,6 +1,6 @@
 import './pageStyles.scss'
 import browser from 'browserApi'
-import { getSettings, saveSettings } from '../shared/settings'
+import { getSettings, saveSettings } from '../lib/settings'
 
 document.getElementById('version-text').innerText = `V${
   browser.runtime.getManifest().version

@@ -1,12 +1,14 @@
 import React from 'preact'
 import browser from 'browserApi'
-import { getSettings, saveSettings } from '../shared/settings'
+import { getSettings, saveSettings } from '../lib/settings'
 
 const PopupApp: React.FunctionalComponent = () => {
   return (
     <div>
       <h2>Simply Synonyms</h2>
-      <h3 id="dev-badge">TEST VERSION</h3>
+      {!('update_url' in browser.runtime.getManifest()) && (
+        <h3 id="dev-badge">TEST BUILD</h3>
+      )}
       <p>
         A simple synonym finder. Double click any word on the page to find a
         definition and synonyms.
@@ -24,7 +26,7 @@ const PopupApp: React.FunctionalComponent = () => {
           </a>
         </i>
       </p>
-      <div class="section">
+      {/* <div class="section">
         <p id="user-welcome"></p>
         <div id="signin-div">
           <p>
@@ -46,7 +48,7 @@ const PopupApp: React.FunctionalComponent = () => {
           </p>
         </div>
         <button id="signout">Sign Out</button>
-      </div>
+      </div> */}
       <div class="section">
         <button id="open-quicksearch">Open Quick Thesaurus Search</button>
         <p class="fine-print">
