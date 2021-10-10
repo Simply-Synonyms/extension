@@ -1,26 +1,26 @@
-const webpack = require("webpack"),
-  path = require("path"),
-  fs = require("fs"),
-  CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin,
-  CopyWebpackPlugin = require("copy-webpack-plugin"),
+const webpack = require('webpack'),
+  path = require('path'),
+  fs = require('fs'),
+  CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin,
+  CopyWebpackPlugin = require('copy-webpack-plugin'),
   MiniCssExtractPlugin = require('mini-css-extract-plugin'),
   CssMinimizerPlugin = require('css-minimizer-webpack-plugin'),
-  HtmlWebpackPlugin = require("html-webpack-plugin")
+  HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const devMode = process.env.NODE_ENV !== "production"
+const devMode = process.env.NODE_ENV !== 'production'
 
 const options = {
-  mode: process.env.NODE_ENV || "development",
+  mode: process.env.NODE_ENV || 'development',
   entry: {
     popup: './src/popup/index.js',
     background: './src/background/index.js',
-    content: './src/content/index.js',
-    pageScript: './src/content/pageInterfaceScript.js',
-    internalPage: './src/pages/extensionPage.js'
+    content: './src/contentscript/index.ts',
+    pageScript: './src/contentscript/pageInterfaceScript.js',
+    internalPage: './src/pages/extensionPage.js',
   },
   output: {
     path: path.join(__dirname, 'build'),
-    filename: "[name].bundle.js"
+    filename: '[name].bundle.js',
   },
   module: {
     rules: [
@@ -31,94 +31,101 @@ const options = {
       },
       {
         test: /\.(css|scss)$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader'
-        ],
-        exclude: /node_modules/
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        exclude: /node_modules/,
       },
       {
-        test: new RegExp('.(' + ["jpg", "jpeg", "png", "gif", "svg"].join('|') + ')$'),
-        use: "file-loader?name=[name].[ext]",
-        exclude: /node_modules|icons/
+        test: new RegExp(
+          '.(' + ['jpg', 'jpeg', 'png', 'gif', 'svg'].join('|') + ')$'
+        ),
+        use: 'file-loader?name=[name].[ext]',
+        exclude: /node_modules|icons/,
       },
       {
         test: /\.html$/,
-        use: "html-loader",
-        exclude: /node_modules/
-      }
-    ]
+        use: 'html-loader',
+        exclude: /node_modules/,
+      },
+    ],
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js"],
+    extensions: ['.ts', '.tsx', '.js'],
     alias: {
-      firebaseConfig: path.join(__dirname, "firebaseConfig.json") // Path to file that contains firebase config object
-    }
+      firebaseConfig: path.join(__dirname, 'firebaseConfig.json'), // Path to file that contains firebase config object
+      react: 'preact/compat',
+      'react-dom/test-utils': 'preact/test-utils',
+      'react-dom': 'preact/compat',
+      'react/jsx-runtime': 'preact/jsx-runtime',
+    },
   },
   externals: {
-    browserApi: 'chrome' // Allows easy access to chrome global browser API
+    browserApi: 'chrome', // Allows easy access to chrome global browser API
   },
   plugins: [
     new CleanWebpackPlugin(),
     new webpack.EnvironmentPlugin({
-      'NODE_ENV': 'development',
-      'DEV_API': false
+      NODE_ENV: 'development',
+      DEV_API: false,
     }),
     new CopyWebpackPlugin({
-      patterns: [{
-        from: './manifest.json',
-        to: 'manifest.json'
-      }, {
-        from: '../LICENSE',
-        to: 'LICENSE.txt'
-      }, {
-        from: './icons',
-        to: 'icons'
-      }, {
-        from: './fonts',
-        to: 'fonts'
-      }]
+      patterns: [
+        {
+          from: './manifest.json',
+          to: 'manifest.json',
+        },
+        {
+          from: '../LICENSE',
+          to: 'LICENSE.txt',
+        },
+        {
+          from: './icons',
+          to: 'icons',
+        },
+        {
+          from: './fonts',
+          to: 'fonts',
+        },
+      ],
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].bundle.css'
+      filename: '[name].bundle.css',
     }),
     new HtmlWebpackPlugin({
       template: 'src/popup/popup.html',
       filename: 'popup.html',
       chunks: ['popup'],
-      cache: false // Needed to ensure that HTML files are regenerated for some reason
+      cache: false, // Needed to ensure that HTML files are regenerated for some reason
     }),
     new HtmlWebpackPlugin({
       template: 'src/background/background.html',
       filename: 'background.html',
       chunks: ['background'],
-      cache: false
+      cache: false,
     }),
-    ...generateInternalPageHtmlPlugins()
-  ]
+    ...generateInternalPageHtmlPlugins(),
+  ],
 }
 
-function generateInternalPageHtmlPlugins () {
+function generateInternalPageHtmlPlugins() {
   const templateFiles = fs.readdirSync(path.resolve('./src/pages/'))
   return templateFiles
-    .filter(item => item.endsWith('.html'))
-    .map(item => {
+    .filter((item) => item.endsWith('.html'))
+    .map((item) => {
       console.log(item)
       const name = item.split('.')[0]
       return new HtmlWebpackPlugin({
         template: `src/pages/${name}.html`,
         filename: `page/${name}.html`,
         chunks: ['internalPage'],
-        cache: false
+        cache: false,
       })
     })
 }
 
 if (devMode) {
-  options.devtool = "eval-cheap-module-source-map"
+  options.devtool = 'eval-cheap-module-source-map'
   options.watchOptions = {
-    ignored: /node_modules/
+    ignored: /node_modules/,
   }
 } else {
   options.optimization = {
@@ -128,9 +135,11 @@ if (devMode) {
       new CssMinimizerPlugin(),
     ],
   }
-  options.plugins.push(new webpack.BannerPlugin({
-    banner: `The Simply Synonyms extension is licensed under the GNU General Public License (please see /LICENSE.txt). The Simply Synonyms source is available open-source on Github at https://github.com/Simply-Synonyms`
-  }))
+  options.plugins.push(
+    new webpack.BannerPlugin({
+      banner: `The Simply Synonyms extension is licensed under the GNU General Public License (please see /LICENSE.txt). The Simply Synonyms source is available open-source on Github at https://github.com/Simply-Synonyms`,
+    })
+  )
 }
 
 module.exports = options

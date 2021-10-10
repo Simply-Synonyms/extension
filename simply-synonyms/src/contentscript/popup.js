@@ -19,7 +19,7 @@ const popupElementClasses = {
   showAntonymsButton: 'antonyms-button',
   openDictionaryButton: 'open-dictionary-button',
   closeButton: 'close-button',
-  audioPlayer: 'audio'
+  audioPlayer: 'audio',
 }
 
 const popup = {}
@@ -49,7 +49,7 @@ export function initializePopup() {
   popup.showAntonymsButton.addEventListener('click', switchTabs)
   popup.openDictionaryButton.addEventListener('click', () => onOpenDictionary())
 
-  document.addEventListener('keydown', e => {
+  document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closePopup()
   })
   document.addEventListener('click', (e) => {
@@ -76,17 +76,21 @@ export function resetPopup() {
 }
 
 // Function that just returns popup element
-export function getPopup () {
+export function getPopup() {
   return popup.popup
 }
 
 // Function to open popup at specified position (or same position as before)
 
 let popupX
-export function openPopup (word, onCloseCallback, x, y) {
+export function openPopup(word, onCloseCallback, x, y) {
   closeCallback = onCloseCallback // Will get called when popup closes
   onOpenDictionary = () => {
-    browser.runtime.sendMessage(null, { action: 'doQuickSearch', searchDictionary: true, word })
+    browser.runtime.sendMessage(null, {
+      action: 'doQuickSearch',
+      searchDictionary: true,
+      word,
+    })
   }
 
   if (x && y) {
@@ -99,15 +103,22 @@ export function openPopup (word, onCloseCallback, x, y) {
   adjustPopupPosition()
 
   // Set all loading message timeouts
-  loadingTextTimeouts.push(setTimeout(() =>  {
-    popup.loadingText.innerText = 'Trying to reach synonym servers...'
-    loadingTextTimeouts.push(setTimeout(() => {
-      popup.loadingText.innerText = 'This is taking longer than usual...'
-      loadingTextTimeouts.push(setTimeout(() => {
-        popup.loadingText.innerText = 'It looks like there\'s an issue with our servers. Please try again later.'
-      }, 20000))
-    }, 4000))
-  }, 2000))
+  loadingTextTimeouts.push(
+    setTimeout(() => {
+      popup.loadingText.innerText = 'Trying to reach synonym servers...'
+      loadingTextTimeouts.push(
+        setTimeout(() => {
+          popup.loadingText.innerText = 'This is taking longer than usual...'
+          loadingTextTimeouts.push(
+            setTimeout(() => {
+              popup.loadingText.innerText =
+                "It looks like there's an issue with our servers. Please try again later."
+            }, 20000)
+          )
+        }, 4000)
+      )
+    }, 2000)
+  )
 }
 
 // Switch between popup tabs
@@ -127,12 +138,12 @@ export function switchTabs() {
 }
 
 // Function to set popup status/results text
-export function setResultsText (t) {
+export function setResultsText(t) {
   popup.resultsText.innerText = t
 }
 
 // Function to stop loader and show contents
-export function stopLoading () {
+export function stopLoading() {
   popup.loader.style.display = 'none'
   popup.content.style.display = 'block'
   adjustPopupPosition()
@@ -144,7 +155,7 @@ const wordDetailClasses = {
   offensiveWarning: 'detail-offensive',
   pronunciationText: 'detail-pronunciation-text',
   pronunciationPlayButton: 'detail-play-button',
-  definitions: 'detail-definitions'
+  definitions: 'detail-definitions',
 }
 
 class PopupWordDetail {
@@ -163,7 +174,10 @@ class PopupWordDetail {
       this.el[elementName] = detailEl.querySelector(`.${elementClass}`) // This.el is an object containing all important elements in each word div
     })
 
-    this.el.detailSummary.innerText = `${this.hid + 1}. ${hg.word.replaceAll(/\*/g, '')} (${hg.functionalType})`
+    this.el.detailSummary.innerText = `${this.hid + 1}. ${hg.word.replaceAll(
+      /\*/g,
+      ''
+    )} (${hg.functionalType})`
 
     this.populateDetail(hg)
   }
@@ -171,11 +185,15 @@ class PopupWordDetail {
   populateDetail(hg) {
     this.el.wordHeading.innerText = hg.word
     if (hg.offensive) this.el.offensive.style.display = 'block'
-    if (hg.pronunciation) this.el.pronunciationText.innerText = `pronounced ${hg.pronunciation}`
+    if (hg.pronunciation)
+      this.el.pronunciationText.innerText = `pronounced ${hg.pronunciation}`
     if (hg.audio) {
       this.el.pronunciationPlayButton.style.display = 'inline'
-      this.el.pronunciationPlayButton.addEventListener('click', _ => {
-        browser.runtime.sendMessage(null, { action: 'playAudio', url: hg.audio })
+      this.el.pronunciationPlayButton.addEventListener('click', (_) => {
+        browser.runtime.sendMessage(null, {
+          action: 'playAudio',
+          url: hg.audio,
+        })
       })
     }
     for (const [i, def] of hg.shortdefs.entries()) {
@@ -196,7 +214,7 @@ const wordDivClasses = {
   details: 'word-details',
   content: 'word-details-content',
   loading: 'word-details-loading',
-  statusText: 'word-details-status-text'
+  statusText: 'word-details-status-text',
 }
 
 class PopupWord {
@@ -217,12 +235,16 @@ class PopupWord {
 
     this.el.word.innerText = word
 
-    this.el.detailsButton.addEventListener('click', e => this.wordDetailsToggle())
+    this.el.detailsButton.addEventListener('click', (e) =>
+      this.wordDetailsToggle()
+    )
 
     if (typeof clickCallback === 'function') {
       // Add listener to replace editable text with new synonym
       this.element.classList.add('clickable')
-      this.element.querySelector('.word').addEventListener('click', e => clickCallback(word))
+      this.element
+        .querySelector('.word')
+        .addEventListener('click', (e) => clickCallback(word))
     }
   }
 
@@ -232,20 +254,26 @@ class PopupWord {
 
     // Change open/close icon and add stay-open class to button
     // TODO use .replace instead
-    this.el.buttonIcon.classList.add(!this.wordDetailsOpen ? 'icon-info' : 'icon-close')
-    this.el.buttonIcon.classList.remove(this.wordDetailsOpen ? 'icon-info' : 'icon-close')
+    this.el.buttonIcon.classList.add(
+      !this.wordDetailsOpen ? 'icon-info' : 'icon-close'
+    )
+    this.el.buttonIcon.classList.remove(
+      this.wordDetailsOpen ? 'icon-info' : 'icon-close'
+    )
     this.element.classList.toggle('details-button-open')
 
     if (this.wordDetailsOpen) {
-      if (PopupWord.currentWithDetailsOpen) PopupWord.currentWithDetailsOpen.wordDetailsToggle() // if another word details dialog is open, close it.
+      if (PopupWord.currentWithDetailsOpen)
+        PopupWord.currentWithDetailsOpen.wordDetailsToggle() // if another word details dialog is open, close it.
       if (!this.el.statusText.innerText) this.getWordDetails()
     }
 
     PopupWord.currentWithDetailsOpen = this.wordDetailsOpen ? this : null
   }
 
-  getWordDetails () {
-    const [wordDetailsRequestPromise, onUserCancelledRequest] = api.getWordDetails(this.word)
+  getWordDetails() {
+    const [wordDetailsRequestPromise, onUserCancelledRequest] =
+      api.getWordDetails(this.word)
 
     wordDetailsRequestPromise
       .then((response) => {
@@ -259,13 +287,13 @@ class PopupWord {
           this.el.statusText.innerText = `Couldn't find word details for ${this.word}`
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err)
         this.el.statusText.innerText = `We couldn't reach our servers. Please try again later.`
       })
       .finally(() => {
-        this.el.loading.style.display = 'none';
-        this.el.content.style.display = 'block';
+        this.el.loading.style.display = 'none'
+        this.el.content.style.display = 'block'
       })
   }
 }
@@ -283,7 +311,9 @@ export function addWordsToPopup(wordType, definitions, words, clickCallback) {
     // Create definition labels
     const defEl = document.createElement('div')
     defEl.classList.add('shortdef')
-    defEl.classList.add(wordType === 'antonyms' ? 'shortdef-ant': 'shortdef-syn')
+    defEl.classList.add(
+      wordType === 'antonyms' ? 'shortdef-ant' : 'shortdef-syn'
+    )
     defEl.innerText = def.toString()
     div.appendChild(defEl)
     // Print out synonyms for each definition
@@ -300,7 +330,7 @@ export function adjustPopupPosition() {
   // Adjust height & position
   if (window.innerHeight - 20 - popupEl.offsetTop < popupEl.offsetHeight) {
     // Popup is overflowing on bottom of page
-    popupEl.style.top = `${(window.innerHeight  - 40 - popupEl.offsetHeight)}px`
+    popupEl.style.top = `${window.innerHeight - 40 - popupEl.offsetHeight}px`
     popupEl.style.left = `${popupEl.offsetLeft + 50}px`
   }
   if (window.innerWidth - 20 - popupEl.offsetLeft < popupEl.offsetWidth) {

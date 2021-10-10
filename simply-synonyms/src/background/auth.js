@@ -9,22 +9,29 @@ function getAuthToken(interactive) {
   // Request an OAuth token from the Chrome Identity API.
   chrome.identity.getAuthToken({ interactive }, (token) => {
     if (chrome.runtime.lastError && !interactive) {
-      console.log('It was not possible to get a token automatically.');
+      console.log('It was not possible to get a token automatically.')
     } else if (chrome.runtime.lastError) {
-      console.error(chrome.runtime.lastError);
+      console.error(chrome.runtime.lastError)
     } else if (token) {
       authToken = token
       // Authorize Firebase with the OAuth Access Token.
-      const credential = firebase.auth.GoogleAuthProvider.credential(null, token);
-      firebase.auth().signInWithCredential(credential)
+      const credential = firebase.auth.GoogleAuthProvider.credential(
+        null,
+        token
+      )
+      firebase
+        .auth()
+        .signInWithCredential(credential)
         .catch((err) => {
           // The OAuth token might have been invalidated; Remove it from cache.
           if (err.code === 'auth/invalid-credential') {
-            chrome.identity.removeCachedAuthToken({ token }, () => startAuth(interactive));
+            chrome.identity.removeCachedAuthToken({ token }, () =>
+              startAuth(interactive)
+            )
           }
-        });
+        })
     } else {
-      console.error('The OAuth Token was null');
+      console.error('The OAuth Token was null')
     }
   })
 }
@@ -35,7 +42,8 @@ function signOut() {
     chrome.identity.removeCachedAuthToken({ token: authToken })
   } finally {
     // We have to revoke the token as well or else the select account screen won't appear at next sign in.
-    const revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token=' + authToken;
+    const revokeUrl =
+      'https://accounts.google.com/o/oauth2/revoke?token=' + authToken
     fetch(revokeUrl)
     api.setIdToken(null)
   }
@@ -47,8 +55,10 @@ chrome.runtime.onMessage.addListener((msg, sender, respond) => {
       getAuthToken(msg.interactive)
       break
     case 'refreshIdToken':
-      firebase.auth().currentUser?.getIdToken()
-        ?.then(t => {
+      firebase
+        .auth()
+        .currentUser?.getIdToken()
+        ?.then((t) => {
           chrome.storage.local.set({ idToken: t })
           respond(t)
         })
@@ -60,16 +70,15 @@ chrome.runtime.onMessage.addListener((msg, sender, respond) => {
   return true
 })
 
-export default function initializeAuth () {
+export default function initializeAuth() {
   firebase.auth().onAuthStateChanged((user) => {
     // console.log(user)
     if (user) {
       // Store IdToken so it can be used by content scripts
-      user.getIdToken()
-        .then(t => {
-          chrome.storage.local.set({idToken: t})
-          api.setIdToken(t)
-        })
+      user.getIdToken().then((t) => {
+        chrome.storage.local.set({ idToken: t })
+        api.setIdToken(t)
+      })
     } else {
       chrome.storage.local.remove(['idToken'])
     }

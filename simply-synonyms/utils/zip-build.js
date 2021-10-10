@@ -12,7 +12,7 @@ if (fs.existsSync(destPath)) {
 
 const output = fs.createWriteStream(destPath)
 const archive = archiver('zip', {
-  zlib: { level: 9 }
+  zlib: { level: 9 },
 })
 archive.pipe(output)
 
