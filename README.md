@@ -1,5 +1,7 @@
 # Simply Synonyms
 
+> ❗ I am currently in the process of refactoring and redesigning the extension for a v1 release (see branch v1-dev). Until then, this extension will not be updated any more (except when critical bug fixes are needed). If you would like to help test a v1 release candidate when it's ready, please contact me.
+
 A lightweight thesaurus extension for Chrome - double click any word to find synonyms, antonyms, and other useful information. [Install from the Chrome Web Store](https://chrome.google.com/webstore/detail/simply-synonyms/hapeijdlgbbhjmijhmgggnakcgdcpfap).
 
 The extension simply uses a content script that injects the popup and double-click listener into every page. The node.js API processes data from the Dictionary API (and other sources) for the extension to fetch.
