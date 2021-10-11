@@ -12,6 +12,7 @@
     "format": "prettier --write \"**/*.{js,ts,tsx}\" --config ../prettier.config.js"
   },
   "dependencies": {
+    "clsx": "^1.1.1",
     "firebase": "^8.1.1",
     "preact": "^10.5.14",
     "react-icons": "^4.3.1"

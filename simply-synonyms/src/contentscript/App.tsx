@@ -4,17 +4,18 @@ import browser from 'browserApi'
 import AppPopup from './Popup'
 import { useEffect, useState, useRef } from 'preact/hooks'
 
-let closeCallback = () => {}
-
 const App: React.FunctionComponent<{
   settings: UserSettings
 }> = ({ settings }) => {
   const popupRef = useRef<HTMLDivElement>()
 
   const [popupOpen, setPopupOpen] = useState(false)
-  const [position, setPosition] = useState<[x: number, y: number]>([50, 50])
+  // const [position, setPosition] = useState<[x: number, y: number]>(null)
 
   let enableOnSite = !settings.siteDisableList.includes(window.location.host)
+
+  const wordRef = useRef<string>()
+  const positionRef = useRef<[x: number, y: number]>()
 
   // Function to find selected word, fetch synonyms and open synonym popup.
   function processDoubleClick(e, w?) {
@@ -45,7 +46,9 @@ const App: React.FunctionComponent<{
     // Don't open popup again if user selected a word within popup
     if (!e || popupRef.current?.contains(e.target)) return
 
-    setPosition([e.clientX, e.clientY])
+
+    positionRef.current = ([e.clientX - 10, e.clientY + 30])
+    wordRef.current = word
     setPopupOpen(true)
     // onPageInterfaceMessage('closePopup', (_) => resetPopup())
   }
@@ -70,11 +73,17 @@ const App: React.FunctionComponent<{
     document.addEventListener('click', (e) => {
       if (!popupRef.current?.contains(e.target as any)) setPopupOpen(false)
     })
-  })
+  }, [])
 
   return (
     <div id="ssyne-container">
-      <AppPopup word="a" ref={popupRef} position={position} open={popupOpen} />
+      <AppPopup
+        word={wordRef.current}
+        ref={popupRef}
+        position={positionRef.current}
+        open={popupOpen}
+        onClose={() => setPopupOpen(false)}
+      />
     </div>
   )
 }

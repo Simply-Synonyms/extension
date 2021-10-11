@@ -15,7 +15,7 @@ const config = {
     popup: './src/popup/index.tsx',
     background: './src/background/index.js',
     content: './src/contentscript/index.tsx',
-    pageScript: './src/contentscript/pageInterfaceScript.js',
+    embeddedScript: './src/contentscript/embeddedPageScript.js',
     internalPage: './src/pages/extensionPage.js',
   },
   output: {

@@ -4,7 +4,7 @@
 import {
   onPageInterfaceMessage,
   sendPageInterfaceMessage,
-} from './util/pageInterface'
+} from './embeddedScriptInterface'
 
 // was using this file then realized it wasnt needed, leaving it here for now
 // TODO figure out how to disable dev tools for just this entry (as most websites don't allow unsafe-eval)

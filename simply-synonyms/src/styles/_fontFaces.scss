@@ -2,32 +2,41 @@
 @mixin Mulish {
   /* https://google-webfonts-helper.herokuapp.com/fonts/mulish?subsets=latin */
 
-  /* mulish-300 - latin */
-  @font-face {
-    font-family: 'Mulish';
-    font-style: normal;
-    font-weight: 300;
-    src: local(''),
-    url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v1-latin-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v1-latin-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-  }
   /* mulish-regular - latin */
   @font-face {
     font-family: 'Mulish';
     font-style: normal;
     font-weight: 400;
     src: local(''),
-    url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v1-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v1-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+        url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v5-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v5-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   }
-  /* mulish-500 - latin */
+  /* mulish-300 - latin */
   @font-face {
     font-family: 'Mulish';
     font-style: normal;
-    font-weight: 500;
+    font-weight: 300;
     src: local(''),
-    url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v1-latin-500.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v1-latin-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+        url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v5-latin-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v5-latin-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  }
+  /* mulish-600 - latin */
+  @font-face {
+    font-family: 'Mulish';
+    font-style: normal;
+    font-weight: 600;
+    src: local(''),
+        url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v5-latin-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v5-latin-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  }
+  /* mulish-800 - latin */
+  @font-face {
+    font-family: 'Mulish';
+    font-style: normal;
+    font-weight: 800;
+    src: local(''),
+        url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v5-latin-800.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v5-latin-800.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   }
   /* mulish-300italic - latin */
   @font-face {
@@ -35,8 +44,8 @@
     font-style: italic;
     font-weight: 300;
     src: local(''),
-    url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v1-latin-300italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v1-latin-300italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+        url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v5-latin-300italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v5-latin-300italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   }
   /* mulish-italic - latin */
   @font-face {
@@ -44,16 +53,16 @@
     font-style: italic;
     font-weight: 400;
     src: local(''),
-    url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v1-latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v1-latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+        url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v5-latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v5-latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   }
-  /* mulish-500italic - latin */
+  /* mulish-600italic - latin */
   @font-face {
     font-family: 'Mulish';
     font-style: italic;
-    font-weight: 500;
+    font-weight: 600;
     src: local(''),
-    url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v1-latin-500italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-    url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v1-latin-500italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+        url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v5-latin-600italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('chrome-extension://__MSG_@@extension_id__/fonts/Mulish/mulish-v5-latin-600italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   }
 }

@@ -1,9 +1,7 @@
 // Copyright (C) 2021 Benjamin Ashbaugh
 // Licensed under GPL-3 at /LICENSE
 
-import browser from 'browserApi'
-import QuickSearchPopup from './quickSearch'
-import injectPageScript from './util/pageInterface'
+import injectPageScript from './embeddedScriptInterface'
 import './css/styles.scss'
 import { getSettings, saveSettings } from '../lib/settings'
 import { render } from 'preact'

@@ -3,7 +3,7 @@
 
 import popupHtml, { wordDivHtml, wordDetailDetailHtml } from './html/popupHtml'
 import api from '../api'
-import { sendPageInterfaceMessage } from './util/pageInterface'
+import { sendPageInterfaceMessage } from './embeddedScriptInterface'
 import browser from 'browserApi'
 
 let currentTab = 'synonyms'

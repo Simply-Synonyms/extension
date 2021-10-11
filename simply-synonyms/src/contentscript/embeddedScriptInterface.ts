@@ -30,6 +30,7 @@ export function onPageInterfaceMessage(
 // Function to add page script to HTML document
 export default function injectPageScript() {
   const script = document.createElement('script')
-  script.src = browser.runtime.getURL('pageScript.bundle.js')
+  script.id = 'simply-synonyms-embedded-script'
+  script.src = browser.runtime.getURL('embeddedScript.bundle.js')
   document.head.appendChild(script)
 }
