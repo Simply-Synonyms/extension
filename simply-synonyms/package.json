@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Webpack build system for Simply Synonyms",
   "author": "Benjamin Ashbaugh",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "scripts": {
     "start": "webpack --watch",
     "build": "webpack --progress",

@@ -101,6 +101,7 @@ const AppPopup = forwardRef<
     <>
       {open && (
         <div
+          ref={ref}
           id="ssyne-popup"
           style={{
             left: position[0],
@@ -108,25 +109,29 @@ const AppPopup = forwardRef<
           }}
         >
           <div class="header">
-            <button class="header-button close-button" title="close">
+            {/* <button class="header-button close-button" title="close">
               <i class="icon-close-x"></i>
-            </button>
+            </button> */}
           </div>
-          <div class="loading">
+          {/* <div class="loading">
             <div class="spinner">
               <div class="double-bounce1"></div>
               <div class="double-bounce2"></div>
             </div>
             <p class="connecting-text"></p>
-          </div>
+          </div> */}
+          <div class="tabs">
+              <button>Synonyms</button>
+              <button>Antonyms</button>
+              <button>Definition</button>
+            </div>
           <div class="content">
-            <p class="results-text"></p>
-            <button class="button antonyms-button">Show antonyms</button>
-            <button class="button open-dictionary-button">
-              Open dictionary
-            </button>
-            <div class="synonyms-div synonyms"></div>
-            <div class="synonyms-div antonyms"></div>
+            <p class="results-text">{
+
+            }</p>
+            <div>
+
+            </div>
           </div>
         </div>
       )}

@@ -16,13 +16,11 @@
 @mixin defaultPopupStyles {
     position: fixed;
     width: 300px;
-    top: 50px;
-    left: 50px;
     overflow-y: auto;
-    border: 1px solid theme.$primary-color;
     border-radius: 5px;
     background: white;
     z-index: 100000;
+    box-shadow: 0px 8px 22px #00000026;
 
     * {
         font-family: 'Mulish', sans-serif;
@@ -106,20 +104,20 @@
         color: #585858;
     }
 
-    .button {
-        background: none;
-        outline: none;
-        border: 2px solid black;
-        border-radius: 3px;
-        padding: 0 5px;
-        font-size: 0.8em;
+    .tabs {
+        display: flex;
+        width: 100%;
+        border-bottom: 2px solid theme.$light-gray;
+        box-shadow: 0px 4px 8px #0000001a;
+    }
 
-        &:hover {
-            cursor: pointer;
-            border: 2px solid theme.$primary-color;
-            color: theme.$primary-color;
-            /*font-weight: bold;*/
-        }
+    .tabs button {
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: theme.$muted;
+        padding: 8px 4px;
+        font-weight: 600;
     }
 
     .word-details-hover-container {
