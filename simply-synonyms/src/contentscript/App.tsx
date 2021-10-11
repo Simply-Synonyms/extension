@@ -1,10 +1,13 @@
-import React from 'preact'
+import Preact from 'preact'
 import { UserSettings } from '../lib/settings'
 import browser from 'browserApi'
 import AppPopup from './Popup'
 import { useEffect, useState, useRef } from 'preact/hooks'
+import { Toaster } from 'react-hot-toast'
 
-const App: React.FunctionComponent<{
+export type TargetType = 'gdoc' | 'contenteditable' | 'input'
+
+const App: Preact.FunctionComponent<{
   settings: UserSettings
 }> = ({ settings }) => {
   const popupRef = useRef<HTMLDivElement>()
@@ -16,13 +19,14 @@ const App: React.FunctionComponent<{
 
   const wordRef = useRef<string>()
   const positionRef = useRef<[x: number, y: number]>()
+  const targetTypeRef = useRef<TargetType>()
 
-  // Function to find selected word, fetch synonyms and open synonym popup.
+  // Function to find selected word and open synonym popup.
   function processDoubleClick(e, w?) {
     if (!enableOnSite) return
 
     // Figure out which type of element the word is in (the target). Null means the the text isn't editable
-    let targetType = null
+    let targetType: TargetType = null
     if (window.location.hostname === 'docs.google.com') targetType = 'gdoc'
     else if (e.target.hasAttribute('contenteditable'))
       targetType = 'contenteditable'
@@ -46,9 +50,9 @@ const App: React.FunctionComponent<{
     // Don't open popup again if user selected a word within popup
     if (!e || popupRef.current?.contains(e.target)) return
 
-
-    positionRef.current = ([e.clientX - 10, e.clientY + 30])
+    positionRef.current = [e.clientX - 10, e.clientY + 30]
     wordRef.current = word
+    targetTypeRef.current = targetType
     setPopupOpen(true)
     // onPageInterfaceMessage('closePopup', (_) => resetPopup())
   }
@@ -77,10 +81,12 @@ const App: React.FunctionComponent<{
 
   return (
     <div id="ssyne-container">
+      <Toaster position="bottom-center" />
       <AppPopup
         word={wordRef.current}
         ref={popupRef}
         position={positionRef.current}
+        targetType={targetTypeRef.current}
         open={popupOpen}
         onClose={() => setPopupOpen(false)}
       />

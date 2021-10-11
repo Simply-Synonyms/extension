@@ -6,6 +6,10 @@ import {
 } from './embeddedScriptInterface'
 import { useEffect, useState } from 'preact/hooks'
 import { waitMs } from '../lib/util'
+import { FiChevronLeft } from 'react-icons/fi'
+import { TargetType } from './App'
+import { toast } from 'react-hot-toast'
+import { HiOutlineClipboardCopy } from 'react-icons/hi'
 
 // Minimum spacing between popup and edges of window
 const WINDOW_MARGIN = 20
@@ -16,21 +20,28 @@ const AppPopup = forwardRef<
   HTMLDivElement,
   {
     word: string
+    targetType: TargetType
     open: boolean
     position: [x: number, y: number] | null
     onClose: () => void
   }
->(({ word, position: initialPosition, open, onClose }, ref) => {
-  const [tab, setTab] = useState<'synonyms' | 'antonyms' | 'definition'>(
-    'synonyms'
-  )
+>(({ word, position: initialPosition, open, onClose, targetType }, ref) => {
+  const [exploringWord, setExploringWord] = useState<string | null>(null)
+
+  type Tab = 'synonyms' | 'antonyms' | 'definition'
+  const [tab, _setTab] = useState<Tab>('synonyms')
+
+  const setTab = (tab: Tab) => {
+    _setTab(tab)
+    setExploringWord(null)
+  }
 
   const [loading, setLoading] = useState(true)
   const [loadingStatus, setLoadingStatus] = useState('')
   const [thesaurusData, setThesaurusData] = useState<{
     shortdefs: string[]
-    synonyms: string[]
-    antonyms: string[]
+    synonyms: string[][]
+    antonyms: string[][]
   }>(null)
 
   const [position, setPosition] = useState(null)
@@ -38,10 +49,10 @@ const AppPopup = forwardRef<
   const reset = () => {
     setPosition(null)
     setLoading(true)
+    setTab('synonyms')
+    setExploringWord(null)
     setThesaurusData(null)
   }
-
-  console.log(word)
 
   useEffect(() => {
     if (ref.current && open) {
@@ -67,7 +78,7 @@ const AppPopup = forwardRef<
     }
 
     if (!open) reset()
-  }, [open, ref.current])
+  }, [open, ref.current, thesaurusData, tab])
 
   const updateLoadingStatus = async () => {
     // await waitMs(2000)
@@ -85,6 +96,7 @@ const AppPopup = forwardRef<
     updateLoadingStatus()
 
     const data = await synonymRequestPromise
+
     setThesaurusData(data)
     setLoading(false)
   }
@@ -160,7 +172,7 @@ const AppPopup = forwardRef<
             // display: open ? 'block' : 'none',
             left: `${position && Math.max(WINDOW_MARGIN, position[0])}px`,
             top: `${position && Math.max(WINDOW_MARGIN, position[1])}px`,
-            maxHeight: `${window.innerHeight - WINDOW_MARGIN * 2}`,
+            maxHeight: `${window.innerHeight - WINDOW_MARGIN * 2}px`,
           }}
         >
           <div class="controls">
@@ -190,6 +202,7 @@ const AppPopup = forwardRef<
               </div>
             )}
           </div>
+
           {loading && (
             <div class="loading">
               <div class="spinner">
@@ -199,11 +212,84 @@ const AppPopup = forwardRef<
               <p class="connecting-text">{loadingStatus}</p>
             </div>
           )}
+
           <div class="content">
-            {thesaurusData && <><p class="results-text">
-              Showing results for "{word}"
-            </p>
-            <div></div></>}
+            {thesaurusData && (
+              <>
+                {!exploringWord && (
+                  <div>
+                    <h3 class="results-text">
+                      {(tab === 'synonyms'
+                        ? thesaurusData.synonyms
+                        : thesaurusData.antonyms
+                      )?.length
+                        ? 'Results for'
+                        : `No ${tab} found for`}
+                      <span class="primary-color"> {word}</span>
+                    </h3>
+                    <div class="words">
+                      {(tab === 'synonyms'
+                        ? thesaurusData.synonyms
+                        : thesaurusData.antonyms
+                      )?.map((wordGroup, groupIndex) => (
+                        <div>
+                          <h4 className="word-group-label">
+                            <span class="muted">{groupIndex + 1}. </span>
+                            {thesaurusData.shortdefs[groupIndex]}
+                          </h4>
+                          {wordGroup.map((word) => (
+                            <div class="container">
+                              <span
+                                class="word"
+                                onClick={(e) => {
+                                  setExploringWord(word)
+                                  e.stopPropagation()
+                                }}
+                              >
+                                {word}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {exploringWord && (
+                  <div class="word-details">
+                    <div class="top">
+                      <a
+                        class="back"
+                        onClick={(e) => {
+                          setExploringWord(null)
+                          e.stopPropagation()
+                        }}
+                      >
+                        <FiChevronLeft size={18} />
+                        <span>Back to words</span>
+                      </a>
+                      <div class="space"></div>
+                      {targetType && (
+                        <div>
+                          <button class="button">Use this word</button>
+                        </div>
+                      )}
+                    </div>
+
+                    <h2 class="flex-middle">
+                      <span>{exploringWord}</span>
+                      <button onClick={async (e) => {
+                        e.stopPropagation()
+                        await navigator.clipboard.writeText(exploringWord)
+                        toast.success(`Copied "${exploringWord}" to clipboard`)
+                      }}><HiOutlineClipboardCopy size={20}/></button>
+                    </h2>
+                    <h6>definition</h6>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       )}

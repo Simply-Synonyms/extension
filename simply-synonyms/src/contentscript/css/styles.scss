@@ -6,9 +6,11 @@
 @include theme.font-Mulish;
 
 #ssyne-popup, #ssyne-qs-popup {
-    /* Revert everything in the popups back to user-agent stylesheet */
+    /* Revert everything in the popup back to user-agent stylesheet */
     all: initial;
-    * {
+
+    // Have to use where to avoid bugs caused by specificity
+    :where(*:not(svg):not(svg *)) {
         all: revert;
     }
 }
@@ -16,7 +18,7 @@
 @mixin defaultPopupStyles {
     background: white;
     position: fixed;
-    width: 300px;
+    width: 350px;
     overflow-y: auto;
     border-radius: 5px;
     background: white;
@@ -34,86 +36,100 @@
     @include icons.icons;
 
     @include defaultPopupStyles;
-    min-height: 500px;
+    min-height: 300px;
+    overflow-x: hidden;
 
-    .synonyms-div {
-        .word-container {
+    .words {
+        .container {
             display: inline-block;
+            margin: 3px 6px 3px 0;
 
-            &.clickable .word {
-                cursor: pointer;
-            }
+            // &.clickable .word {
+            //     cursor: pointer;
+            // }
 
-            &.clickable .word:hover {
-                color: white;
-                background: theme.$primary-color;
-            }
+            // &.clickable .word:hover {
+            //     color: white;
+            //     background: theme.$primary-color;
+            // }
         }
 
         .word {
             display: inline-block;
-            margin: 3px;
-            padding: 2px;
+            padding: 3px 6px;
             white-space: nowrap;
             background: white;
-            border: 1px solid #1e90ff;
-            border-radius: 4px;
-            cursor: default;
+            border: 1px solid #E8E8E8;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.01);
+            @include theme.util-transition;
+
+            &:hover {
+                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.08);
+            }
         }
-    }
-    .header-button {
-        margin: 0;
-        border: none;
-        padding: 0;
-        cursor: pointer;
     }
 
     .content {
-        margin: 10px 25px;
+        margin: 10px 20px;
     }
 
     .results-text {
-        font-weight: bold;
-        font-size: 1.1em;
+        font-weight: 800;
+        font-size: 1.05em;
     }
 
-    .shortdef-syn::before {
-        content: "Synonyms for: ";
-        color: gray;
+    .primary-color {
+        color: theme.$primary-color
     }
 
-    .shortdef-ant::before {
-        content: "Antonyms for: ";
-        color: gray;
-    }
+    // .shortdef {
+    //     font-weight: bold;
+    //     border-top: 2px solid #c1c1c1;
+    //     margin: 10px 0 5px;
+    //     padding-top: 3px;
+    //     font-size: 0.8em;
+    // }
 
-    .shortdef {
-        font-weight: bold;
-        border-top: 2px solid #c1c1c1;
-        margin: 10px 0 5px;
-        padding-top: 3px;
+    .word-group-label {
+        color: theme.$text-gray;
         font-size: 0.8em;
+        font-weight: 800;
+        margin: 10px 0;
+
+        .muted {
+            font-weight: 400;
+            color: theme.$muted
+        }
     }
 
-    .connecting-text, .word-details-connecting-text {
-        text-align: center;
-        color: #585858;
-    }
+    // .connecting-text, .word-details-connecting-text {
+    //     text-align: center;
+    //     color: #585858;
+    // }
 
     button {
+        display: inline-block;
         cursor: pointer;
         background: none;
         border: none;
     }
 
-    .controls .close {
-        font-size: 0.8em;
-        color: theme.$muted;
-        @include theme.util-transition;
-    }
+    .controls {
+        background: white;
+        position: sticky;
+        top: 0;
 
-    .controls .close:hover {
-        color: black;
+        .close {
+            font-size: 0.8em;
+            color: theme.$muted;
+            @include theme.util-transition;
+
+            &:hover {
+                color: black;
+            }
+        }
     }
 
     .tabs {
@@ -160,63 +176,119 @@
         background: theme.$primary-color;
     }
 
-    .word-details-hover-container {
-        position: relative;
-        top: 0;
-        bottom: 0;
-    }
-
-    .word-details-button {
-        position: absolute;
-        background: theme.$primary-color;
-        width: 0;
-        /* cancel margin of word text span and border radius, but remain behind word text span */
-        left: -5px;
-        top: -3px;
-        bottom: -3px;
-        z-index: 99000;
-        transition: 0.2s;
-        border-radius: 0 10px 10px 0;
-        overflow: hidden;
-        cursor: pointer;
-
-        i {
-            margin: 0 auto;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-    }
-
-    .content:not(.word-hover-disabled) .word-container:hover .word-details-button, .word-container.details-button-open .word-details-button {
-        width: 26px;
-    }
-
     .word-details {
-        display: block;
-        position: absolute;
-        z-index: 110000;
-        background: #ffffff;
-        box-shadow: inset 0 0 4px #aeaeae;
-        left: 0;
-        right: 0;
-        height: 0;
-        opacity: 0;
-        transition: 0.2s;
-        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
 
-        &.open {
-            border-top: 2px solid black;
-            border-bottom: 2px solid black;
-            height: 200px;
-            opacity: 1;
-            overflow-y: scroll;
-            padding: 15px;
+        .top {
+            @include theme.util-flex-middle;
+
+            .back {
+                @include theme.util-flex-middle;
+                cursor: pointer;
+                font-size: 0.8em;
+                font-weight: 300;
+                color: theme.$text-gray;
+                margin-left: -6px;
+        
+                svg {
+                    stroke-width: 1px;
+                }
+            }
+
+            .space {
+                flex-grow: 1;
+            }
         }
     }
 
-    .word-details-content {
-        display: none;
+    .button {
+        border-radius: 10px;
+        padding: 8px 12px;
+        background: theme.$primary-color;
+        font-weight: 600;
+        color: white;
+        @include theme.util-transition;
+
+        &:hover {
+            opacity: 80%;
+        }
     }
+
+    h2 {
+        font-weight: 800;
+        font-size: 1.15em;
+    }
+
+    h6 {
+        text-transform: uppercase;
+        color: theme.$muted;
+        font-size: 0.75em;
+        margin: 4px 0;
+    }
+
+    .flex-middle {
+        @include theme.util-flex-middle;
+    }
+
+    // .word-details-hover-container {
+    //     position: relative;
+    //     top: 0;
+    //     bottom: 0;
+    // }
+
+    // .word-details-button {
+    //     position: absolute;
+    //     background: theme.$primary-color;
+    //     width: 0;
+    //     /* cancel margin of word text span and border radius, but remain behind word text span */
+    //     left: -5px;
+    //     top: -3px;
+    //     bottom: -3px;
+    //     z-index: 99000;
+    //     transition: 0.2s;
+    //     border-radius: 0 10px 10px 0;
+    //     overflow: hidden;
+    //     cursor: pointer;
+
+    //     i {
+    //         margin: 0 auto;
+    //         top: 50%;
+    //         transform: translateY(-50%);
+    //     }
+    // }
+
+    // .content:not(.word-hover-disabled) .word-container:hover .word-details-button, .word-container.details-button-open .word-details-button {
+    //     width: 26px;
+    // }
+
+    // .word-details {
+    //     display: block;
+    //     position: absolute;
+    //     z-index: 110000;
+    //     background: #ffffff;
+    //     box-shadow: inset 0 0 4px #aeaeae;
+    //     left: 0;
+    //     right: 0;
+    //     height: 0;
+    //     opacity: 0;
+    //     transition: 0.2s;
+    //     overflow: hidden;
+
+    //     &.open {
+    //         border-top: 2px solid black;
+    //         border-bottom: 2px solid black;
+    //         height: 200px;
+    //         opacity: 1;
+    //         overflow-y: scroll;
+    //         padding: 15px;
+    //     }
+    // }
+
+    // .word-details-content {
+    //     display: none;
+    // }
 
     .detail summary {
         outline: none;

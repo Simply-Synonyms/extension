@@ -5,7 +5,7 @@
   "author": "Benjamin Ashbaugh",
   "license": "GPL-3.0",
   "scripts": {
-    "start": "webpack --watch",
+    "dev": "webpack --watch",
     "build": "webpack --progress",
     "build-prod": "NODE_ENV=production webpack --progress",
     "build-zip": "rm -rf build && yarn build-prod && node utils/zip-build.js",
@@ -15,6 +15,7 @@
     "clsx": "^1.1.1",
     "firebase": "^8.1.1",
     "preact": "^10.5.14",
+    "react-hot-toast": "^2.1.1",
     "react-icons": "^4.3.1"
   },
   "devDependencies": {
