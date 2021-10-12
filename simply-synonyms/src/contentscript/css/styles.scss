@@ -18,12 +18,12 @@
 @mixin defaultPopupStyles {
     background: white;
     position: fixed;
-    width: 350px;
+    // width: 350px;
     overflow-y: auto;
-    border-radius: 5px;
+    border-radius: 10px;
     background: white;
     z-index: 100000;
-    box-shadow: 0px 8px 22px #00000026;
+    box-shadow: 0px 8px 22px rgba(0, 0, 0, 0.25);
 
     * {
         font-family: 'Mulish', sans-serif;
@@ -36,8 +36,23 @@
     @include icons.icons;
 
     @include defaultPopupStyles;
-    min-height: 300px;
+    // min-height: 300px;
     overflow-x: hidden;
+
+    &.collapsed {
+        opacity: 0.8;
+        @include theme.util-transition;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    .popup-expand-button {
+        position: absolute;
+        width: 100%;
+        height: 100%; 
+    }
 
     .words {
         .container {

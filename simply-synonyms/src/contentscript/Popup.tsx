@@ -10,11 +10,18 @@ import { FiChevronLeft } from 'react-icons/fi'
 import { TargetType } from './App'
 import { toast } from 'react-hot-toast'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
+import { useSpring, animated } from 'react-spring'
 
 // Minimum spacing between popup and edges of window
 const WINDOW_MARGIN = 20
 // Horizontal spacing between target and popup when adjusting position
 const TARGET_MARGIN = 50
+
+// Initial vertical spacing between target and top of popup
+const TARGET_VERTICAL_PADDING = 20
+
+const POPUP_WIDTH = 350
+const MIN_POPUP_HEIGHT = 300
 
 const AppPopup = forwardRef<
   HTMLDivElement,
@@ -26,6 +33,7 @@ const AppPopup = forwardRef<
     onClose: () => void
   }
 >(({ word, position: initialPosition, open, onClose, targetType }, ref) => {
+  const [expanded, setExpanded] = useState(false)
   const [exploringWord, setExploringWord] = useState<string | null>(null)
 
   type Tab = 'synonyms' | 'antonyms' | 'definition'
@@ -47,6 +55,7 @@ const AppPopup = forwardRef<
   const [position, setPosition] = useState(null)
 
   const reset = () => {
+    setExpanded(false)
     setPosition(null)
     setLoading(true)
     setTab('synonyms')
@@ -54,31 +63,104 @@ const AppPopup = forwardRef<
     setThesaurusData(null)
   }
 
-  useEffect(() => {
-    if (ref.current && open) {
-      // Ensure that the popup doesn't overlap the target position, or the margin around the edge of the window
-      const el = ref.current
-      const pos = initialPosition
-      // Make sure there's room for the popup at bottom of window
-      const newY = Math.max(
+  /* Animated popup positioning */
+  const popupStyles = useSpring({
+    immediate: !open,
+    config: {
+      tension: 300,
+    },
+    left: `${
+      position &&
+      initialPosition[0] + POPUP_WIDTH <= window.innerWidth - WINDOW_MARGIN &&
+      Math.max(WINDOW_MARGIN, position[0])
+    }px`,
+    right: `${
+      position &&
+      initialPosition[0] + POPUP_WIDTH > window.innerWidth - WINDOW_MARGIN &&
+      window.innerWidth -
+        position[0] -
+        (expanded ? POPUP_WIDTH : ref.current.offsetWidth)
+    }px`,
+    top: `${
+      position &&
+      initialPosition[1] + MIN_POPUP_HEIGHT <=
+        window.innerHeight - WINDOW_MARGIN &&
+      Math.max(WINDOW_MARGIN, position[1])
+    }px`,
+    bottom: `${
+      position &&
+      initialPosition[1] + ref.current.scrollHeight >
+        window.innerHeight - WINDOW_MARGIN &&
+      Math.max(
         WINDOW_MARGIN,
-        Math.min(pos[1], window.innerHeight - WINDOW_MARGIN - el.offsetHeight)
+        window.innerHeight - position[1] - ref.current.scrollHeight
       )
-      setPosition(
-        // If there isn't room at right side of window, move popup to left of target
-        pos[0] + el.offsetWidth >
-          window.innerWidth - WINDOW_MARGIN - TARGET_MARGIN
-          ? [pos[0] - el.offsetWidth - TARGET_MARGIN, newY]
-          : [
-              // If the new top position is above target, move to right to ensure that target is visible
-              newY < pos[1] ? pos[0] + TARGET_MARGIN : pos[0],
-              newY,
-            ]
-      )
-    }
+    }px`,
+    height: expanded
+      ? Math.min(
+          Math.max(MIN_POPUP_HEIGHT, ref.current.scrollHeight),
+          window.innerHeight - WINDOW_MARGIN * 2
+        ) + 'px'
+      : '30px',
+    width: expanded ? POPUP_WIDTH + 'px' : '150px',
+  })
 
+  /* Automatic repositioning */
+  useEffect(() => {
+    // Ensure that the popup doesn't overlap the target position, or the margin around the edge of the window
+    if (ref.current && open) {
+      const el = ref.current
+
+      // If there isn't room at bottom of window, move popup above target
+      const above =
+        initialPosition[1] + el.scrollHeight + TARGET_VERTICAL_PADDING >
+        window.innerHeight - WINDOW_MARGIN
+      let newY = above
+        ? window.innerHeight -
+          WINDOW_MARGIN -
+          el.scrollHeight -
+          (!expanded && TARGET_VERTICAL_PADDING)
+        : initialPosition[1] + TARGET_VERTICAL_PADDING
+
+      // If there isn't room at right side of window, move popup to left of target
+      const atLeft =
+        initialPosition[0] + POPUP_WIDTH + TARGET_MARGIN >
+        window.innerWidth - WINDOW_MARGIN
+      let newX = atLeft
+        ? initialPosition[0] - (expanded ? POPUP_WIDTH : el.scrollWidth)
+        : initialPosition[0]
+
+      if (expanded && initialPosition[1] + TARGET_VERTICAL_PADDING > newY) {
+        // Move left/right to leave horizontal spacing between target and edge of popup if needed
+        newX += atLeft ? -TARGET_MARGIN : TARGET_MARGIN
+      }
+
+      // If it's collapsed center it under the target
+      if (!expanded) newX += atLeft ? el.offsetWidth / 2 : -el.offsetWidth / 2
+
+      // Clamp values at top and left:
+      setPosition([
+        Math.max(WINDOW_MARGIN, newX),
+        Math.max(WINDOW_MARGIN, newY),
+      ])
+    }
+  }, [open, expanded, ref.current, thesaurusData, tab])
+
+  useEffect(() => {
     if (!open) reset()
-  }, [open, ref.current, thesaurusData, tab])
+  }, [open])
+
+  useEffect(() => {
+    const func = (e) => {
+      // If popup isn't expanded, always close when a key is pressed
+      if (!expanded || e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', func)
+    return () => {
+      // On cleanup remove the listener
+      document.removeEventListener('keydown', func)
+    }
+  }, [expanded])
 
   const updateLoadingStatus = async () => {
     // await waitMs(2000)
@@ -102,10 +184,10 @@ const AppPopup = forwardRef<
   }
 
   useEffect(() => {
-    if (word && open) {
+    if (word && expanded) {
       loadThesaurus()
     }
-  }, [word, open])
+  }, [word, expanded])
 
   // synonymRequestPromise
   //   .then((response) => {
@@ -165,133 +247,151 @@ const AppPopup = forwardRef<
   return (
     <>
       {open && (
-        <div
+        <animated.div
           ref={ref}
           id="ssyne-popup"
-          style={{
-            // display: open ? 'block' : 'none',
-            left: `${position && Math.max(WINDOW_MARGIN, position[0])}px`,
-            top: `${position && Math.max(WINDOW_MARGIN, position[1])}px`,
-            maxHeight: `${window.innerHeight - WINDOW_MARGIN * 2}px`,
-          }}
+          style={popupStyles}
+          class={expanded ? 'expanded' : 'collapsed'}
         >
-          <div class="controls">
-            <button class="close" onClick={() => onClose()}>
-              close
+          {!expanded && (
+            <button
+              class="popup-expand-button"
+              onClick={(e) => {
+                e.stopPropagation()
+                setExpanded(true)
+              }}
+            >
+              Simply Synonyms
             </button>
-            {!loading && (
-              <div class="tabs">
-                <button
-                  class={tab === 'synonyms' && 'active'}
-                  onClick={() => setTab('synonyms')}
-                >
-                  Synonyms
-                </button>
-                <button
-                  class={tab === 'antonyms' && 'active'}
-                  onClick={() => setTab('antonyms')}
-                >
-                  Antonyms
-                </button>
-                <button
-                  class={tab === 'definition' && 'active'}
-                  onClick={() => setTab('definition')}
-                >
-                  Definition
-                </button>
-              </div>
-            )}
-          </div>
-
-          {loading && (
-            <div class="loading">
-              <div class="spinner">
-                <div class="double-bounce1"></div>
-                <div class="double-bounce2"></div>
-              </div>
-              <p class="connecting-text">{loadingStatus}</p>
-            </div>
           )}
+          {expanded && (
+            <>
+              <div class="controls">
+                <button class="close" onClick={() => onClose()}>
+                  close
+                </button>
+                {!loading && (
+                  <div class="tabs">
+                    <button
+                      class={tab === 'synonyms' && 'active'}
+                      onClick={() => setTab('synonyms')}
+                    >
+                      Synonyms
+                    </button>
+                    <button
+                      class={tab === 'antonyms' && 'active'}
+                      onClick={() => setTab('antonyms')}
+                    >
+                      Antonyms
+                    </button>
+                    <button
+                      class={tab === 'definition' && 'active'}
+                      onClick={() => setTab('definition')}
+                    >
+                      Definition
+                    </button>
+                  </div>
+                )}
+              </div>
 
-          <div class="content">
-            {thesaurusData && (
-              <>
-                {!exploringWord && (
-                  <div>
-                    <h3 class="results-text">
-                      {(tab === 'synonyms'
-                        ? thesaurusData.synonyms
-                        : thesaurusData.antonyms
-                      )?.length
-                        ? 'Results for'
-                        : `No ${tab} found for`}
-                      <span class="primary-color"> {word}</span>
-                    </h3>
-                    <div class="words">
-                      {(tab === 'synonyms'
-                        ? thesaurusData.synonyms
-                        : thesaurusData.antonyms
-                      )?.map((wordGroup, groupIndex) => (
-                        <div>
-                          <h4 className="word-group-label">
-                            <span class="muted">{groupIndex + 1}. </span>
-                            {thesaurusData.shortdefs[groupIndex]}
-                          </h4>
-                          {wordGroup.map((word) => (
-                            <div class="container">
-                              <span
-                                class="word"
-                                onClick={(e) => {
-                                  setExploringWord(word)
-                                  e.stopPropagation()
-                                }}
-                              >
-                                {word}
-                              </span>
+              {loading && (
+                <div class="loading">
+                  <div class="spinner">
+                    <div class="double-bounce1"></div>
+                    <div class="double-bounce2"></div>
+                  </div>
+                  <p class="connecting-text">{loadingStatus}</p>
+                </div>
+              )}
+
+              <div class="content">
+                {thesaurusData && (
+                  <>
+                    {!exploringWord && (
+                      <div>
+                        <h3 class="results-text">
+                          {(tab === 'synonyms'
+                            ? thesaurusData.synonyms
+                            : thesaurusData.antonyms
+                          )?.length
+                            ? 'Results for'
+                            : `No ${tab} found for`}
+                          <span class="primary-color"> {word}</span>
+                        </h3>
+                        <div class="words">
+                          {(tab === 'synonyms'
+                            ? thesaurusData.synonyms
+                            : thesaurusData.antonyms
+                          )?.map((wordGroup, groupIndex) => (
+                            <div>
+                              <h4 className="word-group-label">
+                                <span class="muted">{groupIndex + 1}. </span>
+                                {thesaurusData.shortdefs[groupIndex]}
+                              </h4>
+                              {wordGroup.map((word) => (
+                                <div class="container">
+                                  <span
+                                    class="word"
+                                    onClick={(e) => {
+                                      setExploringWord(word)
+                                      e.stopPropagation()
+                                    }}
+                                  >
+                                    {word}
+                                  </span>
+                                </div>
+                              ))}
                             </div>
                           ))}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                      </div>
+                    )}
 
-                {exploringWord && (
-                  <div class="word-details">
-                    <div class="top">
-                      <a
-                        class="back"
-                        onClick={(e) => {
-                          setExploringWord(null)
-                          e.stopPropagation()
-                        }}
-                      >
-                        <FiChevronLeft size={18} />
-                        <span>Back to words</span>
-                      </a>
-                      <div class="space"></div>
-                      {targetType && (
-                        <div>
-                          <button class="button">Use this word</button>
+                    {exploringWord && (
+                      <div class="word-details">
+                        <div class="top">
+                          <a
+                            class="back"
+                            onClick={(e) => {
+                              setExploringWord(null)
+                              e.stopPropagation()
+                            }}
+                          >
+                            <FiChevronLeft size={18} />
+                            <span>Back to words</span>
+                          </a>
+                          <div class="space"></div>
+                          {targetType && (
+                            <div>
+                              <button class="button">Use this word</button>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
 
-                    <h2 class="flex-middle">
-                      <span>{exploringWord}</span>
-                      <button onClick={async (e) => {
-                        e.stopPropagation()
-                        await navigator.clipboard.writeText(exploringWord)
-                        toast.success(`Copied "${exploringWord}" to clipboard`)
-                      }}><HiOutlineClipboardCopy size={20}/></button>
-                    </h2>
-                    <h6>definition</h6>
-                  </div>
+                        <h2 class="flex-middle">
+                          <span>{exploringWord}</span>
+                          <button
+                            title="Copy word to clipboard"
+                            onClick={async (e) => {
+                              e.stopPropagation()
+                              await navigator.clipboard.writeText(exploringWord)
+                              toast.success(
+                                `Copied "${exploringWord}" to clipboard`
+                              )
+                            }}
+                          >
+                            <HiOutlineClipboardCopy size={20} />
+                          </button>
+                        </h2>
+                        <h6>definition</h6>
+                      </div>
+                    )}
+                  </>
                 )}
-              </>
-            )}
-          </div>
-        </div>
+              </div>
+            </>
+          )}
+        </animated.div>
       )}
     </>
   )

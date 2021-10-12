@@ -16,7 +16,8 @@
     "firebase": "^8.1.1",
     "preact": "^10.5.14",
     "react-hot-toast": "^2.1.1",
-    "react-icons": "^4.3.1"
+    "react-icons": "^4.3.1",
+    "react-spring": "^9.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",

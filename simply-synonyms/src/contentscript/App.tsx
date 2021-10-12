@@ -50,7 +50,7 @@ const App: Preact.FunctionComponent<{
     // Don't open popup again if user selected a word within popup
     if (!e || popupRef.current?.contains(e.target)) return
 
-    positionRef.current = [e.clientX - 10, e.clientY + 30]
+    positionRef.current = [e.clientX, e.clientY]
     wordRef.current = word
     targetTypeRef.current = targetType
     setPopupOpen(true)
@@ -58,6 +58,7 @@ const App: Preact.FunctionComponent<{
   }
 
   useEffect(() => {
+    // TODO cleanup
     browser.runtime.onMessage.addListener((msg) => {
       switch (msg.action) {
         case 'openQuickSearch':
@@ -71,9 +72,6 @@ const App: Preact.FunctionComponent<{
 
     document.body.addEventListener('dblclick', processDoubleClick)
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') setPopupOpen(false)
-    })
     document.addEventListener('click', (e) => {
       if (!popupRef.current?.contains(e.target as any)) setPopupOpen(false)
     })
@@ -81,7 +79,12 @@ const App: Preact.FunctionComponent<{
 
   return (
     <div id="ssyne-container">
-      <Toaster position="bottom-center" />
+      <Toaster
+        position="bottom-center"
+        containerStyle={{
+          zIndex: 100001,
+        }}
+      />
       <AppPopup
         word={wordRef.current}
         ref={popupRef}
