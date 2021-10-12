@@ -89,7 +89,7 @@ const AppPopup = forwardRef<
     }px`,
     bottom: `${
       position &&
-      initialPosition[1] + ref.current.scrollHeight >
+      initialPosition[1] + MIN_POPUP_HEIGHT >
         window.innerHeight - WINDOW_MARGIN &&
       Math.max(
         WINDOW_MARGIN,
@@ -116,11 +116,19 @@ const AppPopup = forwardRef<
         initialPosition[1] + el.scrollHeight + TARGET_VERTICAL_PADDING >
         window.innerHeight - WINDOW_MARGIN
       let newY = above
-        ? window.innerHeight -
-          WINDOW_MARGIN -
-          el.scrollHeight -
-          (!expanded && TARGET_VERTICAL_PADDING)
+        ? (expanded
+            ? window.innerHeight - WINDOW_MARGIN
+            : initialPosition[1] - TARGET_VERTICAL_PADDING) - el.scrollHeight
         : initialPosition[1] + TARGET_VERTICAL_PADDING
+
+      console.log(
+        above,
+        newY,
+        window.innerHeight,
+        WINDOW_MARGIN,
+        el.scrollHeight,
+        !expanded && TARGET_VERTICAL_PADDING
+      )
 
       // If there isn't room at right side of window, move popup to left of target
       const atLeft =
@@ -363,7 +371,7 @@ const AppPopup = forwardRef<
                           <div class="space"></div>
                           {targetType && (
                             <div>
-                              <button class="button">Use this word</button>
+                              <button class="button">Replace word</button>
                             </div>
                           )}
                         </div>
