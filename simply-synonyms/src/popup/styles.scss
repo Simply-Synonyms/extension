@@ -2,24 +2,86 @@
 
 @include theme.font-Mulish;
 
+html, body {
+    margin: 0;
+}
+
 #app {
     width: 400px;
-    margin: 20px;
     font-family: 'Mulish', sans-serif;
+}
+
+.top {
+    padding: 5px 20px;
+    @include theme.util-flex-middle;
+    justify-content: space-between;
+    gap: 20px;
+    background: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+
+    .spacer {
+        flex-grow: 1;
+    }
+}
+
+.body {
+    margin: 20px;
+}
+
+.login-home {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    width: 70%;
+    margin: 40px auto;
+
+    img {
+        width: 60%;
+    }
+
+    .greeting {
+        color: theme.$text-gray;
+        font-size: 1.2em;
+        font-weight: 600;
+    }
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+button.large {
+    border-radius: 100px;
+    border: none;
+    background: theme.$primary-color;
+    width: 100%;
+    padding: 15px 20px;
+    font-weight: 800;
+    font-size: 1.2em;
+    color: white;
+
+    &.secondary {
+        color: black;
+        background: #e7e7e7;
+    }
 }
 
 .switch {
     @include theme.styled-switch
 }
 
-.control-box {
-    margin: 30px 0px;
-}
+// .control-box {
+//     margin: 30px 0px;
+// }
 
-.section {
-    text-align: center;
-    border-top: 1px solid #e8e8e8;
-}
+// .section {
+//     text-align: center;
+//     border-top: 1px solid #e8e8e8;
+// }
+
 .footer {
     margin-top: 5px;
     font-size: 0.9em;
@@ -38,14 +100,10 @@ input {
     color: orange;
 }
 
-button {
-    @include theme.styled-button;
-}
+// button {
+//     @include theme.styled-button;
+// }
 
-.hidden {
-    display: none;
-}
-
-#user-welcome {
-    font-size: 1.1em;
-}
+// #user-welcome {
+//     font-size: 1.1em;
+// }

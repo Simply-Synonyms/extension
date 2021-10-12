@@ -12,11 +12,12 @@
     "format": "prettier --write \"**/*.{js,ts,tsx}\" --config ../prettier.config.js"
   },
   "dependencies": {
+    "@react-icons/all-files": "^4.1.0",
     "clsx": "^1.1.1",
     "firebase": "^8.1.1",
+    "framer-motion": "^4.1.17",
     "preact": "^10.5.14",
     "react-hot-toast": "^2.1.1",
-    "react-icons": "^4.3.1",
     "react-spring": "^9.3.0"
   },
   "devDependencies": {

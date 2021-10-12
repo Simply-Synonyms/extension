@@ -20,6 +20,7 @@ const App: Preact.FunctionComponent<{
   const wordRef = useRef<string>()
   const positionRef = useRef<[x: number, y: number]>()
   const targetTypeRef = useRef<TargetType>()
+  const targetElRef = useRef<HTMLElement>()
 
   // Function to find selected word and open synonym popup.
   function processDoubleClick(e, w?) {
@@ -53,6 +54,7 @@ const App: Preact.FunctionComponent<{
     positionRef.current = [e.clientX, e.clientY]
     wordRef.current = word
     targetTypeRef.current = targetType
+    targetElRef.current = e.target
     setPopupOpen(true)
     // onPageInterfaceMessage('closePopup', (_) => resetPopup())
   }
@@ -83,6 +85,7 @@ const App: Preact.FunctionComponent<{
         position="bottom-center"
         containerStyle={{
           zIndex: 100001,
+          fontWeight: 600,
         }}
       />
       <AppPopup
@@ -90,6 +93,7 @@ const App: Preact.FunctionComponent<{
         ref={popupRef}
         position={positionRef.current}
         targetType={targetTypeRef.current}
+        targetEl={targetElRef.current}
         open={popupOpen}
         onClose={() => setPopupOpen(false)}
       />

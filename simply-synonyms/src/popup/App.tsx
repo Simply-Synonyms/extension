@@ -1,15 +1,116 @@
 import React from 'preact'
 import browser from 'browserApi'
-import { getSettings, saveSettings } from '../lib/settings'
+import { getSettings, saveSettings, UserSettings } from '../lib/settings'
+import { Toaster, toast } from 'react-hot-toast'
+import { selectRandom } from '../lib/util'
+import { is } from '@react-spring/shared'
+import { FiSettings } from '@react-icons/all-files/fi/FiSettings'
 
-const PopupApp: React.FunctionalComponent = () => {
+const greetings = [
+  '',
+  'Hello!',
+  `Let's do some writing!`,
+  'Ready to find some great words?',
+  'What are we doing next?',
+  'Thanks for using Simply Synonyms!',
+  'What a beautiful day.',
+  `Good afternoon! Or morning! Or evening! I don't know what time it is...`
+]
+
+const images = [
+  'undraw_Autumn',
+  'undraw_lightbulb_moment',
+  'undraw_reading_time',
+  'undraw_Shared_workspace',
+  'undraw_Sunny_day',
+  'undraw_Welcome'
+]
+
+const greeting = selectRandom(greetings)
+const image = selectRandom(images)
+
+const PopupApp = ({ settings }: { settings: UserSettings }) => {
   return (
     <div>
-      <h2>Simply Synonyms</h2>
-      {!('update_url' in browser.runtime.getManifest()) && (
-        <h3 id="dev-badge">TEST BUILD</h3>
-      )}
-      <p>
+      <Toaster position='bottom-center' />
+      <div class="top">
+        <h3>Simply Synonyms</h3>
+        <label class="switch">
+          <input checked={!settings.popupDisabled} type="checkbox" id="disable_switch" onChange={async (e) => {
+            const enable = (e.target as HTMLInputElement).checked
+            await saveSettings({
+              popupDisabled: !enable
+            })
+            toast(`Simply Synonyms ${enable ? 'enabled' : 'disabled'}`, {
+              duration: 1000
+            })
+          }} />
+          <div class="slider"></div>
+        </label>
+        <div id="version-text">{`V${
+          browser.runtime.getManifest().version
+        }`}</div>
+        <button>
+          <FiSettings size={24} />
+        </button>
+      </div>
+      <div class="body">
+        {!('update_url' in browser.runtime.getManifest()) && (
+          <h3 id="dev-badge">TEST BUILD</h3>
+        )}
+
+        <div class='login-home'>
+          <img src={`/assets/${image}.svg`} />
+          <div class="greeting">{greeting}</div>
+          <button class="large">
+            Sign In
+          </button>
+          <button class="large secondary">
+            Make an Account
+          </button>
+        </div>
+
+        <div class="footer">
+          <span>
+            <a href="https://synonyms.bweb.app/changelog" target="_blank">
+              Change log
+            </a>
+          </span>
+          <span>
+            {' '}
+            &middot;{' '}
+            <a
+              href="https://share.clickup.com/l/h/4-10555185-1/c7936bdf33d8baf"
+              target="_blank"
+            >
+              Upcoming features
+            </a>
+          </span>
+          <span>
+            {' '}
+            &middot;{' '}
+            <a href="https://synonyms.bweb.app/privacy" target="_blank">
+              Privacy
+            </a>
+          </span>
+          <span>
+            {' '}
+            &middot;{' '}
+            <a href="/page/help.html" target="_blank">
+              Support
+            </a>
+          </span>
+          <span>
+            {' '}
+            &middot;{' '}
+            <a href="https://github.com/Simply-Synonyms" target="_blank">
+              GitHub
+            </a>
+          </span>
+        </div>
+      </div>
+
+      {/* <p>
         A simple synonym finder. Double click any word on the page to find a
         definition and synonyms.
       </p>
@@ -25,7 +126,7 @@ const PopupApp: React.FunctionalComponent = () => {
             Merriam-Webster Dictionary API
           </a>
         </i>
-      </p>
+      </p> */}
       {/* <div class="section">
         <p id="user-welcome"></p>
         <div id="signin-div">
@@ -49,7 +150,7 @@ const PopupApp: React.FunctionalComponent = () => {
         </div>
         <button id="signout">Sign Out</button>
       </div> */}
-      <div class="section">
+      {/* <div class="section">
         <button id="open-quicksearch">Open Quick Thesaurus Search</button>
         <p class="fine-print">
           Tip: Quick search can now be accessed by pressing <code>Alt+S</code>{' '}
@@ -72,51 +173,7 @@ const PopupApp: React.FunctionalComponent = () => {
             <button>Open Settings</button>
           </a>
         </div>
-      </div>
-
-      <div class="footer">
-        <span id="version-text">{`V${
-          browser.runtime.getManifest().version
-        }`}</span>
-        <span>
-          {' '}
-          &middot;{' '}
-          <a href="https://synonyms.bweb.app/changelog" target="_blank">
-            Change log
-          </a>
-        </span>
-        <span>
-          {' '}
-          &middot;{' '}
-          <a
-            href="https://share.clickup.com/l/h/4-10555185-1/c7936bdf33d8baf"
-            target="_blank"
-          >
-            Upcoming features
-          </a>
-        </span>
-        <span>
-          {' '}
-          &middot;{' '}
-          <a href="https://synonyms.bweb.app/privacy" target="_blank">
-            Privacy
-          </a>
-        </span>
-        <span>
-          {' '}
-          &middot;{' '}
-          <a href="/page/help.html" target="_blank">
-            Support
-          </a>
-        </span>
-        <span>
-          {' '}
-          &middot;{' '}
-          <a href="https://github.com/Simply-Synonyms" target="_blank">
-            GitHub
-          </a>
-        </span>
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -25,7 +25,9 @@ const synonymsApi = {
     const onUserCancelledRequest = () => (userCancelledRequest = true)
 
     word = word.trim()
-    const synonymRequestPromise = GET(`get-thesaurus-data?word=${word}`)
+    const synonymRequestPromise = GET(
+      `get-thesaurus-data?word=${encodeURIComponent(word)}`
+    )
     // .then((data) => {
     //   if (!!this.idToken && !userCancelledRequest)
     //     GET('update-user-stats') // Increment user's synonym counters once they recieve the synonym data
@@ -47,12 +49,14 @@ const synonymsApi = {
 
     return [synonymRequestPromise, onUserCancelledRequest]
   },
-  getWordDetails(word) {
+  getWordDetails(word): [Promise<any>, () => boolean] {
     let userCancelledRequest = false // We don't actually cancel the request, but if the user closes the dialog before receiving synonym data, it doesn't increment the synonym counter.
     const onUserCancelledRequest = () => (userCancelledRequest = true)
 
     word = word.trim()
-    const synonymRequestPromise = GET(`get-dictionary-data?word=${word}`)
+    const synonymRequestPromise = GET(
+      `get-dictionary-data?word=${encodeURIComponent(word)}`
+    )
     // .then((data) => {
     //   if (!!this.idToken && !userCancelledRequest)
     //     GET('update-user-stats?worddata=1') // Increment user's synonym counters once they recieve the synonym data

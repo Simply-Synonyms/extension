@@ -24,7 +24,9 @@
     background: white;
     z-index: 100000;
     box-shadow: 0px 8px 22px rgba(0, 0, 0, 0.25);
+}
 
+#ssyne-container {
     * {
         font-family: 'Mulish', sans-serif;
     }
@@ -38,6 +40,11 @@
     @include defaultPopupStyles;
     // min-height: 300px;
     overflow-x: hidden;
+
+    .content {
+        margin: 10px 20px;
+        position: relative;
+    }
 
     &.collapsed {
         opacity: 0.8;
@@ -86,15 +93,6 @@
         }
     }
 
-    .content {
-        margin: 10px 20px;
-    }
-
-    .results-text {
-        font-weight: 800;
-        font-size: 1.05em;
-    }
-
     .primary-color {
         color: theme.$primary-color
     }
@@ -112,17 +110,12 @@
         font-size: 0.8em;
         font-weight: 800;
         margin: 10px 0;
-
-        .muted {
-            font-weight: 400;
-            color: theme.$muted
-        }
     }
 
-    // .connecting-text, .word-details-connecting-text {
-    //     text-align: center;
-    //     color: #585858;
-    // }
+    .muted {
+        font-weight: 400;
+        color: theme.$muted
+    }
 
     button {
         display: inline-block;
@@ -135,6 +128,7 @@
         background: white;
         position: sticky;
         top: 0;
+        z-index: 1000;
 
         .close {
             font-size: 0.8em;
@@ -191,6 +185,57 @@
         background: theme.$primary-color;
     }
 
+    .definitions {
+
+        .homograph {
+            position: relative;
+            margin: 25px 0;
+
+            &::before {
+                content: "";
+                position: absolute;
+                height: 100%;
+                left: -10px;
+                width: 2px;
+                background: theme.$faded-primary;
+            }
+        }
+
+        .definition-label {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-weight: 400;
+    
+            .functional-type {
+                text-transform: uppercase;
+                font-size: 0.7em;
+                font-weight: 300;
+            }
+    
+            .word {
+                font-weight: 800;
+            }
+    
+            .pronunciation {
+                color: theme.$muted;
+            }
+    
+            svg {
+                margin-bottom: -2px;
+            }
+        }
+    
+        .definition {
+            margin: 5px 0;
+        }
+
+        .offensive {
+            color: theme.$warning-color;
+            font-size: 0.8em;
+            margin: 4px 0;
+        }
+    }
+
     .word-details {
         display: flex;
         flex-direction: column;
@@ -201,6 +246,7 @@
 
             .back {
                 @include theme.util-flex-middle;
+                @include theme.util-transition;
                 cursor: pointer;
                 font-size: 0.8em;
                 font-weight: 300;
@@ -209,6 +255,11 @@
         
                 svg {
                     stroke-width: 1px;
+                }
+
+                &:hover {
+                    color: black;
+                    transform: translateX(-3px);
                 }
             }
 
@@ -227,7 +278,7 @@
         @include theme.util-transition;
 
         &:hover {
-            opacity: 80%;
+            opacity: 0.8;
         }
     }
 
@@ -277,61 +328,6 @@
     // .content:not(.word-hover-disabled) .word-container:hover .word-details-button, .word-container.details-button-open .word-details-button {
     //     width: 26px;
     // }
-
-    // .word-details {
-    //     display: block;
-    //     position: absolute;
-    //     z-index: 110000;
-    //     background: #ffffff;
-    //     box-shadow: inset 0 0 4px #aeaeae;
-    //     left: 0;
-    //     right: 0;
-    //     height: 0;
-    //     opacity: 0;
-    //     transition: 0.2s;
-    //     overflow: hidden;
-
-    //     &.open {
-    //         border-top: 2px solid black;
-    //         border-bottom: 2px solid black;
-    //         height: 200px;
-    //         opacity: 1;
-    //         overflow-y: scroll;
-    //         padding: 15px;
-    //     }
-    // }
-
-    // .word-details-content {
-    //     display: none;
-    // }
-
-    .detail summary {
-        outline: none;
-        cursor: pointer;
-        color: #00366d;
-    }
-
-    .detail-offensive {
-        color: red;
-        display: none;
-    }
-
-    .detail-pronunciation, .detail-pronunciation span {
-        margin: 0;
-        padding: 0;
-    }
-
-    .detail-pronunciation-text {
-        color: #323232;
-    }
-
-    .detail-play-button {
-        text-decoration: underline;
-        color: theme.$primary-color;
-        user-select: none;
-        cursor: pointer;
-        display: none;
-    }
 }
 
 /* The quick search popup */

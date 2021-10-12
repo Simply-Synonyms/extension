@@ -4,3 +4,8 @@ export const waitMs = (ms: number) => {
     setTimeout(() => resolve(), ms)
   })
 }
+
+/** Select a random element from an array */
+export const selectRandom = <T>(arr: T[]): T => {
+  return arr[Math.floor(Math.random() * arr.length)]
+}

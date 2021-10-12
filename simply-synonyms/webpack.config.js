@@ -13,7 +13,7 @@ const config = {
   mode: process.env.NODE_ENV || 'development',
   entry: {
     popup: './src/popup/index.tsx',
-    background: './src/background/index.js',
+    background: './src/background/index.ts',
     content: './src/contentscript/index.tsx',
     embeddedScript: './src/contentscript/embeddedPageScript.js',
     internalPage: './src/pages/extensionPage.js',
@@ -65,7 +65,7 @@ const config = {
     ],
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: ['.mjs', '.ts', '.tsx', '.js'],
     alias: {
       firebaseConfig: path.join(__dirname, 'firebaseConfig.json'), // Path to file that contains firebase config object
       react: 'preact/compat',
@@ -100,6 +100,10 @@ const config = {
         {
           from: './fonts',
           to: 'fonts',
+        },
+        {
+          from: './assets',
+          to: 'assets',
         },
       ],
     }),

@@ -3,3 +3,8 @@ declare module 'browserApi' {
   let c: typeof chrome
   export = c
 }
+
+declare module 'firebaseConfig' {
+  let t: any
+  export = t
+}
