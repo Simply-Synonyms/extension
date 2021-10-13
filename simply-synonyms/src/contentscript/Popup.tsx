@@ -46,7 +46,10 @@ const AppPopup = forwardRef<
       setExploringWord(null)
     }
 
-    useEffect(() => _setTab(targetType ? 'synonyms' : 'definition'), [targetType])
+    useEffect(
+      () => _setTab(targetType ? 'synonyms' : 'definition'),
+      [targetType]
+    )
 
     const [thesaurusLoading, setThesaurusLoading] = useState(true)
     const [loadingStatus, setLoadingStatus] = useState('')
@@ -332,7 +335,11 @@ const AppPopup = forwardRef<
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 100 }}
                             class="word-details"
-                            style={{ position: 'absolute', top: 0, width: '100%' }}
+                            style={{
+                              position: 'absolute',
+                              top: 0,
+                              width: '100%',
+                            }}
                           >
                             <div class="top">
                               <a
@@ -380,6 +387,7 @@ const AppPopup = forwardRef<
                             </h2>
                             <h6>Definitions</h6>
                             <Definitions
+                              animateDefinitions
                               word={exploringWord}
                               onLoad={() => reposition()}
                             />

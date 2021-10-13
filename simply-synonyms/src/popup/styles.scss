@@ -35,6 +35,7 @@ html, body {
     align-items: center;
     width: 70%;
     margin: 40px auto;
+    text-align: center;
 
     img {
         width: 60%;
@@ -71,6 +72,32 @@ button.large {
 
 .switch {
     @include theme.styled-switch
+}
+
+.settings-container {
+    background: #fdfdfd;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+
+    h2 {
+        padding: 10px;
+    }
+
+    .setting {
+        width: 80%;
+        text-align: center;
+    }
+
+    textarea {
+        
+    }
 }
 
 // .control-box {

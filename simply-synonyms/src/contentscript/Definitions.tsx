@@ -6,11 +6,13 @@ import { HiOutlineClipboardCopy } from '@react-icons/all-files/hi/HiOutlineClipb
 import { RiChatVoiceLine } from '@react-icons/all-files/ri/RiChatVoiceLine'
 import api from '../api'
 import { FiExternalLink } from '@react-icons/all-files/fi/FiExternalLink'
+import { motion } from 'framer-motion'
 
 const Definitions: Preact.FunctionComponent<{
   word: string
   onLoad: () => void
-}> = ({ word, onLoad }) => {
+  animateDefinitions?: boolean
+}> = ({ word, onLoad, animateDefinitions }) => {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<{
     homographs: {
@@ -69,57 +71,88 @@ const Definitions: Preact.FunctionComponent<{
       )}
       {data && (
         <div class="definitions">
-          {data.homographs.map((hg, hIndex) => (
-            <div class="homograph">
-              <h4 class="definition-label">
-                {/* <span class="index">{hIndex}. </span> */}
-                <span class="functional-type">{hg.functionalType}: </span>
-                <span class="word">{hg.word}</span>
-                <button
-                  title="Copy word to clipboard"
-                  onClick={async (e) => {
-                    e.stopPropagation()
-                    const withoutAsterisks = hg.word.replace(/\*/g, '')
-                    await navigator.clipboard.writeText(withoutAsterisks)
-                    toast.success(`Copied "${withoutAsterisks}" to clipboard`)
-                  }}
-                >
-                  <HiOutlineClipboardCopy size={16} />
-                </button>
-                {hg.pronunciation && (
-                  <span class="pronunciation"> ({hg.pronunciation})</span>
-                )}
-                {hg.audio && (
-                  <button
-                    class="pronunciation"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      browser.runtime.sendMessage(null, {
-                        action: 'playAudio',
-                        url: hg.audio,
-                      })
-                    }}
-                  >
-                    <RiChatVoiceLine size={18} />
-                  </button>
-                )}
-              </h4>
-              {hg.offensive && (
-                <div class="offensive">(Potentially offensive)</div>
-              )}
-              {hg.shortdefs.map((def, defIndex) => (
-                <div class="definition">
-                  {/* fromCharCode allows us to represent the index with letters: a, b, c... */}
-                  <span class="muted">
-                    {String.fromCharCode(97 + defIndex)}.{' '}
-                  </span>
-                  {def}
+          <motion.div
+            variants={{
+              hidden: {},
+              show: {
+                transition: {
+                  staggerChildren: 0.05,
+                },
+              },
+            }}
+            initial={animateDefinitions && 'hidden'}
+            animate="show"
+          >
+            {data.homographs.map((hg, hIndex) => (
+              <motion.div
+                key={hg.word}
+                variants={{
+                  hidden: { y: 30, opacity: 0 },
+                  show: {
+                    y: 0,
+                    opacity: 1,
+                    transition: {
+                      duration: 0.3,
+                    },
+                  },
+                }}
+              >
+                <div class="homograph">
+                  <h4 class="definition-label">
+                    {/* <span class="index">{hIndex}. </span> */}
+                    <span class="functional-type">{hg.functionalType}: </span>
+                    <span class="word">{hg.word}</span>
+                    <button
+                      title="Copy word to clipboard"
+                      onClick={async (e) => {
+                        e.stopPropagation()
+                        const withoutAsterisks = hg.word.replace(/\*/g, '')
+                        await navigator.clipboard.writeText(withoutAsterisks)
+                        toast.success(
+                          `Copied "${withoutAsterisks}" to clipboard`
+                        )
+                      }}
+                    >
+                      <HiOutlineClipboardCopy size={16} />
+                    </button>
+                    {hg.pronunciation && (
+                      <span class="pronunciation"> ({hg.pronunciation})</span>
+                    )}
+                    {hg.audio && (
+                      <button
+                        class="pronunciation"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          browser.runtime.sendMessage(null, {
+                            action: 'playAudio',
+                            url: hg.audio,
+                          })
+                        }}
+                      >
+                        <RiChatVoiceLine size={18} />
+                      </button>
+                    )}
+                  </h4>
+                  {hg.offensive && (
+                    <div class="offensive">(Potentially offensive)</div>
+                  )}
+                  {hg.shortdefs.map((def, defIndex) => (
+                    <div class="definition" key={defIndex}>
+                      {/* fromCharCode allows us to represent the index with letters: a, b, c... */}
+                      <span class="muted">
+                        {String.fromCharCode(97 + defIndex)}.{' '}
+                      </span>
+                      {def}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          ))}
+              </motion.div>
+            ))}
+          </motion.div>
           {!data.homographs?.length && (
-            <div class="muted" style={{ margin: '10px 0'}}>No definitions found.</div>
+            <div class="muted" style={{ margin: '10px 0' }}>
+              No definitions found.
+            </div>
           )}
           <button
             class="button flex-middle"
