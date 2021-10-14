@@ -8,6 +8,8 @@ import { FiX } from '@react-icons/all-files/fi/FiX'
 import { useState } from 'preact/hooks'
 import { motion, AnimatePresence } from 'framer-motion'
 
+const WEBSITE = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://synonyms.bweb.app/'
+
 const greetings = [
   '',
   'Hello!',
@@ -79,7 +81,10 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
         <div id="version-text">{`V${
           browser.runtime.getManifest().version
         }`}</div>
-        <button style={{ zIndex: 40 }} onClick={() => setSettingsOpen(o => !o)}>
+        <button
+          style={{ zIndex: 40 }}
+          onClick={() => setSettingsOpen((o) => !o)}
+        >
           {settingsOpen ? <FiX size={24} /> : <FiSettings size={24} />}
         </button>
       </div>
@@ -91,8 +96,8 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
         <div class="login-home">
           <img src={`/assets/${image}.svg`} />
           <div class="greeting">{greeting}</div>
-          <button class="large">Sign In</button>
-          <button class="large secondary">Make an Account</button>
+          <a target='_blank' class="button large" href={WEBSITE + '/app/login'}>Sign In</a>
+          <a target='_blank' class="button large secondary" href={WEBSITE + '/app/signup'}>Make an Account</a>
         </div>
 
         <motion.div
@@ -103,7 +108,10 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
           <h2>Settings</h2>
           <div class="setting">
             <h3>Disabled Sites</h3>
-            <p>Simply Synonyms won't work on any of the websites on this list. Add one per line.</p>
+            <p>
+              Simply Synonyms won't work on any of the websites on this list.
+              Add one per line.
+            </p>
             <textarea rows={5} />
           </div>
         </motion.div>

@@ -9,6 +9,7 @@ import { HiOutlineClipboardCopy } from '@react-icons/all-files/hi/HiOutlineClipb
 import { useSpring, animated } from 'react-spring'
 import Definitions from './Definitions'
 import { motion, AnimatePresence } from 'framer-motion'
+import browser from 'browserApi'
 
 // Minimum spacing between popup and edges of window
 const WINDOW_MARGIN = 20
@@ -225,6 +226,10 @@ const AppPopup = forwardRef<
       }
     }
 
+    const noResults = !(
+      tab === 'synonyms' ? thesaurusData?.synonyms : thesaurusData?.antonyms
+    )?.length
+
     return (
       <>
         {open && (
@@ -290,15 +295,11 @@ const AppPopup = forwardRef<
                     <>
                       {!exploringWord && (
                         <div>
-                          <h2>
-                            {(tab === 'synonyms'
-                              ? thesaurusData.synonyms
-                              : thesaurusData.antonyms
-                            )?.length
-                              ? 'Results for'
-                              : `No ${tab} found for`}
+                          <h2 class={noResults && 'center'}>
+                            {!noResults ? 'Results for' : `No ${tab} found for`}
                             <span class="primary-color"> {word}</span>
                           </h2>
+                          {noResults && <img src={browser.runtime.getURL('/assets/undraw_not_found.svg')} />}
                           <div class="words">
                             {(tab === 'synonyms'
                               ? thesaurusData.synonyms

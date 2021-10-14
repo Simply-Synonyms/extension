@@ -299,6 +299,16 @@
         @include theme.util-flex-middle;
     }
 
+    .center {
+        text-align: center;
+    }
+
+    img {
+        display: block;
+        width: 60%;
+        margin: 30px auto;
+    }
+
     // .word-details-hover-container {
     //     position: relative;
     //     top: 0;

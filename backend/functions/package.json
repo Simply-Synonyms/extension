@@ -5,14 +5,14 @@
   "scripts": {
     "build": "babel 'src' --out-dir 'build' --source-maps",
     "watch": "yarn build --watch",
-    "start": "yarn watch & firebase serve --only functions",
+    "dev": "yarn watch & firebase serve --only functions",
     "shell": "firebase functions:shell",
     "predeploy": "yarn build",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "12"
+    "node": "14"
   },
   "dependencies": {
     "@babel/cli": "^7.12.8",

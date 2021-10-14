@@ -48,13 +48,14 @@ html, body {
     }
 }
 
-button {
+button, .button {
+    text-decoration: none;
     cursor: pointer;
     border: none;
     background: none;
 }
 
-button.large {
+.button.large {
     border-radius: 100px;
     border: none;
     background: theme.$primary-color;
@@ -110,12 +111,13 @@ button.large {
 // }
 
 .footer {
+    text-align: center;
     margin-top: 5px;
     font-size: 0.9em;
     color: gray;
 }
 
-a.no-highlight {
+a {
     color: inherit;
 }
 
