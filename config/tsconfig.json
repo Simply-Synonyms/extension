@@ -104,5 +104,8 @@
   },
   "include": [
     "../src/**/*.ts", "../src/**/*.js"
+  ],
+  "files": [
+    "../src/global.d.ts"
   ]
 }

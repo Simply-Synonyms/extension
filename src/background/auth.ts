@@ -1,4 +1,3 @@
-import firebase from 'firebase/app'
 import {
   signInWithCustomToken,
   getAuth,
@@ -7,38 +6,6 @@ import {
   User,
 } from 'firebase/auth'
 import browser from 'browserApi'
-import api from '../api'
-
-// function getAuthToken(interactive) {
-//   // Request an OAuth token from the Chrome Identity API.
-//   // chrome.identity.getAuthToken({ interactive }, (token) => {
-//   //   if (chrome.runtime.lastError && !interactive) {
-//   //     console.log('It was not possible to get a token automatically.')
-//   //   } else if (chrome.runtime.lastError) {
-//   //     console.error(chrome.runtime.lastError)
-//   //   } else if (token) {
-//   //     authToken = token
-//   //     // Authorize Firebase with the OAuth Access Token.
-//   //     const credential = firebase.auth.GoogleAuthProvider.credential(
-//   //       null,
-//   //       token
-//   //     )
-//   //     firebase
-//   //       .auth()
-//   //       .signInWithCredential(credential)
-//   //       .catch((err) => {
-//   //         // The OAuth token might have been invalidated; Remove it from cache.
-//   //         if (err.code === 'auth/invalid-credential') {
-//   //           chrome.identity.removeCachedAuthToken({ token }, () =>
-//   //             startAuth(interactive)
-//   //           )
-//   //         }
-//   //       })
-//   //   } else {
-//   //     console.error('The OAuth Token was null')
-//   //   }
-//   // })
-// }
 
 // TODO verify orgin
 browser.runtime.onMessageExternal.addListener((msg, sender, respond) => {

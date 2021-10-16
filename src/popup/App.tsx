@@ -54,12 +54,17 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
   }
 
   const [user, setUser] = useState<User>()
-  browser.runtime.sendMessage(
-    {
-      action: 'getUser',
-    },
-    setUser
-  )
+
+  useEffect(() => {
+    browser.runtime.sendMessage(
+      {
+        action: 'getUser',
+      },
+      setUser
+    )
+  }, [])
+
+  const [enableState, setEnableState] = useState(!settings.popupDisabled)
 
   return (
     <div>
@@ -68,7 +73,7 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
         <h3>Simply Synonyms</h3>
         <label class="switch">
           <input
-            checked={!settings.popupDisabled}
+            checked={enableState}
             type="checkbox"
             id="disable_switch"
             onChange={async (e) => {
@@ -76,6 +81,7 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
               await saveSettings({
                 popupDisabled: !enable,
               })
+              setEnableState(enable)
               toast(`Simply Synonyms ${enable ? 'enabled' : 'disabled'}`, {
                 duration: 1000,
               })
@@ -213,27 +219,17 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
           <span>
             {' '}
             &middot;{' '}
-            <a
-              href="https://share.clickup.com/l/h/4-10555185-1/c7936bdf33d8baf"
-              target="_blank"
-            >
-              Upcoming features
-            </a>
-          </span>
-          <span>
-            {' '}
-            &middot;{' '}
             <a href="https://synonyms.bweb.app/privacy" target="_blank">
               Privacy
             </a>
           </span>
-          <span>
+          {/* <span>
             {' '}
             &middot;{' '}
             <a href="/page/help.html" target="_blank">
               Support
             </a>
-          </span>
+          </span> */}
           <span>
             {' '}
             &middot;{' '}

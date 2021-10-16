@@ -1,7 +1,10 @@
 ## Simply Synonyms Change Log
 
-#### V0.3.8
- + 
+#### V1.0.0-rc.1
+
++ Completely refactored extension with TypeScript, redesigned the UI, added additional features and fixed bugs.
++ Rewrote API and website
++ New auth system
 
 #### V0.3.7
  + Small patch to make sure the new options system doesn't break the extension for people who skipped from v0.3.4 to v0.3.6
