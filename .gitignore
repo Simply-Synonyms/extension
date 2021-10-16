@@ -1,7 +1,5 @@
 .idea
 node_modules
-package.json
-yarn.lock
 test.html
 */yarn-error.log
 **/.DS_Store
