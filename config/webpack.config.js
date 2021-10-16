@@ -100,15 +100,15 @@ const config = {
           to: 'LICENSE.txt',
         },
         {
-          from: p('icons'),
+          from: p('assets/icons'),
           to: 'icons',
         },
         {
-          from: p('fonts'),
+          from: p('assets/fonts'),
           to: 'fonts',
         },
         {
-          from: p('assets'),
+          from: p('assets/img'),
           to: 'assets',
         },
       ],
