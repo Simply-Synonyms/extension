@@ -1,11 +1,11 @@
-import firebase from 'firebase/app'
+import { initializeApp } from 'firebase/app'
 import firebaseConfig from 'firebaseConfig'
 import initializeAuth from './auth'
 import createContextMenus from './contextMenusAndShortcuts'
 import browser from 'browserApi'
 import { resetSettings } from '../lib/settings'
 
-firebase.initializeApp(firebaseConfig)
+initializeApp(firebaseConfig)
 
 if ('update_url' in browser.runtime.getManifest())
   browser.runtime.setUninstallURL('https://forms.gle/5eR4sC3rW9UV93hUA')

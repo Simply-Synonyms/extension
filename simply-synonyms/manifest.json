@@ -29,6 +29,9 @@
     "fonts/*",
     "assets/*"
   ],
+  "externally_connectable" : {
+    "matches": [ "*://localhost/*", "https://synonyms.bweb.app/*" ]
+  },
   "content_scripts": [{
     "js": ["content.bundle.js"],
     "css": ["content.bundle.css"],

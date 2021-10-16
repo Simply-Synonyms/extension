@@ -299,7 +299,13 @@ const AppPopup = forwardRef<
                             {!noResults ? 'Results for' : `No ${tab} found for`}
                             <span class="primary-color"> {word}</span>
                           </h2>
-                          {noResults && <img src={browser.runtime.getURL('/assets/undraw_not_found.svg')} />}
+                          {noResults && (
+                            <img
+                              src={browser.runtime.getURL(
+                                '/assets/undraw_not_found.svg'
+                              )}
+                            />
+                          )}
                           <div class="words">
                             {(tab === 'synonyms'
                               ? thesaurusData.synonyms

@@ -10,7 +10,7 @@ export interface UserSettings {
 
 const DEFAULT_SETTINGS: UserSettings = {
   popupDisabled: false,
-  onlyEditableText: true,
+  onlyEditableText: false,
   siteDisableList: [],
 }
 
