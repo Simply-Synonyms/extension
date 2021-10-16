@@ -5,3 +5,9 @@ yarn.lock
 test.html
 */yarn-error.log
 **/.DS_Store
+
+build
+dist.zip
+build.zip
+firebaseConfig.json
+config/firebaseConfig.json

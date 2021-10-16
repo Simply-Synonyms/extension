@@ -9,17 +9,20 @@ const webpack = require('webpack'),
 
 const devMode = process.env.NODE_ENV !== 'production'
 
+// Relative to root dir
+const p = (l) => path.join(__dirname, '..', l)
+
 const config = {
   mode: process.env.NODE_ENV || 'development',
   entry: {
-    popup: './src/popup/index.tsx',
-    background: './src/background/index.ts',
-    content: './src/contentscript/index.tsx',
-    embeddedScript: './src/contentscript/embeddedPageScript.js',
-    internalPage: './src/pages/extensionPage.js',
+    popup: p('src/popup/index.tsx'),
+    background: p('src/background/index.ts'),
+    content: p('src/contentscript/index.tsx'),
+    embeddedScript: p('src/contentscript/embeddedPageScript.js'),
+    internalPage: p('src/pages/extensionPage.js'),
   },
   output: {
-    path: path.join(__dirname, 'build'),
+    path: p('build'),
     filename: '[name].bundle.js',
   },
   module: {
@@ -41,6 +44,9 @@ const config = {
           // },
           {
             loader: 'ts-loader',
+            options: {
+              configFile: p('config/tsconfig.json')
+            }
           },
         ],
         exclude: /node_modules/,
@@ -67,7 +73,7 @@ const config = {
   resolve: {
     extensions: ['.mjs', '.ts', '.tsx', '.js'],
     alias: {
-      firebaseConfig: path.join(__dirname, 'firebaseConfig.json'), // Path to file that contains firebase config object
+      firebaseConfig: p('config/firebaseConfig.json'), // Path to file that contains firebase config object
       react: 'preact/compat',
       'react-dom/test-utils': 'preact/test-utils',
       'react-dom': 'preact/compat',
@@ -86,23 +92,23 @@ const config = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: './manifest.json',
+          from: p('manifest.json'),
           to: 'manifest.json',
         },
         {
-          from: '../LICENSE',
+          from: p('LICENSE'),
           to: 'LICENSE.txt',
         },
         {
-          from: './icons',
+          from: p('icons'),
           to: 'icons',
         },
         {
-          from: './fonts',
+          from: p('fonts'),
           to: 'fonts',
         },
         {
-          from: './assets',
+          from: p('assets'),
           to: 'assets',
         },
       ],
@@ -111,13 +117,13 @@ const config = {
       filename: '[name].bundle.css',
     }),
     new HtmlWebpackPlugin({
-      template: 'src/popup/popup.html',
+      template: p('src/popup/popup.html'),
       filename: 'popup.html',
       chunks: ['popup'],
       cache: false, // Needed to ensure that HTML files are regenerated for some reason
     }),
     new HtmlWebpackPlugin({
-      template: 'src/background/background.html',
+      template: p('src/background/background.html'),
       filename: 'background.html',
       chunks: ['background'],
       cache: false,
@@ -127,14 +133,14 @@ const config = {
 }
 
 function generateInternalPageHtmlPlugins() {
-  const templateFiles = fs.readdirSync(path.resolve('./src/pages/'))
+  const templateFiles = fs.readdirSync(p('src/pages'))
   return templateFiles
     .filter((item) => item.endsWith('.html'))
     .map((item) => {
       console.log(item)
       const name = item.split('.')[0]
       return new HtmlWebpackPlugin({
-        template: `src/pages/${name}.html`,
+        template: p(`src/pages/${name}.html`),
         filename: `page/${name}.html`,
         chunks: ['internalPage'],
         cache: false,
