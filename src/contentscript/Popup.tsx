@@ -1,7 +1,10 @@
 import { forwardRef } from 'preact/compat'
-import api from '../api'
+import {
+  GetThesaurusDataResponse,
+  getThesaurusData,
+  favoriteWord,
+} from '../api'
 import { useEffect, useState } from 'preact/hooks'
-import { waitMs } from '../lib/util'
 import { TargetType } from './App'
 import { toast } from 'react-hot-toast'
 import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft'
@@ -10,6 +13,9 @@ import { useSpring, animated } from 'react-spring'
 import Definitions from './Definitions'
 import { motion, AnimatePresence } from 'framer-motion'
 import browser from 'browserApi'
+import { AiOutlineStar } from '@react-icons/all-files/ai/AiOutlineStar'
+import { AiFillStar } from '@react-icons/all-files/ai/AiFillStar'
+import { isLoggedIn } from '../lib/auth'
 
 // Minimum spacing between popup and edges of window
 const WINDOW_MARGIN = 20
@@ -21,6 +27,49 @@ const TARGET_VERTICAL_PADDING = 20
 
 const POPUP_WIDTH = 350
 const MIN_POPUP_HEIGHT = 300
+
+const AddWordToFavoritesButton = ({
+  word,
+  favorites,
+  onChange,
+}: {
+  word: string
+  favorites: Record<string, boolean>
+  onChange: (favorite: boolean) => void
+}) => {
+  const isFavorite = !!favorites[word]
+
+  return (
+    <button
+      title="Add to favorites"
+      onClick={async (e) => {
+        e.stopPropagation()
+
+        if (!await isLoggedIn()) {
+          toast.error('Make an account to save favorites')
+          return
+        }
+
+        onChange(!isFavorite)
+        try {
+          const res = await favoriteWord(word, isFavorite)
+          if (!res.success) throw `Couldn't update favorite`
+          onChange(res.favorite)
+          toast(
+            res.favorite
+              ? `⭐️ Saved ${word} to favorites`
+              : `❌ Removed ${word} from favorites`
+          )
+        } catch (e) {
+          onChange(isFavorite)
+        }
+      }}
+      class="bounce-button"
+    >
+      {isFavorite ? <AiFillStar size={20} /> : <AiOutlineStar size={20} />}
+    </button>
+  )
+}
 
 const AppPopup = forwardRef<
   HTMLDivElement,
@@ -37,6 +86,7 @@ const AppPopup = forwardRef<
     { word, position: initialPosition, open, onClose, targetType, targetEl },
     ref
   ) => {
+
     const [expanded, setExpanded] = useState(false)
 
     type Tab = 'synonyms' | 'antonyms' | 'definition'
@@ -54,11 +104,8 @@ const AppPopup = forwardRef<
 
     const [thesaurusLoading, setThesaurusLoading] = useState(true)
     const [loadingStatus, setLoadingStatus] = useState('')
-    const [thesaurusData, setThesaurusData] = useState<{
-      shortdefs: string[]
-      synonyms: string[][]
-      antonyms: string[][]
-    }>(null)
+    const [thesaurusData, setThesaurusData] =
+      useState<GetThesaurusDataResponse>(null)
 
     const [exploringWord, setExploringWord] = useState<string | null>(null)
 
@@ -183,17 +230,15 @@ const AppPopup = forwardRef<
     }
 
     const loadThesaurus = async () => {
-      const [synonymRequestPromise, onUserCancelledRequest] =
-        api.getSynonyms(word)
-
       updateLoadingStatus()
 
-      const data = await synonymRequestPromise.catch((err) => {
-        toast.error(`We couldn't reach our servers. Please try again.`, {
-          duration: 4000,
-        })
-        onClose()
-      })
+      const data =
+        (await getThesaurusData(word).catch((err) => {
+          toast.error(`We couldn't reach our servers. Please try again.`, {
+            duration: 4000,
+          })
+          onClose()
+        })) || null
 
       setThesaurusData(data)
       setThesaurusLoading(false)
@@ -225,6 +270,10 @@ const AppPopup = forwardRef<
           break
       }
     }
+
+    const [favoriteWords, setFavoriteWords] = useState<Record<string, boolean>>(
+      {}
+    )
 
     const noResults = !(
       tab === 'synonyms' ? thesaurusData?.synonyms : thesaurusData?.antonyms
@@ -341,7 +390,7 @@ const AppPopup = forwardRef<
                             initial={{ opacity: 0, y: 100 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 100 }}
-                            class="word-details"
+                            className="word-details"
                             style={{
                               position: 'absolute',
                               top: 0,
@@ -391,12 +440,20 @@ const AppPopup = forwardRef<
                               >
                                 <HiOutlineClipboardCopy size={20} />
                               </button>
+                              <AddWordToFavoritesButton
+                                onChange={f => setFavoriteWords(favs => ({...favs, [exploringWord]: f}))}
+                                word={exploringWord}
+                                favorites={favoriteWords}
+                              />
                             </h2>
                             <h6>Definitions</h6>
                             <Definitions
                               animateDefinitions
                               word={exploringWord}
                               onLoad={() => reposition()}
+                              setIsFavorite={(f) =>
+                                (favoriteWords[exploringWord] = f)
+                              }
                             />
                           </motion.div>
                         )}
@@ -405,8 +462,19 @@ const AppPopup = forwardRef<
                   )}
                   {tab === 'definition' && (
                     <>
-                      <h2>{word}</h2>
-                      <Definitions word={word} onLoad={() => reposition()} />
+                      <h2 class="flex-middle">
+                        <span>{word}</span>
+                        <AddWordToFavoritesButton
+                          onChange={f => setFavoriteWords(favs => ({...favs, [word]: f}))}
+                          word={word}
+                          favorites={favoriteWords}
+                        />
+                      </h2>
+                      <Definitions
+                        word={word}
+                        onLoad={() => reposition()}
+                        setIsFavorite={(f) => (favoriteWords[word] = f)}
+                      />
                     </>
                   )}
                 </div>

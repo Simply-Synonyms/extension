@@ -139,32 +139,38 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
         </div>
       </motion.div>
 
-      {user && <div class="relative">
-        <motion.div
-          class="user-menu-container"
-          ref={userMenuRef}
-          variants={{
-            open: () => ({
-              height: userMenuRef.current.scrollHeight,
-            }),
-            closed: {
-              height: 0,
-              // display: 'none'
-            },
-          }}
-          initial="closed"
-          animate={userMenuOpen ? 'open' : 'closed'}
-        >
-          <div class="inner">
-            <p>{user.email}</p>
-            <button onClick={() => {
-              browser.runtime.sendMessage({
-                action: 'signOut'
-              })
-            }}>Sign Out</button>
-          </div>
-        </motion.div>
-      </div>}
+      {user && (
+        <div class="relative">
+          <motion.div
+            class="user-menu-container"
+            ref={userMenuRef}
+            variants={{
+              open: () => ({
+                height: userMenuRef.current.scrollHeight,
+              }),
+              closed: {
+                height: 0,
+                // display: 'none'
+              },
+            }}
+            initial="closed"
+            animate={userMenuOpen ? 'open' : 'closed'}
+          >
+            <div class="inner">
+              <p>{user.email}</p>
+              <button
+                onClick={() => {
+                  browser.runtime.sendMessage({
+                    action: 'signOut',
+                  })
+                }}
+              >
+                Sign Out
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
 
       <div class="body">
         {!('update_url' in browser.runtime.getManifest()) && (

@@ -45,8 +45,8 @@ const config = {
           {
             loader: 'ts-loader',
             options: {
-              configFile: p('config/tsconfig.json')
-            }
+              configFile: p('config/tsconfig.json'),
+            },
           },
         ],
         exclude: /node_modules/,

@@ -309,6 +309,14 @@
         margin: 30px auto;
     }
 
+    .bounce-button {
+        @include theme.util-transition;
+
+        &:active {
+            transform: scale(0.8);
+        }
+    }
+
     // .word-details-hover-container {
     //     position: relative;
     //     top: 0;

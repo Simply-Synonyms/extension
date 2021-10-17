@@ -35,5 +35,6 @@
     "css": ["content.bundle.css"],
     "matches": ["*://*/*"],
     "run_at": "document_idle"
-  }]
+  }],
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAip5je2HfLpi7vYOfr02Tw86u5e7NuWQuEu8zomKPuicMaBymhar4U6yYX1l4PT97fyEDNOSeOGlXmAAnCscMB4DnEnVMXiPg4ZUQ7Kv1YD//P8iGMbnaHFH21wDODER2FlhY3oqNgU3gMclwxIv6/vDRJriSMOKzj8OZUixv8DePOEUxxgY5nkgYLFYKDp1VqqwJAcIw+kwPHm1HwE6Y8tkhmhZI5JbYMCUF8BcjwhD0n15kiHF15o6JIYvZWUJEWrcORo44MX/9B0PZN4isWRfxAifH9RO3Sf3WpIx5i4HzwosXNAbzZidn+ypCx3BK1HEaG5pw31sWfKA3IX7bGQIDAQAB"
 }

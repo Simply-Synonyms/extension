@@ -1,87 +1,112 @@
 import browser from 'browserApi'
 
 // Set this env var if you're working on the API locally with a firebase emulator
-const apiURL = process.env.DEV_API
-  ? process.env.DEV_API
-  : 'https://us-central1-simply-synonyms-apiv1.cloudfunctions.net/extension/'
+const baseURL =
+  (process.env.DEV_API
+    ? process.env.DEV_API
+    : 'https://us-central1-simply-synonyms-apiv1.cloudfunctions.net/extension') +
+  '/'
 
-const GET = (route: string) => {
-  return fetch(apiURL + route, {
-    // headers: !synonymsApi.idToken
-    //   ? {}
-    //   : {
-    //       Authorization: `Bearer ${synonymsApi.idToken}`,
-    //     },
+type ApiEndpointName = 'getThesaurusData' | 'getDictionaryData' | 'favoriteWord'
+
+const apiRequest = (
+  method: 'GET' | 'POST',
+  endpoint: string,
+  idToken?: string,
+  body?: Record<string, any>
+) => {
+  return fetch(baseURL + endpoint, {
+    method,
+    headers: {
+      Authorization: idToken && `Bearer ${idToken}`,
+    },
+    body: body && JSON.stringify(body),
   }).then((r) => r.json())
 }
 
-const synonymsApi = {
-  // idToken: null,
-  // setIdToken(t) {
-  //   this.idToken = t
-  // },
-  getSynonyms(word): [Promise<any>, () => boolean] {
-    let userCancelledRequest = false // We don't actually cancel the request, but if the user closes the dialog before receiving synonym data, it doesn't increment the synonym counter.
-    const onUserCancelledRequest = () => (userCancelledRequest = true)
-
-    word = word.trim()
-    const synonymRequestPromise = GET(
-      `get-thesaurus-data?word=${encodeURIComponent(word)}`
-    )
-    // .then((data) => {
-    //   if (!!this.idToken && !userCancelledRequest)
-    //     GET('update-user-stats') // Increment user's synonym counters once they recieve the synonym data
-    //       .then(({ status }) => {
-    //         if (status === 401) {
-    //           browser.runtime.sendMessage(
-    //             null,
-    //             { action: 'refreshIdToken' },
-    //             {},
-    //             (t) => {
-    //               this.idToken = t
-    //               GET('update-user-stats') // try again
-    //             }
-    //           ) // Check for a token refresh and update token when fetch is unauthorized
-    //         }
-    //       })
-    //   return data
-    // })
-
-    return [synonymRequestPromise, onUserCancelledRequest]
+export function processApiRequest(
+  msg: {
+    action: 'processApiRequest'
+    endpoint: ApiEndpointName
+    [key: string]: any
   },
-  getWordDetails(word): [Promise<any>, () => boolean] {
-    let userCancelledRequest = false // We don't actually cancel the request, but if the user closes the dialog before receiving synonym data, it doesn't increment the synonym counter.
-    const onUserCancelledRequest = () => (userCancelledRequest = true)
+  idToken?: string
+) {
+  console.log(
+    `Processing request (with${idToken ? '' : 'out'} authentication):`,
+    msg
+  )
+  switch (msg.endpoint) {
+    case 'getThesaurusData': {
+      const req = apiRequest(
+        'GET',
+        `get-thesaurus-data?word=${encodeURIComponent(msg.word.trim())}`,
+        idToken
+      )
 
-    word = word.trim()
-    const synonymRequestPromise = GET(
-      `get-dictionary-data?word=${encodeURIComponent(word)}`
-    )
-    // .then((data) => {
-    //   if (!!this.idToken && !userCancelledRequest)
-    //     GET('update-user-stats?worddata=1') // Increment user's synonym counters once they recieve the synonym data
-    //       .then(({ status }) => {
-    //         if (status === 401) {
-    //           browser.runtime.sendMessage(
-    //             null,
-    //             { action: 'refreshIdToken' },
-    //             {},
-    //             (t) => {
-    //               this.idToken = t
-    //             }
-    //           ) // Check for a token refresh and update token when fetch is unauthorized
-    //         }
-    //       })
-    //       .catch(console.error)
-    //   return data
-    // })
-
-    return [synonymRequestPromise, onUserCancelledRequest]
-  },
+      return req
+    }
+    case 'getDictionaryData': {
+      return apiRequest(
+        'GET',
+        `get-dictionary-data?word=${encodeURIComponent(msg.word.trim())}`,
+        idToken
+      )
+    }
+    case 'favoriteWord': {
+      return apiRequest('POST', `favorite-word`, idToken, {
+        word: msg.word,
+        remove: msg.remove,
+      })
+    }
+  }
 }
 
-// browser.storage.local.get(['idToken'], ({ idToken: t }) => {
-//   synonymsApi.idToken = t
-// })
+function sendRequestToBackground(endpoint: ApiEndpointName, data: any) {
+  return new Promise((resolve, reject) => {
+    browser.runtime.sendMessage(
+      {
+        action: 'processApiRequest',
+        endpoint,
+        ...data,
+      },
+      resolve
+    )
+  }) as Promise<any>
+}
 
-export default synonymsApi
+export interface GetThesaurusDataResponse {
+  shortdefs: string[]
+  synonyms: string[][]
+  antonyms: string[][]
+}
+export const getThesaurusData = (
+  word: string
+): Promise<GetThesaurusDataResponse> =>
+  sendRequestToBackground('getThesaurusData', { word })
+
+export interface GetWordDataResponse {
+  homographs: {
+    offensive: boolean
+    pronunciation?: string
+    audio?: string
+    shortdefs: string[]
+    functionalType: string
+    word: string
+    date: string
+  }[]
+  isFavorite?: boolean
+}
+export const getWordData = (word: string): Promise<GetWordDataResponse> =>
+  sendRequestToBackground('getDictionaryData', { word })
+
+export interface FavoriteWordResponse {
+  success: boolean
+  word: string
+  favorite: boolean
+}
+export const favoriteWord = (
+  word: string,
+  remove: boolean
+): Promise<FavoriteWordResponse> =>
+  sendRequestToBackground('favoriteWord', { word, remove })

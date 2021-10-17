@@ -1,9 +1,11 @@
 import { initializeApp } from 'firebase/app'
 import firebaseConfig from 'firebaseConfig'
 import initializeAuth from './auth'
-import createContextMenus from './contextMenusAndShortcuts'
+import createContextMenus from './contextMenus'
 import browser from 'browserApi'
 import { resetSettings } from '../lib/settings'
+import { processApiRequest } from '../api'
+import { getIdToken, getAuth } from '@firebase/auth'
 
 initializeApp(firebaseConfig)
 
@@ -28,6 +30,12 @@ initializeAuth()
 
 browser.runtime.onMessage.addListener((msg, sender, respond) => {
   switch (msg.action) {
+    case 'processApiRequest':
+      ;(async () => {
+        const user = getAuth().currentUser
+        respond(await processApiRequest(msg, user && (await getIdToken(user))))
+      })()
+      return true
     case 'playAudio':
       // We have to play audio files from the background so that websites' CSP headers don't interfere
       new Audio(msg.url).play()
@@ -52,5 +60,4 @@ browser.runtime.onMessage.addListener((msg, sender, respond) => {
       })
       break
   }
-  // return true
 })

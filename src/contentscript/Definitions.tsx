@@ -4,44 +4,39 @@ import { useEffect, useState } from 'preact/hooks'
 import toast from 'react-hot-toast'
 import { HiOutlineClipboardCopy } from '@react-icons/all-files/hi/HiOutlineClipboardCopy'
 import { RiChatVoiceLine } from '@react-icons/all-files/ri/RiChatVoiceLine'
-import api from '../api'
+import { GetWordDataResponse, getWordData } from '../api'
 import { FiExternalLink } from '@react-icons/all-files/fi/FiExternalLink'
+import { FiStar } from '@react-icons/all-files/fi/FiStar'
 import { motion } from 'framer-motion'
 
 const Definitions: Preact.FunctionComponent<{
   word: string
   onLoad: () => void
+  setIsFavorite?: (fav: boolean) => void
   animateDefinitions?: boolean
-}> = ({ word, onLoad, animateDefinitions }) => {
+}> = ({ word, onLoad, animateDefinitions, setIsFavorite }) => {
   const [loading, setLoading] = useState(false)
-  const [data, setData] = useState<{
-    homographs: {
-      offensive: boolean
-      pronunciation?: string
-      audio?: string
-      shortdefs: string[]
-      functionalType: string
-      word: string
-      date: string
-    }[]
-  }>(null)
+  const [data, setData] = useState<GetWordDataResponse>(null)
 
   const loadDictionaryData = async () => {
     setLoading(true)
     setData(null)
 
-    const [wordDetailsRequestPromise, onUserCancelledRequest] =
-      api.getWordDetails(word)
-
-    const data = await wordDetailsRequestPromise.catch((err) => {
-      toast.error(`Something went wrong and we couldn't fetch the definition`, {
-        duration: 3000,
-      })
-    })
+    const data =
+      (await getWordData(word).catch((err) => {
+        toast.error(
+          `Something went wrong and we couldn't fetch the definition`,
+          {
+            duration: 3000,
+          }
+        )
+      })) || null
 
     setLoading(false)
     if (Array.isArray(data?.homographs)) setData(data)
-    else setData({ homographs: [] })
+    else setData({ homographs: [], isFavorite: data?.isFavorite })
+
+    if (data.isFavorite !== undefined) setIsFavorite(data.isFavorite)
   }
 
   useEffect(() => {

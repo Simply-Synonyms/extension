@@ -13,7 +13,7 @@ browser.runtime.onMessageExternal.addListener((msg, sender, respond) => {
   switch (msg.action) {
     case 'signInWithToken':
       signInWithCustomToken(auth, msg.token).catch((error) => {
-        console.log('error', error)
+        console.log('Error authenticating', error)
       })
     case 'signOutExtension':
       signOut(auth)
@@ -23,18 +23,12 @@ browser.runtime.onMessageExternal.addListener((msg, sender, respond) => {
 
 browser.runtime.onMessage.addListener((msg, sender, respond) => {
   switch (msg.action) {
-    // case 'refreshIdToken':
-    //   firebase
-    //     .auth()
-    //     .currentUser?.getIdToken()
-    //     ?.then((t) => {
-    //       chrome.storage.local.set({ idToken: t })
-    //       respond(t)
-    //     })
-    //   break
+    case 'checkIsLoggedIn':
+      respond(!!getAuth().currentUser)
+      break
     case 'getUser':
       const user: User | null = getAuth().currentUser
-      respond(user.toJSON())
+      respond(user?.toJSON())
       break
     case 'signOut':
       browser.tabs.create({
@@ -53,13 +47,7 @@ export default function initializeAuth() {
   onAuthStateChanged(getAuth(), (user) => {
     if (user) {
       console.log('Authenticated', user)
-      // Store IdToken so it can be used by content scripts
-      user.getIdToken().then((t) => {
-        browser.storage.local.set({ idToken: t })
-        // api.setIdToken(t)
-      })
     } else {
-      browser.storage.local.set({ idToken: null })
       console.log('Not authenticated')
     }
   })
