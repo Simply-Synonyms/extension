@@ -7,7 +7,11 @@ const baseURL =
     : 'https://us-central1-simply-synonyms-apiv1.cloudfunctions.net/extension') +
   '/'
 
-type ApiEndpointName = 'getThesaurusData' | 'getDictionaryData' | 'favoriteWord'
+type ApiEndpointName =
+  | 'getThesaurusData'
+  | 'getDictionaryData'
+  | 'favoriteWord'
+  | 'getFavoriteWords'
 
 const apiRequest = (
   method: 'GET' | 'POST',
@@ -59,10 +63,13 @@ export function processApiRequest(
         remove: msg.remove,
       })
     }
+    case 'getFavoriteWords': {
+      return apiRequest('GET', `get-favorite-words`, idToken)
+    }
   }
 }
 
-function sendRequestToBackground(endpoint: ApiEndpointName, data: any) {
+function sendRequestToBackground(endpoint: ApiEndpointName, data: any = {}) {
   return new Promise((resolve, reject) => {
     browser.runtime.sendMessage(
       {
@@ -110,3 +117,12 @@ export const favoriteWord = (
   remove: boolean
 ): Promise<FavoriteWordResponse> =>
   sendRequestToBackground('favoriteWord', { word, remove })
+
+export interface GetFavoriteWordsResponse {
+  favoriteWords: {
+    id: number
+    word: string
+  }[]
+}
+export const getFavoriteWords = (): Promise<GetFavoriteWordsResponse> =>
+  sendRequestToBackground('getFavoriteWords')

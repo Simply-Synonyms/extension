@@ -9,11 +9,7 @@ import { FiUser } from '@react-icons/all-files/fi/FiUser'
 import { useEffect, useRef, useState } from 'preact/hooks'
 import { motion, AnimatePresence } from 'framer-motion'
 import { User } from '@firebase/auth'
-
-const WEBSITE =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000'
-    : 'https://synonyms.bweb.app/'
+import { WEBSITE_URL } from '../config'
 
 const greetings = [
   '',
@@ -185,14 +181,14 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
               <a
                 target="_blank"
                 class="button large"
-                href={WEBSITE + '/app/login'}
+                href={WEBSITE_URL + '/app/login'}
               >
                 Sign In
               </a>
               <a
                 target="_blank"
                 class="button large secondary"
-                href={WEBSITE + '/app/signup'}
+                href={WEBSITE_URL + '/app/signup'}
               >
                 Make an Account
               </a>
@@ -218,14 +214,14 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
             browser.runtime.getManifest().version
           }`}</div>
           <span>
-            <a href="https://synonyms.bweb.app/changelog" target="_blank">
+            <a href={WEBSITE_URL + '/changelog'} target="_blank">
               Change log
             </a>
           </span>
           <span>
             {' '}
             &middot;{' '}
-            <a href="https://synonyms.bweb.app/privacy" target="_blank">
+            <a href={WEBSITE_URL + '/privacy'} target="_blank">
               Privacy
             </a>
           </span>
@@ -245,71 +241,6 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
           </span>
         </div>
       </div>
-
-      {/* <p>
-        A simple synonym finder. Double click any word on the page to find a
-        definition and synonyms.
-      </p>
-      <p>
-        <i>
-          Powered by the{' '}
-          <a
-            class="no-highlight"
-            href="https://dictionaryapi.com/?ref=simply-synonyms"
-            target="_blank"
-            rel="noopener"
-          >
-            Merriam-Webster Dictionary API
-          </a>
-        </i>
-      </p> */}
-      {/* <div class="section">
-        <p id="user-welcome"></p>
-        <div id="signin-div">
-          <p>
-            Sign in with Google to access additional features, including an
-            optional personalized email each week.
-          </p>
-          <button id="google-signin">Sign in with Google</button>
-          <p class="fine-print">
-            By signing in, you agree to the{' '}
-            <a
-              href="https://synonyms.bweb.app/privacy"
-              class="no-highlight"
-              target="_blank"
-            >
-              Simply Synonyms Privacy Policy
-            </a>
-            . You also agree to receive synonym-related informational emails
-            from Simply Synonyms, which you can unsubscribe from at any time.
-          </p>
-        </div>
-        <button id="signout">Sign Out</button>
-      </div> */}
-      {/* <div class="section">
-        <button id="open-quicksearch">Open Quick Thesaurus Search</button>
-        <p class="fine-print">
-          Tip: Quick search can now be accessed by pressing <code>Alt+S</code>{' '}
-          or from the right click menu on any page.
-        </p>
-      </div>
-      <div class="section">
-        <h3>Options</h3>
-        <div class="control-box">
-          <p>
-            Disable Simply Synonyms Popup (will take effect after page reload)
-          </p>
-          <label class="switch">
-            <input type="checkbox" id="disable_switch" />
-            <span class="slider round"></span>
-          </label>
-        </div>
-        <div class="control-box">
-          <a href="/page/settings.html" target="_blank">
-            <button>Open Settings</button>
-          </a>
-        </div>
-      </div> */}
     </div>
   )
 }

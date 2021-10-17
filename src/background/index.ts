@@ -6,6 +6,7 @@ import browser from 'browserApi'
 import { resetSettings } from '../lib/settings'
 import { processApiRequest } from '../api'
 import { getIdToken, getAuth } from '@firebase/auth'
+import { WEBSITE_URL } from '../config'
 
 initializeApp(firebaseConfig)
 
@@ -14,15 +15,23 @@ if ('update_url' in browser.runtime.getManifest())
 
 browser.runtime.onInstalled.addListener((details) => {
   const version = browser.runtime.getManifest().version
-  if (
-    details.reason === 'install' ||
-    version === '0.3.5' ||
-    version === '0.3.6' ||
-    version === '0.3.7'
-  ) {
-    // Set default settings
-    resetSettings()
-  }
+  browser.storage.sync.get('v1_installed', ({ v1_installed }) => {
+    if (!v1_installed) {
+      // Set default settings
+      resetSettings()
+
+      const onboardingUrl =
+        WEBSITE_URL +
+        `/onboarding?v=${encodeURIComponent(version)}${
+          details.reason !== 'install' ? '&fromAlpha=1' : ''
+        }`
+      browser.tabs.create({
+        url: onboardingUrl,
+      })
+    }
+  })
+
+  browser.storage.sync.set({ v1_installed: true })
 })
 
 createContextMenus()

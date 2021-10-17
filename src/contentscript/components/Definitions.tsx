@@ -4,10 +4,11 @@ import { useEffect, useState } from 'preact/hooks'
 import toast from 'react-hot-toast'
 import { HiOutlineClipboardCopy } from '@react-icons/all-files/hi/HiOutlineClipboardCopy'
 import { RiChatVoiceLine } from '@react-icons/all-files/ri/RiChatVoiceLine'
-import { GetWordDataResponse, getWordData } from '../api'
+import { GetWordDataResponse, getWordData } from '../../api'
 import { FiExternalLink } from '@react-icons/all-files/fi/FiExternalLink'
 import { FiStar } from '@react-icons/all-files/fi/FiStar'
 import { motion } from 'framer-motion'
+import Loader from './Loader'
 
 const Definitions: Preact.FunctionComponent<{
   word: string
@@ -50,20 +51,7 @@ const Definitions: Preact.FunctionComponent<{
 
   return (
     <>
-      {loading && (
-        <div class="word-details-loading">
-          {/* <div class="folding-cube">
-            <div class="cube1 sk-cube"></div>
-            <div class="cube2 sk-cube"></div>
-            <div class="cube4 sk-cube"></div>
-            <div class="cube3 sk-cube"></div>
-          </div> */}
-          <div class="spinner">
-            <div class="double-bounce1"></div>
-            <div class="double-bounce2"></div>
-          </div>
-        </div>
-      )}
+      {loading && <Loader />}
       {data && (
         <div class="definitions">
           <motion.div
@@ -115,7 +103,7 @@ const Definitions: Preact.FunctionComponent<{
                     )}
                     {hg.audio && (
                       <button
-                        class="pronunciation"
+                        class="pronunciation bounce-button"
                         onClick={(e) => {
                           e.stopPropagation()
                           browser.runtime.sendMessage(null, {

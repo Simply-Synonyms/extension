@@ -10,12 +10,13 @@ import { toast } from 'react-hot-toast'
 import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft'
 import { HiOutlineClipboardCopy } from '@react-icons/all-files/hi/HiOutlineClipboardCopy'
 import { useSpring, animated } from 'react-spring'
-import Definitions from './Definitions'
+import Definitions from './components/Definitions'
 import { motion, AnimatePresence } from 'framer-motion'
 import browser from 'browserApi'
 import { AiOutlineStar } from '@react-icons/all-files/ai/AiOutlineStar'
 import { AiFillStar } from '@react-icons/all-files/ai/AiFillStar'
-import { isLoggedIn } from '../lib/auth'
+import { isLoggedIn } from '../lib/hooks'
+import MoreTab from './components/MoreTab'
 
 // Minimum spacing between popup and edges of window
 const WINDOW_MARGIN = 20
@@ -45,7 +46,7 @@ const AddWordToFavoritesButton = ({
       onClick={async (e) => {
         e.stopPropagation()
 
-        if (!await isLoggedIn()) {
+        if (!(await isLoggedIn())) {
           toast.error('Make an account to save favorites')
           return
         }
@@ -86,10 +87,9 @@ const AppPopup = forwardRef<
     { word, position: initialPosition, open, onClose, targetType, targetEl },
     ref
   ) => {
-
     const [expanded, setExpanded] = useState(false)
 
-    type Tab = 'synonyms' | 'antonyms' | 'definition'
+    type Tab = 'synonyms' | 'antonyms' | 'definition' | 'more'
     const [tab, _setTab] = useState<Tab>('synonyms')
 
     const setTab = (tab: Tab) => {
@@ -325,6 +325,14 @@ const AppPopup = forwardRef<
                       >
                         Definition
                       </button>
+                      {targetType && (
+                        <button
+                          class={tab === 'more' && 'active'}
+                          onClick={() => setTab('more')}
+                        >
+                          My words
+                        </button>
+                      )}
                     </div>
                   }
                 </div>
@@ -340,132 +348,130 @@ const AppPopup = forwardRef<
                 )}
 
                 <div class="content">
-                  {thesaurusData && tab !== 'definition' && (
+                  {thesaurusData && (tab === 'synonyms' || tab === 'antonyms') && (
                     <>
-                      {!exploringWord && (
-                        <div>
-                          <h2 class={noResults && 'center'}>
-                            {!noResults ? 'Results for' : `No ${tab} found for`}
-                            <span class="primary-color"> {word}</span>
-                          </h2>
-                          {noResults && (
-                            <img
-                              src={browser.runtime.getURL(
-                                '/assets/undraw_not_found.svg'
-                              )}
-                            />
-                          )}
-                          <div class="words">
-                            {(tab === 'synonyms'
-                              ? thesaurusData.synonyms
-                              : thesaurusData.antonyms
-                            )?.map((wordGroup, groupIndex) => (
-                              <div>
-                                <h4 className="word-group-label">
-                                  <span class="muted">{groupIndex + 1}. </span>
-                                  {thesaurusData.shortdefs[groupIndex]}
-                                </h4>
-                                {wordGroup.map((w) => (
-                                  <div class="container">
-                                    <span
-                                      class="word"
-                                      onClick={(e) => {
-                                        setExploringWord(w)
-                                        e.stopPropagation()
-                                      }}
-                                    >
-                                      {w}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      <AnimatePresence>
-                        {exploringWord && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 100 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 100 }}
-                            className="word-details"
-                            style={{
-                              position: 'absolute',
-                              top: 0,
-                              width: '100%',
-                            }}
-                          >
-                            <div class="top">
-                              <a
-                                class="back"
-                                onClick={(e) => {
-                                  setExploringWord(null)
-                                  e.stopPropagation()
-                                }}
-                              >
-                                <FiChevronLeft size={18} />
-                                <span>Back to words</span>
-                              </a>
-                              <div class="space"></div>
-                              {targetType && (
-                                <div>
-                                  <button
-                                    class="button"
+                      <div>
+                        <h2 class={noResults && 'center'}>
+                          {!noResults ? 'Results for' : `No ${tab} found for`}
+                          <span class="primary-color"> {word}</span>
+                        </h2>
+                        {noResults && (
+                          <img
+                            src={browser.runtime.getURL(
+                              '/assets/undraw_not_found.svg'
+                            )}
+                          />
+                        )}
+                        <div class="words">
+                          {(tab === 'synonyms'
+                            ? thesaurusData.synonyms
+                            : thesaurusData.antonyms
+                          )?.map((wordGroup, groupIndex) => (
+                            <div>
+                              <h4 className="word-group-label">
+                                <span class="muted">{groupIndex + 1}. </span>
+                                {thesaurusData.shortdefs[groupIndex]}
+                              </h4>
+                              {wordGroup.map((w) => (
+                                <div class="container">
+                                  <span
+                                    class="word"
                                     onClick={(e) => {
-                                      replaceWord(exploringWord)
-                                      onClose()
+                                      setExploringWord(w)
+                                      e.stopPropagation()
                                     }}
                                   >
-                                    Replace word
-                                  </button>
+                                    {w}
+                                  </span>
                                 </div>
-                              )}
+                              ))}
                             </div>
-
-                            <h2 class="flex-middle">
-                              <span>{exploringWord}</span>
-                              <button
-                                title="Copy word to clipboard"
-                                onClick={async (e) => {
-                                  e.stopPropagation()
-                                  await navigator.clipboard.writeText(
-                                    exploringWord
-                                  )
-                                  toast.success(
-                                    `Copied "${exploringWord}" to clipboard`
-                                  )
-                                }}
-                              >
-                                <HiOutlineClipboardCopy size={20} />
-                              </button>
-                              <AddWordToFavoritesButton
-                                onChange={f => setFavoriteWords(favs => ({...favs, [exploringWord]: f}))}
-                                word={exploringWord}
-                                favorites={favoriteWords}
-                              />
-                            </h2>
-                            <h6>Definitions</h6>
-                            <Definitions
-                              animateDefinitions
-                              word={exploringWord}
-                              onLoad={() => reposition()}
-                              setIsFavorite={(f) =>
-                                (favoriteWords[exploringWord] = f)
-                              }
-                            />
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                          ))}
+                        </div>
+                      </div>
                     </>
                   )}
+                  <AnimatePresence>
+                    {exploringWord && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 100 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 100 }}
+                        className="word-details"
+                      >
+                        <div class="top">
+                          <a
+                            class="back"
+                            onClick={(e) => {
+                              setExploringWord(null)
+                              e.stopPropagation()
+                            }}
+                          >
+                            <FiChevronLeft size={18} />
+                            <span>Back to words</span>
+                          </a>
+                          <div class="space"></div>
+                          {targetType && (
+                            <div>
+                              <button
+                                class="button"
+                                onClick={(e) => {
+                                  replaceWord(exploringWord)
+                                  onClose()
+                                }}
+                              >
+                                Replace word
+                              </button>
+                            </div>
+                          )}
+                        </div>
+
+                        <h2 class="flex-middle">
+                          <span>{exploringWord}</span>
+                          <button
+                            class="bounce-button"
+                            title="Copy word to clipboard"
+                            onClick={async (e) => {
+                              e.stopPropagation()
+                              await navigator.clipboard.writeText(exploringWord)
+                              toast.success(
+                                `Copied "${exploringWord}" to clipboard`
+                              )
+                            }}
+                          >
+                            <HiOutlineClipboardCopy size={20} />
+                          </button>
+                          <AddWordToFavoritesButton
+                            onChange={(f) =>
+                              setFavoriteWords((favs) => ({
+                                ...favs,
+                                [exploringWord]: f,
+                              }))
+                            }
+                            word={exploringWord}
+                            favorites={favoriteWords}
+                          />
+                        </h2>
+                        <h6>Definitions</h6>
+                        <Definitions
+                          animateDefinitions
+                          word={exploringWord}
+                          onLoad={() => reposition()}
+                          setIsFavorite={(f) =>
+                            (favoriteWords[exploringWord] = f)
+                          }
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                   {tab === 'definition' && (
                     <>
                       <h2 class="flex-middle">
                         <span>{word}</span>
                         <AddWordToFavoritesButton
-                          onChange={f => setFavoriteWords(favs => ({...favs, [word]: f}))}
+                          onChange={(f) =>
+                            setFavoriteWords((favs) => ({ ...favs, [word]: f }))
+                          }
                           word={word}
                           favorites={favoriteWords}
                         />
@@ -476,6 +482,12 @@ const AppPopup = forwardRef<
                         setIsFavorite={(f) => (favoriteWords[word] = f)}
                       />
                     </>
+                  )}
+                  {tab === 'more' && (
+                    <MoreTab
+                      onWordClick={(w) => setExploringWord(w)}
+                      isExploringWord={!!exploringWord}
+                    />
                   )}
                 </div>
               </>

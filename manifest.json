@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Simply Synonyms",
   "author": "Benjamin Ashbaugh",
-  "version": "0.99.0",
+  "version": "0.99.1",
   "description": "A fast and lightweight thesaurus and dictionary extension for Chrome",
   "icons": {
     "16": "icons/icon_16.png",
@@ -28,7 +28,7 @@
     "assets/*"
   ],
   "externally_connectable" : {
-    "matches": [ "*://localhost/*", "https://synonyms.bweb.app/*" ]
+    "matches": [ "*://localhost/*", "https://simplysynonyms.com/*" ]
   },
   "content_scripts": [{
     "js": ["content.bundle.js"],

@@ -6,6 +6,7 @@ import {
   User,
 } from 'firebase/auth'
 import browser from 'browserApi'
+import { WEBSITE_URL } from '../config'
 
 // TODO verify orgin
 browser.runtime.onMessageExternal.addListener((msg, sender, respond) => {
@@ -35,7 +36,7 @@ browser.runtime.onMessage.addListener((msg, sender, respond) => {
         url:
           process.env.NODE_ENV === 'development'
             ? 'http://localhost:3000/app/logout'
-            : 'https://synonyms.bweb.app/app/logout',
+            : WEBSITE_URL + '/app/logout',
       })
       signOut(getAuth())
       break

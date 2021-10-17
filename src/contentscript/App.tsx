@@ -74,7 +74,7 @@ const App: Preact.FunctionComponent<{
 
     document.body.addEventListener('dblclick', processDoubleClick)
 
-    document.addEventListener('click', (e) => {
+    document.body.addEventListener('click', (e) => {
       if (!popupRef.current?.contains(e.target as any)) setPopupOpen(false)
     })
   }, [])

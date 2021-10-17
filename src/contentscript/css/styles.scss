@@ -238,6 +238,11 @@
     }
 
     .word-details {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        min-height: 100%;
+        background: white;
         display: flex;
         flex-direction: column;
         gap: 8px;
