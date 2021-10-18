@@ -1,4 +1,4 @@
-const Loader = () => {
+const LoadingSpinner = () => {
   return (
     <div>
       {/* <div class="folding-cube">
@@ -15,4 +15,4 @@ const Loader = () => {
   )
 }
 
-export default Loader
+export default LoadingSpinner

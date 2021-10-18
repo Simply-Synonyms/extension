@@ -2,7 +2,7 @@ import Preact from 'preact'
 import { useEffect, useState } from 'preact/hooks'
 import toast from 'react-hot-toast'
 import { getFavoriteWords, GetFavoriteWordsResponse } from '../../api'
-import Loader from './Loader'
+import LoadingSpinner from '../components/LoadingSpinner'
 import { useIsLoggedIn } from '../../lib/hooks'
 import { WEBSITE_URL } from '../../config'
 
@@ -41,7 +41,7 @@ const MoreTab: Preact.FunctionComponent<{
       {isLoggedIn && (
         <>
           <h2>Favorites</h2>
-          {loading && <Loader />}
+          {loading && <LoadingSpinner />}
           <div class="words">
             {favorites?.favoriteWords?.map((w) => (
               <div class="container" key={w.id}>

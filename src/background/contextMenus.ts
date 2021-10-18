@@ -3,51 +3,50 @@ import { saveSettings, getSettings } from '../lib/settings'
 
 export default function () {
   browser.contextMenus.create({
-    title: 'Simply Synonyms Tools',
-    id: 'menuParent',
+    title: 'Open Simply Synonyms',
+    id: 'open',
     contexts: ['all'],
   })
-  browser.contextMenus.create({
-    title: 'Search thesaurus/dictionary',
-    id: 'openQuickSearch',
-    parentId: 'menuParent',
-    contexts: ['all'],
-  })
-  browser.contextMenus.create({
-    title: 'Disable on this site',
-    id: 'disableSite',
-    parentId: 'menuParent',
-    contexts: ['all'],
-  })
-  browser.contextMenus.create({
-    title: 'Enable on this site',
-    id: 'enableSite',
-    parentId: 'menuParent',
-    contexts: ['all'],
-    visible: false,
-  })
-  browser.contextMenus.create({
-    title: 'Options',
-    id: 'settings',
-    parentId: 'menuParent',
-    contexts: ['all'],
-  })
-  browser.contextMenus.create({
-    title: 'Help',
-    id: 'help',
-    parentId: 'menuParent',
-    contexts: ['all'],
-  })
+  // browser.contextMenus.create({
+  //   title: 'Search thesaurus/dictionary',
+  //   id: 'openQuickSearch',
+  //   parentId: 'menuParent',
+  //   contexts: ['all'],
+  // })
+  // browser.contextMenus.create({
+  //   title: 'Reword this phrase',
+  //   id: 'openQuickSearch',
+  //   parentId: 'menuParent',
+  //   contexts: ['all'],
+  // })
+  // browser.contextMenus.create({
+  //   title: 'Disable on this site',
+  //   id: 'disableSite',
+  //   parentId: 'menuParent',
+  //   contexts: ['all'],
+  // })
+  // browser.contextMenus.create({
+  //   title: 'Enable on this site',
+  //   id: 'enableSite',
+  //   parentId: 'menuParent',
+  //   contexts: ['all'],
+  //   visible: false,
+  // })
+  // browser.contextMenus.create({
+  //   title: 'Help',
+  //   id: 'help',
+  //   parentId: 'menuParent',
+  //   contexts: ['all'],
+  // })
 
   /* Context menu handlers */
   browser.contextMenus.onClicked.addListener((info, tab) => {
     switch (info.menuItemId) {
-      case 'settings':
-        browser.tabs.create({
-          url: browser.runtime.getURL('page/settings.html'),
+      case 'open':
+        browser.tabs.sendMessage(tab.id, {
+          action: 'openPopup',
         })
-        break
-      case 'enableSite':
+      // case 'enableSite':
       // case 'disableSite':
       //   getSettings().then((options) => {
       //     const siteHost = new URL(tab.url).host

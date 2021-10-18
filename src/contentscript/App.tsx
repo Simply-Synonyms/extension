@@ -12,51 +12,55 @@ const App: Preact.FunctionComponent<{
 }> = ({ settings }) => {
   const popupRef = useRef<HTMLDivElement>()
 
-  const [popupOpen, setPopupOpen] = useState(false)
+  const [popupOpen, setPopupOpen] = useState<boolean | 'expand'>(false)
   // const [position, setPosition] = useState<[x: number, y: number]>(null)
 
   let enableOnSite = !settings.siteDisableList.includes(window.location.host)
 
-  const wordRef = useRef<string>()
+  const textRef = useRef<string>()
   const positionRef = useRef<[x: number, y: number]>()
   const targetTypeRef = useRef<TargetType>()
   const targetElRef = useRef<HTMLElement>()
 
   // Function to find selected word and open synonym popup.
-  function processDoubleClick(e, w?) {
+  function processEvent(e: Event) {
     if (!enableOnSite) return
 
-    // Figure out which type of element the word is in (the target). Null means the the text isn't editable
-    let targetType: TargetType = null
-    if (window.location.hostname === 'docs.google.com') targetType = 'gdoc'
-    else if (e.target.hasAttribute('contenteditable'))
-      targetType = 'contenteditable'
-    if (['input', 'textarea'].includes(e.target.nodeName.toLowerCase()))
-      targetType = 'input'
+    // Don't open popup again if user selected a word within popup
+    if (popupRef.current?.contains(e.target as any)) return
 
-    if (!targetType && settings.onlyEditableText) return
+    // Figure out which type of element the target is. Null targetType means the the text isn't editable
+    let targetType: TargetType = null,
+      text: string
 
-    let word, selection, googleDoc
-    if (targetType === 'gdoc') {
-      // TODO support Google Docs with their new canvas renderer
+    if (window.location.hostname === 'docs.google.com') {
+      targetType = 'gdoc'
+
+      // TODO handle google doc
       return
     } else {
-      selection = window.getSelection()
-      word = w || selection.toString().trim()
+      if ((e.target as any).hasAttribute('contenteditable'))
+        targetType = 'contenteditable'
+      if (
+        ['input', 'textarea'].includes((e.target as any).nodeName.toLowerCase())
+      )
+        targetType = 'input'
+
+      // Only enable on editable text; cancel
+      if (!targetType && settings.onlyEditableText) return
+
+      const sel = window.getSelection()
+      text = sel.toString()
+
+      if (text.length < 3) text = ''
     }
 
-    if (word.length < 2) return
-    if (word.includes(' ')) return
-
-    // Don't open popup again if user selected a word within popup
-    if (!e || popupRef.current?.contains(e.target)) return
-
-    positionRef.current = [e.clientX, e.clientY]
-    wordRef.current = word
+    positionRef.current = [(e as any).clientX, (e as any).clientY]
+    textRef.current = text.trim()
     targetTypeRef.current = targetType
-    targetElRef.current = e.target
-    setPopupOpen(true)
-    // onPageInterfaceMessage('closePopup', (_) => resetPopup())
+    targetElRef.current = e.target as any
+    // Open the popup immediately if this was a double click of a single word
+    if (text && e.type === 'dblclick' && !text.includes(' ')) setPopupOpen(true)
   }
 
   useEffect(() => {
@@ -66,17 +70,24 @@ const App: Preact.FunctionComponent<{
         case 'openQuickSearch':
           // QuickSearchPopup.open()
           break
-        case 'enableDoubleClickPopup':
-          enableOnSite = !!msg.enable
+        // case 'enableDoubleClickPopup':
+        //   enableOnSite = !!msg.enable
+        //   break
+        case 'openPopup':
+          // Expand the popup immediately
+          setPopupOpen('expand')
           break
       }
     })
 
-    document.body.addEventListener('dblclick', processDoubleClick)
-
-    document.body.addEventListener('click', (e) => {
+    document.addEventListener('click', (e) => {
       if (!popupRef.current?.contains(e.target as any)) setPopupOpen(false)
     })
+
+    document.body.addEventListener('dblclick', processEvent)
+    document.addEventListener('mouseup', processEvent)
+    document.addEventListener('contextmenu', processEvent)
+    document.addEventListener('keyup', processEvent)
   }, [])
 
   return (
@@ -89,7 +100,7 @@ const App: Preact.FunctionComponent<{
         }}
       />
       <AppPopup
-        word={wordRef.current}
+        text={textRef.current}
         ref={popupRef}
         position={positionRef.current}
         targetType={targetTypeRef.current}

@@ -8,7 +8,7 @@ import { GetWordDataResponse, getWordData } from '../../api'
 import { FiExternalLink } from '@react-icons/all-files/fi/FiExternalLink'
 import { FiStar } from '@react-icons/all-files/fi/FiStar'
 import { motion } from 'framer-motion'
-import Loader from './Loader'
+import LoadingSpinner from './LoadingSpinner'
 
 const Definitions: Preact.FunctionComponent<{
   word: string
@@ -51,7 +51,7 @@ const Definitions: Preact.FunctionComponent<{
 
   return (
     <>
-      {loading && <Loader />}
+      {loading && <LoadingSpinner />}
       {data && (
         <div class="definitions">
           <motion.div
