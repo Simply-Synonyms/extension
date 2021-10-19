@@ -154,6 +154,9 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
           >
             <div class="inner">
               <p>{user.email}</p>
+              <a target="_blank" href={WEBSITE_URL + '/app/account'}>
+                <button>Account</button>
+              </a>
               <button
                 onClick={() => {
                   browser.runtime.sendMessage({
@@ -193,6 +196,17 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
                 Make an Account
               </a>
               <p>Creating an account grants access extra features</p>
+            </>
+          )}
+          {user && (
+            <>
+              <a
+                target="_blank"
+                class="button large"
+                href={WEBSITE_URL + '/app'}
+              >
+                Open App
+              </a>
             </>
           )}
         </div>

@@ -16,6 +16,7 @@ import ThesaurusTabs from './tabs/ThesaurusTabs'
 import WordDetailsOverlay from './components/WordDetailsOverlay'
 import PhraseTab from './tabs/PhraseTab'
 import SearchTab from './tabs/SearchTab'
+import { useApiRequest } from '../lib/hooks'
 
 // Minimum spacing between popup and edges of window
 const WINDOW_MARGIN = 20
@@ -70,10 +71,21 @@ const AppPopup = forwardRef<
       }
     }, [open])
 
-    const [thesaurusLoading, setThesaurusLoading] = useState(true)
-    const [loadingStatus, setLoadingStatus] = useState('')
-    const [thesaurusData, setThesaurusData] =
-      useState<GetThesaurusDataResponse>(null)
+    // const [thesaurusLoading, setThesaurusLoading] = useState(true)
+    // const [thesaurusData, setThesaurusData] =
+    //   useState<GetThesaurusDataResponse>(null)
+
+    const [thesaurusData, thesaurusLoading, loadThesaurus, resetThesaurus] =
+      useApiRequest<GetThesaurusDataResponse>(
+        () => getThesaurusData(word),
+        `We couldn't reach our servers. Please try again.`
+      )
+
+    useEffect(() => {
+      if (word && expanded && tab !== 'definition' && !thesaurusData) {
+        loadThesaurus()
+      }
+    }, [word, expanded, tab])
 
     const [exploringWord, setExploringWord] = useState<string | null>(null)
 
@@ -82,9 +94,8 @@ const AppPopup = forwardRef<
     const reset = () => {
       setExpanded(false)
       setPosition(null)
-      setThesaurusLoading(true)
+      resetThesaurus()
       setTab(targetType ? 'synonyms' : 'definition')
-      setThesaurusData(null)
     }
 
     // TODO figure out this positioning nightmare
@@ -177,10 +188,12 @@ const AppPopup = forwardRef<
     /* Reposition when any of the following changes */
     useEffect(reposition, [open, expanded, ref.current, thesaurusData, tab])
 
+    // Reset when popup closes
     useEffect(() => {
       if (!open) reset()
     }, [open])
 
+    // Auto-expand popup when needed
     useEffect(() => {
       if (open === 'expand' && position) setExpanded(true)
     }, [open, position])
@@ -191,8 +204,8 @@ const AppPopup = forwardRef<
         if (!expanded || e.key === 'Escape') onClose()
       }
       document.addEventListener('keydown', func)
+      // On cleanup remove the listener
       return () => {
-        // On cleanup remove the listener
         document.removeEventListener('keydown', func)
       }
     }, [expanded])
@@ -206,26 +219,27 @@ const AppPopup = forwardRef<
       // setLoadingStatus(`We're having trouble getting a response. Please try again.`)
     }
 
-    const loadThesaurus = async () => {
-      updateLoadingStatus()
-
-      const data =
-        (await getThesaurusData(word).catch((err) => {
-          toast.error(`We couldn't reach our servers. Please try again.`, {
-            duration: 4000,
-          })
-          onClose()
-        })) || null
-
-      setThesaurusData(data)
-      setThesaurusLoading(false)
-    }
-
-    useEffect(() => {
-      if (word && expanded && tab !== 'definition' && !thesaurusData) {
-        loadThesaurus()
+    const replaceText = (newWord: string) => {
+      switch (targetType) {
+        case 'input':
+          const el = targetEl as HTMLInputElement
+          // Replace input text with a new string containing the new word
+          el.value =
+            el.value.slice(0, el.selectionStart) +
+            newWord +
+            el.value.slice(el.selectionEnd)
+          break
+        case 'gdoc':
+          // Replace selected word by typing out letters in new word
+          // for (let i = 0; i < wordChosen.length; i++) {
+          //   sendPageInterfaceMessage('simulateGoogleDocKeypress', {
+          //     key: wordChosen[i],
+          //   })
+          // }
+          break
       }
-    }, [word, expanded, tab])
+      onClose()
+    }
 
     const [favoriteWords, setFavoriteWords] = useState<Record<string, boolean>>(
       {}
@@ -360,14 +374,12 @@ const AppPopup = forwardRef<
                         [exploringWord]: f,
                       }))
                     }}
-                    onClose={(closePopup) => {
-                      setExploringWord(null)
-                      if (closePopup) onClose()
-                    }}
+                    onClose={() => setExploringWord(null)}
                     onLoad={() => reposition()}
                     targetEl={targetEl}
                     targetType={targetType}
                     word={exploringWord}
+                    replaceText={replaceText}
                   />
 
                   {tab === 'more' && (
@@ -377,7 +389,13 @@ const AppPopup = forwardRef<
                     />
                   )}
 
-                  {tab === 'phrase' && <PhraseTab phrase={phrase} />}
+                  {tab === 'phrase' && (
+                    <PhraseTab
+                      phrase={phrase}
+                      onLoad={() => reposition()}
+                      replaceText={replaceText}
+                    />
+                  )}
 
                   {tab === 'search' && <SearchTab />}
                 </div>

@@ -6,9 +6,9 @@ import { HiOutlineClipboardCopy } from '@react-icons/all-files/hi/HiOutlineClipb
 import { RiChatVoiceLine } from '@react-icons/all-files/ri/RiChatVoiceLine'
 import { GetWordDataResponse, getWordData } from '../../api'
 import { FiExternalLink } from '@react-icons/all-files/fi/FiExternalLink'
-import { FiStar } from '@react-icons/all-files/fi/FiStar'
 import { motion } from 'framer-motion'
 import LoadingSpinner from './LoadingSpinner'
+import { useApiRequest } from '../../lib/hooks'
 
 const Definitions: Preact.FunctionComponent<{
   word: string
@@ -16,33 +16,20 @@ const Definitions: Preact.FunctionComponent<{
   setIsFavorite?: (fav: boolean) => void
   animateDefinitions?: boolean
 }> = ({ word, onLoad, animateDefinitions, setIsFavorite }) => {
-  const [loading, setLoading] = useState(false)
-  const [data, setData] = useState<GetWordDataResponse>(null)
+  const [data, loading, refreshData] = useApiRequest<GetWordDataResponse>(
+    () => getWordData(word),
+    `Something went wrong and we couldn't fetch the definition`,
+    (data: GetWordDataResponse) => {
+      let d: GetWordDataResponse
+      if (Array.isArray(data?.homographs)) d = data
+      else d = { homographs: [], isFavorite: data?.isFavorite }
 
-  const loadDictionaryData = async () => {
-    setLoading(true)
-    setData(null)
+      if (data.isFavorite !== undefined) setIsFavorite(data.isFavorite)
 
-    const data =
-      (await getWordData(word).catch((err) => {
-        toast.error(
-          `Something went wrong and we couldn't fetch the definition`,
-          {
-            duration: 3000,
-          }
-        )
-      })) || null
-
-    setLoading(false)
-    if (Array.isArray(data?.homographs)) setData(data)
-    else setData({ homographs: [], isFavorite: data?.isFavorite })
-
-    if (data.isFavorite !== undefined) setIsFavorite(data.isFavorite)
-  }
-
-  useEffect(() => {
-    loadDictionaryData()
-  }, [word])
+      return d
+    },
+    [word]
+  )
 
   // Trigger onLoad callback when data loads
   useEffect(() => {

@@ -14,7 +14,8 @@ const WordDetailsOverlay: Preact.FunctionComponent<{
   favoriteWords: Record<string, boolean>
   onLoad: () => void
   onFavoriteChange: (f: boolean) => void
-  onClose: (closePopup?: boolean) => void
+  onClose: () => void
+  replaceText: (t: string) => void
 }> = ({
   word,
   onClose,
@@ -23,28 +24,8 @@ const WordDetailsOverlay: Preact.FunctionComponent<{
   onFavoriteChange,
   favoriteWords,
   onLoad,
+  replaceText,
 }) => {
-  const replaceWord = (newWord: string) => {
-    switch (targetType) {
-      case 'input':
-        const el = targetEl as HTMLInputElement
-        // Replace input text with a new string containing the new word
-        el.value =
-          el.value.slice(0, el.selectionStart) +
-          newWord +
-          el.value.slice(el.selectionEnd)
-        break
-      case 'gdoc':
-        // Replace selected word by typing out letters in new word
-        // for (let i = 0; i < wordChosen.length; i++) {
-        //   sendPageInterfaceMessage('simulateGoogleDocKeypress', {
-        //     key: wordChosen[i],
-        //   })
-        // }
-        break
-    }
-  }
-
   return (
     <AnimatePresence>
       {word && (
@@ -71,8 +52,7 @@ const WordDetailsOverlay: Preact.FunctionComponent<{
                 <button
                   class="button"
                   onClick={(e) => {
-                    replaceWord(word)
-                    onClose(true)
+                    replaceText(word)
                   }}
                 >
                   Replace word

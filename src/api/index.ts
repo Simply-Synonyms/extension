@@ -12,7 +12,7 @@ type ApiEndpointName =
   | 'getDictionaryData'
   | 'favoriteWord'
   | 'getFavoriteWords'
-  | 'rewordPhrase'
+  | 'rewritePhrase'
 
 const apiRequest = (
   method: 'GET' | 'POST',
@@ -24,6 +24,8 @@ const apiRequest = (
     method,
     headers: {
       Authorization: idToken && `Bearer ${idToken}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
     },
     body: body && JSON.stringify(body),
   }).then((r) => r.json())
@@ -67,8 +69,8 @@ export function processApiRequest(
     case 'getFavoriteWords': {
       return apiRequest('GET', `get-favorite-words`, idToken)
     }
-    case 'rewordPhrase': {
-      return apiRequest('POST', `reword-phrase`, idToken, {
+    case 'rewritePhrase': {
+      return apiRequest('POST', `rewrite-phrase`, idToken, {
         text: msg.text,
       })
     }
@@ -133,8 +135,11 @@ export interface GetFavoriteWordsResponse {
 export const getFavoriteWords = (): Promise<GetFavoriteWordsResponse> =>
   sendRequestToBackground('getFavoriteWords')
 
-export interface RewordPhraseResponse {
-  newPhrase: string
+export interface RewritePhraseResponse {
+  newPhrases: {
+    text: string
+    index: number
+  }[]
 }
-export const rewordPhrase = (text: string): Promise<RewordPhraseResponse> =>
-  sendRequestToBackground('rewordPhrase', { text })
+export const rewritePhrase = (text: string): Promise<RewritePhraseResponse> =>
+  sendRequestToBackground('rewritePhrase', { text })

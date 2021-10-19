@@ -1,39 +1,23 @@
 import Preact from 'preact'
-import { useEffect, useState } from 'preact/hooks'
-import toast from 'react-hot-toast'
+import { useEffect } from 'preact/hooks'
 import { getFavoriteWords, GetFavoriteWordsResponse } from '../../api'
 import LoadingSpinner from '../components/LoadingSpinner'
-import { useIsLoggedIn } from '../../lib/hooks'
-import { WEBSITE_URL } from '../../config'
+import { useApiRequest, useIsLoggedIn } from '../../lib/hooks'
 
 const MoreTab: Preact.FunctionComponent<{
   onWordClick: (word: string) => void
   isExploringWord: boolean
 }> = ({ onWordClick, isExploringWord }) => {
   const isLoggedIn = useIsLoggedIn()
-  const [loading, setLoading] = useState(true)
-  const [favorites, setFavorites] = useState<GetFavoriteWordsResponse>(null)
-
-  const loadFavoritesData = async () => {
-    setFavorites(null)
-
-    const data =
-      (await getFavoriteWords().catch((err) => {
-        toast.error(
-          `Something went wrong and we couldn't fetch your favorites`,
-          {
-            duration: 3000,
-          }
-        )
-      })) || null
-
-    setLoading(false)
-    if (data) setFavorites(data)
-  }
+  const [favorites, loading, loadFavorites] =
+    useApiRequest<GetFavoriteWordsResponse>(
+      () => getFavoriteWords(),
+      `Something went wrong and we couldn't fetch your favorites`
+    )
 
   useEffect(() => {
     // Need to refresh data when we stop exploring a word as it might have changed
-    if (isLoggedIn && !isExploringWord) loadFavoritesData()
+    if (isLoggedIn && !isExploringWord) loadFavorites()
   }, [isLoggedIn, isExploringWord])
 
   return (

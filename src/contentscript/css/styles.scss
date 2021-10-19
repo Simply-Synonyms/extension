@@ -322,6 +322,20 @@
         }
     }
 
+    // PHRASE TAB
+
+    .text-box {
+        font-size: 0.9em;
+        background: rgb(228, 228, 228);
+        padding: 5px;
+        border-radius: 5px;
+        margin: 15px 0;
+    }
+
+    .clickable {
+        cursor: pointer;
+    }
+
     // .word-details-hover-container {
     //     position: relative;
     //     top: 0;
