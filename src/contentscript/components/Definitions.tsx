@@ -8,7 +8,7 @@ import { GetWordDataResponse, getWordData } from '../../api'
 import { FiExternalLink } from '@react-icons/all-files/fi/FiExternalLink'
 import { motion } from 'framer-motion'
 import LoadingSpinner from './LoadingSpinner'
-import { useApiRequest } from '../../lib/hooks'
+import { useAsyncRequest } from '../../lib/hooks'
 
 const Definitions: Preact.FunctionComponent<{
   word: string
@@ -16,7 +16,7 @@ const Definitions: Preact.FunctionComponent<{
   setIsFavorite?: (fav: boolean) => void
   animateDefinitions?: boolean
 }> = ({ word, onLoad, animateDefinitions, setIsFavorite }) => {
-  const [data, loading, refreshData] = useApiRequest<GetWordDataResponse>(
+  const [data, loading, refreshData] = useAsyncRequest<GetWordDataResponse>(
     () => getWordData(word),
     `Something went wrong and we couldn't fetch the definition`,
     (data: GetWordDataResponse) => {

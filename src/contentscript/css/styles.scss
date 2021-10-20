@@ -282,6 +282,7 @@
         font-weight: 600;
         color: white;
         @include theme.util-transition;
+        text-decoration: none;
 
         &:hover {
             opacity: 0.8;
@@ -334,6 +335,22 @@
 
     .clickable {
         cursor: pointer;
+    }
+
+    .premium-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        z-index: 50;
+        backdrop-filter: blur(1px);
+        background: #ffffffaa;
+        @include theme.util-flex-middle;
+        flex-direction: column;
+        gap: 10px;
+        padding: 30px 10px;
+        font-weight: 600;
+        text-align: center
     }
 
     // .word-details-hover-container {

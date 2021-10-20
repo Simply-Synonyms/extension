@@ -13,6 +13,7 @@ type ApiEndpointName =
   | 'favoriteWord'
   | 'getFavoriteWords'
   | 'rewritePhrase'
+  | 'getAccountStatus'
 
 const apiRequest = (
   method: 'GET' | 'POST',
@@ -73,6 +74,9 @@ export function processApiRequest(
       return apiRequest('POST', `rewrite-phrase`, idToken, {
         text: msg.text,
       })
+    }
+    case 'getAccountStatus': {
+      return apiRequest('GET', `account`, idToken)
     }
   }
 }
@@ -143,3 +147,9 @@ export interface RewritePhraseResponse {
 }
 export const rewritePhrase = (text: string): Promise<RewritePhraseResponse> =>
   sendRequestToBackground('rewritePhrase', { text })
+
+  export interface GetAccountStatusResponse {
+    premiumActive: boolean
+  }
+  export const getAccountStatus = (): Promise<GetAccountStatusResponse> =>
+    sendRequestToBackground('getAccountStatus')

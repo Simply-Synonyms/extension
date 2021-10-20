@@ -16,7 +16,7 @@ import ThesaurusTabs from './tabs/ThesaurusTabs'
 import WordDetailsOverlay from './components/WordDetailsOverlay'
 import PhraseTab from './tabs/PhraseTab'
 import SearchTab from './tabs/SearchTab'
-import { useApiRequest } from '../lib/hooks'
+import { useAsyncRequest } from '../lib/hooks'
 
 // Minimum spacing between popup and edges of window
 const WINDOW_MARGIN = 20
@@ -76,7 +76,7 @@ const AppPopup = forwardRef<
     //   useState<GetThesaurusDataResponse>(null)
 
     const [thesaurusData, thesaurusLoading, loadThesaurus, resetThesaurus] =
-      useApiRequest<GetThesaurusDataResponse>(
+      useAsyncRequest<GetThesaurusDataResponse>(
         () => getThesaurusData(word),
         `We couldn't reach our servers. Please try again.`
       )
@@ -275,7 +275,7 @@ const AppPopup = forwardRef<
                   </button>
                   {
                     <div class="tabs">
-                      {phrase && targetType && (
+                      {phrase && (
                         <>
                           <button
                             class={tab === 'phrase' && 'active'}

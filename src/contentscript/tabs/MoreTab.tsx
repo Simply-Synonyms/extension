@@ -2,15 +2,15 @@ import Preact from 'preact'
 import { useEffect } from 'preact/hooks'
 import { getFavoriteWords, GetFavoriteWordsResponse } from '../../api'
 import LoadingSpinner from '../components/LoadingSpinner'
-import { useApiRequest, useIsLoggedIn } from '../../lib/hooks'
+import { useAsyncRequest, useIsSignedIn } from '../../lib/hooks'
 
 const MoreTab: Preact.FunctionComponent<{
   onWordClick: (word: string) => void
   isExploringWord: boolean
 }> = ({ onWordClick, isExploringWord }) => {
-  const isLoggedIn = useIsLoggedIn()
+  const isLoggedIn = useIsSignedIn()
   const [favorites, loading, loadFavorites] =
-    useApiRequest<GetFavoriteWordsResponse>(
+    useAsyncRequest<GetFavoriteWordsResponse>(
       () => getFavoriteWords(),
       `Something went wrong and we couldn't fetch your favorites`
     )

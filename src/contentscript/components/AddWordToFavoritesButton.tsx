@@ -1,8 +1,9 @@
+import React from 'preact'
 import { AiFillStar } from '@react-icons/all-files/ai/AiFillStar'
 import { AiOutlineStar } from '@react-icons/all-files/ai/AiOutlineStar'
 import toast from 'react-hot-toast'
 import { favoriteWord } from '../../api'
-import { isLoggedIn } from '../../lib/hooks'
+import { useIsSignedIn } from '../../lib/hooks'
 
 const AddWordToFavoritesButton = ({
   word,
@@ -14,6 +15,7 @@ const AddWordToFavoritesButton = ({
   onChange: (favorite: boolean) => void
 }) => {
   const isFavorite = !!favorites[word]
+  const isSignedIn = useIsSignedIn()
 
   return (
     <button
@@ -21,7 +23,7 @@ const AddWordToFavoritesButton = ({
       onClick={async (e) => {
         e.stopPropagation()
 
-        if (!(await isLoggedIn())) {
+        if (!isSignedIn) {
           toast.error('Make an account to save favorites')
           return
         }

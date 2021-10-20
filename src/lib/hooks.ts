@@ -1,30 +1,37 @@
 import browser from 'browserApi'
 import { useEffect, useState } from 'preact/hooks'
 import toast from 'react-hot-toast'
-import { RewritePhraseResponse } from '../api'
+import { getAccountStatus, GetAccountStatusResponse, RewritePhraseResponse } from '../api'
+import create from 'zustand'
 
-export function isLoggedIn(): Promise<boolean> {
-  return new Promise((resolve) => {
-    browser.runtime.sendMessage(
-      {
-        action: 'checkIsLoggedIn',
-      },
-      resolve
-    )
-  })
-}
+export const useUserStore = create<{
+  isSignedIn: boolean
+  account: GetAccountStatusResponse
+}>(set => ({
+  isSignedIn: false,
+  account: null
+}))
 
-export function useIsLoggedIn(): boolean {
-  const [is, setIs] = useState(false)
+export function useIsSignedIn(): boolean {
+  const is = useUserStore(s => s.isSignedIn)
 
-  useEffect(() => {
-    isLoggedIn().then((l) => setIs(l))
-  }, [])
+  browser.runtime.sendMessage(
+    {
+      action: 'checkIsLoggedIn',
+    },
+    r => {
+      useUserStore.setState({
+        isSignedIn: r
+      })
+    }
+  )
 
   return is
 }
 
-export function useApiRequest<T extends unknown>(
+export const useAccountStatus = () => useUserStore(s => s.account)
+
+export function useAsyncRequest<T extends unknown>(
   /** A function that should return a promise that resolves to the API data */
   request: () => Promise<any>,
   /** If the request fails, create a toast with this message */

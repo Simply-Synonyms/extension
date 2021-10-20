@@ -18,7 +18,8 @@
     "framer-motion": "^4.1.17",
     "preact": "^10.5.14",
     "react-hot-toast": "^2.1.1",
-    "react-spring": "^9.3.0"
+    "react-spring": "^9.3.0",
+    "zustand": "^3.5.14"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",

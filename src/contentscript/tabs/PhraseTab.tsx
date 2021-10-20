@@ -1,18 +1,22 @@
-import Preact from 'preact'
+import React from 'preact'
 import { FiRotateCw } from '@react-icons/all-files/fi/FiRotateCw'
 import { useEffect, useState } from 'preact/hooks'
 import { RewritePhraseResponse, rewritePhrase } from '../../api'
-import { useApiRequest } from '../../lib/hooks'
+import { useAccountStatus, useAsyncRequest } from '../../lib/hooks'
+import browser from 'browserApi'
+import { WEBSITE_URL } from '../../config'
 
 // TODO paid functionality
 
-const PhraseTab: Preact.FunctionComponent<{
+const PhraseTab: React.FunctionComponent<{
   phrase: string
   onLoad: () => void
   replaceText: (t: string) => void
 }> = ({ phrase, onLoad, replaceText }) => {
+  const account = useAccountStatus()
+
   const [rewriteData, rewriting, loadRewrite] =
-    useApiRequest<RewritePhraseResponse>(
+    useAsyncRequest<RewritePhraseResponse>(
       () => rewritePhrase(phrase),
       `We couldn't rewrite that phrase for you`,
       (res: RewritePhraseResponse, oldData) => {
@@ -30,8 +34,13 @@ const PhraseTab: Preact.FunctionComponent<{
     onLoad()
   }, [rewriteData])
 
-  return (
-    <>
+  return <div class="relative">
+      {!account?.premiumActive && <div class="premium-overlay">
+        You need premium to access this feature
+        <a class='button' target='_blank' rel='noopener noreferrer' href={WEBSITE_URL + '/premium'}>Learn more</a>
+      </div>}
+       <div>
+         
       <div class="text-box">{phrase}</div>
       <button
         class="button flex-middle"
@@ -49,9 +58,9 @@ const PhraseTab: Preact.FunctionComponent<{
 
       {rewriteData?.newPhrases.map((r) => (
         <div
-          class="text-box clickable"
+          className="text-box clickable"
           key={r.index}
-          onClick={() => replaceText(r.text)}
+          onClick={() => { replaceText(r.text) }}
         >
           {r.text}
         </div>
@@ -62,8 +71,9 @@ const PhraseTab: Preact.FunctionComponent<{
           <strong>thinking...</strong>
         </div>
       )}
-    </>
-  )
+       </div>
+    </div>
+  
 }
 
 export default PhraseTab

@@ -4,12 +4,24 @@ import browser from 'browserApi'
 import AppPopup from './Popup'
 import { useEffect, useState, useRef } from 'preact/hooks'
 import { Toaster } from 'react-hot-toast'
+import { useIsSignedIn, useUserStore } from '../lib/hooks'
+import { getAccountStatus } from '../api'
 
 export type TargetType = 'gdoc' | 'contenteditable' | 'input'
 
 const App: Preact.FunctionComponent<{
   settings: UserSettings
 }> = ({ settings }) => {
+  // Get the account status whenever we are authenticated
+  const isSignedIn = useIsSignedIn()
+  useEffect(() => {
+    if (isSignedIn) getAccountStatus().then(account => {
+      useUserStore.setState({
+        account
+      })
+    })  
+  }, [isSignedIn])
+
   const popupRef = useRef<HTMLDivElement>()
 
   const [popupOpen, setPopupOpen] = useState<boolean | 'expand'>(false)

@@ -11,6 +11,10 @@ html, body {
     font-family: 'Mulish', sans-serif;
 }
 
+.logo {
+    width: 2.5rem;
+}
+
 .top {
     padding: 5px 20px;
     @include theme.util-flex-middle;
