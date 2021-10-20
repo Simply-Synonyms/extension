@@ -1,10 +1,11 @@
-import Preact from 'preact'
+import React from 'preact'
 import { useEffect } from 'preact/hooks'
 import { getFavoriteWords, GetFavoriteWordsResponse } from '../../api'
 import LoadingSpinner from '../components/LoadingSpinner'
 import { useAsyncRequest, useIsSignedIn } from '../../lib/hooks'
+import { WEBSITE_URL } from '../../config'
 
-const MoreTab: Preact.FunctionComponent<{
+const MoreTab: React.FunctionComponent<{
   onWordClick: (word: string) => void
   isExploringWord: boolean
 }> = ({ onWordClick, isExploringWord }) => {
@@ -22,9 +23,7 @@ const MoreTab: Preact.FunctionComponent<{
 
   return (
     <>
-      {isLoggedIn && (
-        <>
-          <h2>Favorites</h2>
+      <h2>Favorites</h2>
           {loading && <LoadingSpinner />}
           <div class="words">
             {favorites?.favoriteWords?.map((w) => (
@@ -47,14 +46,11 @@ const MoreTab: Preact.FunctionComponent<{
               </small>
             )}
           </div>
-        </>
-      )}
       {!isLoggedIn && (
-        <p>
-          <strong>
-            Please sign in to Simply Synonyms to access this feature
-          </strong>
-        </p>
+        <div class="authwall-overlay">
+          You need an account to access this feature.
+          <a class='button' target='_blank' rel='noopener noreferrer' href={WEBSITE_URL + '/app/signup'}>Sign up</a>
+        </div>
       )}
     </>
   )

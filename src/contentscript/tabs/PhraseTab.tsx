@@ -35,7 +35,7 @@ const PhraseTab: React.FunctionComponent<{
   }, [rewriteData])
 
   return <div class="relative">
-      {!account?.premiumActive && <div class="premium-overlay">
+      {!account?.premiumActive && <div class="authwall-overlay">
         You need premium to access this feature
         <a class='button' target='_blank' rel='noopener noreferrer' href={WEBSITE_URL + '/premium'}>Learn more</a>
       </div>}
