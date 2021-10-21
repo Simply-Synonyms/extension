@@ -1,12 +1,7 @@
+import React from 'preact'
 import { forwardRef } from 'preact/compat'
-import {
-  GetThesaurusDataResponse,
-  getThesaurusData,
-  favoriteWord,
-} from '../api'
 import { useEffect, useState } from 'preact/hooks'
 import { TargetType } from './App'
-import { LoaderIcon, toast } from 'react-hot-toast'
 import { useSpring, animated } from 'react-spring'
 import Definitions from './components/Definitions'
 import AddWordToFavoritesButton from './components/AddWordToFavoritesButton'
@@ -21,13 +16,8 @@ import { AiFillHome } from '@react-icons/all-files/ai/AiFillHome'
 import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch'
 import { initializeDataStore, useDataStore } from './datastore'
 import { useAnimatedPosition } from './positioning'
-import { useUserStore } from '../lib/hooks'
 
 const LOGO_URL = browser.runtime.getURL('/assets/logo.svg')
-
-// TODO memoize?
-const useThesaurus = () =>
-  useDataStore((s) => s.entries[s.activeEntry].thesaurus)
 
 const AppPopup = forwardRef<
   HTMLDivElement,
@@ -48,10 +38,6 @@ const AppPopup = forwardRef<
     const phrase = text?.includes(' ') ? text : null
 
     initializeDataStore(text)
-
-    const store = useUserStore()
-
-    useEffect(() => console.log(store), [store])
 
     const [expanded, setExpanded] = useState(false)
 
@@ -77,7 +63,9 @@ const AppPopup = forwardRef<
       }
     }, [open])
 
-    const [thesaurusData, thesaurusLoading] = useThesaurus()
+    const [thesaurusData, thesaurusLoading] = useDataStore(
+      (s) => s.entries[s.activeEntry].thesaurus
+    )
     const loadThesaurus = useDataStore((s) => s.loadThesaurusData)
 
     useEffect(() => {
@@ -88,16 +76,17 @@ const AppPopup = forwardRef<
 
     const [exploringWord, setExploringWord] = useState<string | null>(null)
 
-    // const [position, setPosition] = useState(null)
-
     const resetDatastore = useDataStore((s) => s.resetStore)
-
     const reset = () => {
       setExpanded(false)
       // setPosition(null)
       resetDatastore()
       setTab(targetType ? 'synonyms' : 'definition')
     }
+    // Reset when popup closes
+    useEffect(() => {
+      if (!open) reset()
+    }, [open])
 
     const [popupStyles, positionLoaded, reposition] = useAnimatedPosition(
       ref.current,
@@ -108,11 +97,6 @@ const AppPopup = forwardRef<
 
     /* Reposition when any of the following changes */
     useEffect(reposition, [open, expanded, ref.current, thesaurusData, tab])
-
-    // Reset when popup closes
-    useEffect(() => {
-      if (!open) reset()
-    }, [open])
 
     // Auto-expand popup when needed
     useEffect(() => {

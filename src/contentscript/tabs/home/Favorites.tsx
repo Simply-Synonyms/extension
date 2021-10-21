@@ -25,7 +25,8 @@ const Favorites: React.FunctionComponent<SubTabProps> = ({
   useEffect(() => {
     // Need to refresh data when we stop exploring a word as it might have changed
     if (isLoggedIn && !isExploringWord) {
-      loadFavorites().then(() => setLoading(false)) }
+      loadFavorites().then(() => setLoading(false))
+    }
   }, [isLoggedIn, isExploringWord])
 
   return (
@@ -47,7 +48,7 @@ const Favorites: React.FunctionComponent<SubTabProps> = ({
         ))}
         {!loading && !favorites.length && (
           <small class="muted">
-            Mark a favorite word by pressing the star icon next beside its
+            Mark a favorite word by pressing the star icon beside its
             definition.
           </small>
         )}

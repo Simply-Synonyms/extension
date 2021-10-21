@@ -8,7 +8,6 @@ import { GetWordDataResponse, getWordData } from '../../api'
 import { FiExternalLink } from '@react-icons/all-files/fi/FiExternalLink'
 import { motion } from 'framer-motion'
 import LoadingSpinner from './LoadingSpinner'
-import { useAsyncRequest } from '../../lib/hooks'
 import { useDataStore } from '../datastore'
 
 const Definitions: Preact.FunctionComponent<{
@@ -16,22 +15,14 @@ const Definitions: Preact.FunctionComponent<{
   onLoad: () => void
   animateDefinitions?: boolean
 }> = ({ word, onLoad, animateDefinitions }) => {
-  const setFavorite = useDataStore((s) => s.setFavorite)
+  const [[data, loading], loadData] = useDataStore((s) => [
+    s.entries[word]?.definition || [null],
+    s.loadWordData,
+  ])
 
-  const [data, loading, refreshData] = useAsyncRequest<GetWordDataResponse>(
-    () => getWordData(word),
-    `Something went wrong and we couldn't fetch the definition`,
-    (data: GetWordDataResponse) => {
-      let d: GetWordDataResponse
-      if (Array.isArray(data?.homographs)) d = data
-      else d = { homographs: [], isFavorite: data?.isFavorite }
-
-      if (data.isFavorite !== undefined) setFavorite(word, data.isFavorite)
-
-      return d
-    },
-    [word]
-  )
+  useEffect(() => {
+    loadData(word)
+  }, [])
 
   // Trigger onLoad callback when data loads
   useEffect(() => {
@@ -40,7 +31,7 @@ const Definitions: Preact.FunctionComponent<{
 
   return (
     <>
-      {loading && <LoadingSpinner />}
+      {loading && !data && <LoadingSpinner />}
       {data && (
         <div class="definitions">
           <motion.div

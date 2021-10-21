@@ -7,6 +7,8 @@ import {
   getWordData,
   GetWordDataResponse,
 } from '../api'
+// TODO REMOVE DEVTOOLS FOR PROD
+// import { devtools } from "zustand/middleware"
 
 /** An entry represents a single word, phrase or other piece of text that can be associated with some thesaurus data, a definition, etc. */
 interface EntryDataType {
@@ -43,10 +45,14 @@ const withToast = (t: string) => (err) => {
 
 /** Utility set function to make it easier to merge values into the currently active entry */
 const mergeEntry =
-  (o: Partial<EntryDataType>, e?: string) => (d: StoreDataType) => ({
+  (o: Partial<EntryDataType> = {}, e?: string) =>
+  (d: StoreDataType) => ({
     entries: {
       ...d.entries,
-      [e || d.activeEntry]: { ...(d.entries[e || d.activeEntry] || initialEntryData), ...o },
+      [e || d.activeEntry]: {
+        ...(d.entries[e || d.activeEntry] || initialEntryData),
+        ...o,
+      },
     },
   })
 
@@ -58,7 +64,7 @@ export const useDataStore = create<
     resetStore: () => void
     setActiveText: (text: string) => void
     loadThesaurusData: () => void
-    loadWordData: () => void
+    loadWordData: (word?: string) => Promise<void>
     setFavorite: (word: string, favorite: boolean) => void
     getFavorites: () => Promise<void>
   }
@@ -71,22 +77,9 @@ export const useDataStore = create<
   setActiveText(t) {
     set((d) => ({
       activeEntry: t,
-      entries: {
-        ...d.entries,
-        [t]: d.entries[t] ? undefined : initialEntryData,
-      },
+      ...mergeEntry({}, t),
     }))
   },
-  // get thesaurus () {
-  //   return get()?.entries[get().activeEntry].thesaurus
-  // },
-  // get definition () {
-  //   return get()?.entries[get().activeEntry].definition
-  // },
-  /** Filter entries to find those marked as a favorite, then return array of their texts */
-  // get favoriteWords () {
-  //   return Object.entries(get().entries).filter(([_, e]) => e.isFavorite).map(([t]) => t)
-  // },
   async loadThesaurusData() {
     const res = await getThesaurusData(get().activeEntry).catch(
       withToast(`Couldn't get thesaurus data for that word`)
@@ -101,27 +94,33 @@ export const useDataStore = create<
     else set(mergeEntry({ thesaurus: [null, false] }))
   },
   /** Loads definition and other word data for the active entry */
-  async loadWordData() {
+  async loadWordData(word) {
+    const w = word || get().activeEntry
+    set(mergeEntry({}, w))
+
     const res =
-      (await getWordData(get().activeEntry).catch(
-        withToast(`Couldn't get word data`)
-      )) || null
+      (await getWordData(w).catch(withToast(`Couldn't get word data`))) || null
 
     if (res && Array.isArray(res?.homographs))
-      set(mergeEntry({ definition: [res, false], isFavorite: res.isFavorite }))
-    else
+      set(
+        mergeEntry({ definition: [res, false], isFavorite: res.isFavorite }, w)
+      )
+    else if (!get().entries[w].definition[0])
       set(
         mergeEntry({
           definition: [{ homographs: [], isFavorite: res?.isFavorite }, false],
           isFavorite: res.isFavorite
-        })
+        }, w)
       )
   },
   setFavorite(w, f) {
     set(
-      mergeEntry({
+      mergeEntry(
+        {
           isFavorite: f,
-        }, w)
+        },
+        w
+      )
     )
   },
   async getFavorites() {
@@ -131,10 +130,6 @@ export const useDataStore = create<
 
     if (res) {
       // Map favorites to an object of entries that are merged with any preexisting entries
-      // const updatedEntries: StoreDataType['entries'] =
-
-      // console.log(updatedEntries)
-      // TODO check merge
       set((d) => ({
         entries: {
           ...d.entries,
@@ -150,15 +145,16 @@ export const useDataStore = create<
         },
       }))
     }
-    // set({ favoritesLoading: false })
   },
 }))
 
 export const initializeDataStore = (text: string) => {
-  useDataStore.setState({
-    activeEntry: text,
-    entries: {
-      [text]: initialEntryData,
-    },
-  })
+  const state = useDataStore.getState()
+  if (!state.entries[text])
+    useDataStore.setState({
+      activeEntry: text,
+      entries: {
+        [text]: initialEntryData,
+      },
+    })
 }
