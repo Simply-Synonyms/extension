@@ -1,8 +1,9 @@
 const archiver = require('archiver')
 const fs = require('fs')
 const path = require('path')
+const manifest = require('../manifest.json')
 
-const destPath = path.resolve('dist.zip')
+const destPath = path.resolve(`dist_${manifest.version}.zip`)
 
 if (!fs.existsSync(path.resolve('build'))) throw 'Build not found'
 if (fs.existsSync(destPath)) {

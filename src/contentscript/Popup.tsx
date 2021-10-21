@@ -19,10 +19,15 @@ import SearchTab from './tabs/SearchTab'
 import browser from 'browserApi'
 import { AiFillHome } from '@react-icons/all-files/ai/AiFillHome'
 import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch'
-import { useDataStore } from './datastore'
+import { initializeDataStore, useDataStore } from './datastore'
 import { useAnimatedPosition } from './positioning'
+import { useUserStore } from '../lib/hooks'
 
 const LOGO_URL = browser.runtime.getURL('/assets/logo.svg')
+
+// TODO memoize?
+const useThesaurus = () =>
+  useDataStore((s) => s.entries[s.activeEntry].thesaurus)
 
 const AppPopup = forwardRef<
   HTMLDivElement,
@@ -42,7 +47,11 @@ const AppPopup = forwardRef<
     const word = text && text.includes(' ') ? null : text
     const phrase = text?.includes(' ') ? text : null
 
-    useDataStore.setState({ text })
+    initializeDataStore(text)
+
+    const store = useUserStore()
+
+    useEffect(() => console.log(store), [store])
 
     const [expanded, setExpanded] = useState(false)
 
@@ -68,7 +77,7 @@ const AppPopup = forwardRef<
       }
     }, [open])
 
-    const [thesaurusData, thesaurusLoading] = useDataStore((s) => s.thesaurus)
+    const [thesaurusData, thesaurusLoading] = useThesaurus()
     const loadThesaurus = useDataStore((s) => s.loadThesaurusData)
 
     useEffect(() => {
@@ -251,14 +260,9 @@ const AppPopup = forwardRef<
                     <>
                       <h2 class="flex-middle">
                         <span>{word}</span>
-                        <AddWordToFavoritesButton
-                          word={word}
-                        />
+                        <AddWordToFavoritesButton word={word} />
                       </h2>
-                      <Definitions
-                        word={word}
-                        onLoad={() => reposition()}
-                      />
+                      <Definitions word={word} onLoad={() => reposition()} />
                     </>
                   )}
                   {/* END word tabs */}

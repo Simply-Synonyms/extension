@@ -6,6 +6,8 @@ test.html
 
 build
 dist.zip
+dist_*.zip
+distout/*
 build.zip
 firebaseConfig.json
 config/firebaseConfig.json

@@ -32,6 +32,19 @@ const apiRequest = (
   }).then((r) => r.json())
 }
 
+function sendRequestToBackground(endpoint: ApiEndpointName, data: any = {}) {
+  return new Promise((resolve, reject) => {
+    browser.runtime.sendMessage(
+      {
+        action: 'processApiRequest',
+        endpoint,
+        ...data,
+      },
+      resolve
+    )
+  }) as Promise<any>
+}
+
 export function processApiRequest(
   msg: {
     action: 'processApiRequest'
@@ -79,19 +92,6 @@ export function processApiRequest(
       return apiRequest('GET', `account`, idToken)
     }
   }
-}
-
-function sendRequestToBackground(endpoint: ApiEndpointName, data: any = {}) {
-  return new Promise((resolve, reject) => {
-    browser.runtime.sendMessage(
-      {
-        action: 'processApiRequest',
-        endpoint,
-        ...data,
-      },
-      resolve
-    )
-  }) as Promise<any>
 }
 
 export interface GetThesaurusDataResponse {

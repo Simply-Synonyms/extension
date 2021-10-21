@@ -6,16 +6,14 @@ import { favoriteWord } from '../../api'
 import { useIsSignedIn } from '../../lib/hooks'
 import { useDataStore } from '../datastore'
 
-const AddWordToFavoritesButton = ({
-  word,
-}: {
-  word: string
-}) => {
-  const [favorites, setFavorite] = useDataStore(s => [s.favoriteWords, s.setFavorite])
-  const isFavorite = !!favorites[word]
+const AddWordToFavoritesButton = ({ word }: { word: string }) => {
+  const [isFavorite, setFavorite] = useDataStore((s) => [
+    s.entries[word]?.isFavorite,
+    s.setFavorite,
+  ])
   const isSignedIn = useIsSignedIn()
 
-  const onChange = f => setFavorite(word, f)
+  const onChange = (f: boolean) => setFavorite(word, f)
 
   return (
     <button
@@ -36,7 +34,7 @@ const AddWordToFavoritesButton = ({
           toast(
             res.favorite
               ? `⭐️ Saved ${word} to favorites`
-              : `❌ Removed ${word} from favorites`
+              : `🗑 Removed ${word} from favorites`
           )
         } catch (e) {
           onChange(isFavorite)

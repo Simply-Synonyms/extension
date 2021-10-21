@@ -16,7 +16,7 @@ const Definitions: Preact.FunctionComponent<{
   onLoad: () => void
   animateDefinitions?: boolean
 }> = ({ word, onLoad, animateDefinitions }) => {
-  const setFavorite = useDataStore(s => s.setFavorite)
+  const setFavorite = useDataStore((s) => s.setFavorite)
 
   const [data, loading, refreshData] = useAsyncRequest<GetWordDataResponse>(
     () => getWordData(word),

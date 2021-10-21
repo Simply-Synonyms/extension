@@ -14,14 +14,7 @@ const WordDetailsOverlay: Preact.FunctionComponent<{
   onLoad: () => void
   onClose: () => void
   replaceText: (t: string) => void
-}> = ({
-  word,
-  onClose,
-  targetType,
-  onLoad,
-  replaceText,
-}) => {
-
+}> = ({ word, onClose, targetType, onLoad, replaceText }) => {
   return (
     <AnimatePresence>
       {word && (
@@ -70,16 +63,10 @@ const WordDetailsOverlay: Preact.FunctionComponent<{
             >
               <HiOutlineClipboardCopy size={20} />
             </button>
-            <AddWordToFavoritesButton
-              word={word}
-            />
+            <AddWordToFavoritesButton word={word} />
           </h2>
           <h6>Definitions</h6>
-          <Definitions
-            animateDefinitions
-            word={word}
-            onLoad={onLoad}
-          />
+          <Definitions animateDefinitions word={word} onLoad={onLoad} />
         </motion.div>
       )}
     </AnimatePresence>
