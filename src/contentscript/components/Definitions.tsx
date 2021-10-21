@@ -9,13 +9,15 @@ import { FiExternalLink } from '@react-icons/all-files/fi/FiExternalLink'
 import { motion } from 'framer-motion'
 import LoadingSpinner from './LoadingSpinner'
 import { useAsyncRequest } from '../../lib/hooks'
+import { useDataStore } from '../datastore'
 
 const Definitions: Preact.FunctionComponent<{
   word: string
   onLoad: () => void
-  setIsFavorite?: (fav: boolean) => void
   animateDefinitions?: boolean
-}> = ({ word, onLoad, animateDefinitions, setIsFavorite }) => {
+}> = ({ word, onLoad, animateDefinitions }) => {
+  const setFavorite = useDataStore(s => s.setFavorite)
+
   const [data, loading, refreshData] = useAsyncRequest<GetWordDataResponse>(
     () => getWordData(word),
     `Something went wrong and we couldn't fetch the definition`,
@@ -24,7 +26,7 @@ const Definitions: Preact.FunctionComponent<{
       if (Array.isArray(data?.homographs)) d = data
       else d = { homographs: [], isFavorite: data?.isFavorite }
 
-      if (data.isFavorite !== undefined) setIsFavorite(data.isFavorite)
+      if (data.isFavorite !== undefined) setFavorite(word, data.isFavorite)
 
       return d
     },

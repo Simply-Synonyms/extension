@@ -66,7 +66,7 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
     <div>
       <Toaster position="bottom-center" />
       <div class="top">
-        <img class='logo' alt='logo' src='/assets/logo.svg' />
+        <img class="logo" alt="logo" src="/assets/logo.svg" />
         <label class="switch">
           <input
             checked={enableState}

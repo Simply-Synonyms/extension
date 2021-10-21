@@ -1,6 +1,7 @@
 @use 'animations';
 @use 'icons';
 @use '../../styles/theme';
+@use 'home';
 
 // Include font faces
 @include theme.font-Mulish;
@@ -37,6 +38,8 @@
     @include animations.animations;
     @include icons.icons;
 
+    @include home.homeTab;
+
     @include defaultPopupStyles;
     // min-height: 300px;
     overflow-x: hidden;
@@ -48,7 +51,7 @@
 
     &.collapsed {
         opacity: 0.8;
-        @include theme.util-transition;
+        transition: opacity cubic-bezier(0.4, 0, 0.2, 1) 150ms;
 
         &:hover {
             opacity: 1;
@@ -146,43 +149,44 @@
         display: flex;
         position: relative;
         width: 100%;
-        border-bottom: 2px solid theme.$light-gray;
+        border-bottom: 2px solid theme.$gray;
         background: white;
-    }
+        // @include theme.util-flex-middle;
 
-    .tabs::after {
-        content: "";
-        position: absolute;
-        width: 100%;
-        height: 1px;
-        z-index: -1;
-        bottom: 0px;
-        box-shadow: 0px 2px 12px #000000;
-    }
+        &::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            z-index: -1;
+            bottom: 0px;
+            box-shadow: 0px 2px 12px #000000;
+        }
 
-    .tabs button {
-        position: relative;
-        color: theme.$muted;
-        padding: 10px 6px;
-        font-weight: 600;
-        @include theme.util-transition;
-        transition-property: color;
-    }
+        button {
+            position: relative;
+            color: theme.$muted;
+            padding: 10px 6px;
+            font-weight: 600;
+            @include theme.util-transition;
+            transition-property: color;
+        }
 
-    .tabs button.active {
-        color: theme.$primary-color;
-        font-weight: 800;
-    }
-
-    .tabs button.active::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        bottom: -2px;
-        z-index: 30;
-        width: 100%;
-        height: 2px;
-        background: theme.$primary-color;
+        button.active {
+            color: theme.$primary-color;
+            font-weight: 800;
+    
+            &::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -2px;
+                z-index: 30;
+                width: 100%;
+                height: 2px;
+                background: theme.$primary-color;
+            }
+        }
     }
 
     .definitions {
@@ -309,10 +313,14 @@
         text-align: center;
     }
 
-    img {
+    img:not(.mini-logo) {
         display: block;
         width: 60%;
         margin: 30px auto;
+    }
+
+    .mini-logo {
+        width: 33px;
     }
 
     .bounce-button {
@@ -351,6 +359,28 @@
         padding: 30px 10px;
         font-weight: 600;
         text-align: center
+    }
+
+    .input-container {
+        color: theme.$gray;
+        position: relative;
+        display: flex;
+        width: 100%;
+
+        .icon {
+            position: absolute;
+            top: 10px;
+            left: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 5px;
+            padding-left: 34px;
+            border: 1px solid theme.$gray;
+            border-radius: 10px;
+            font-size: 1.05rem;
+        }
     }
 
     // .word-details-hover-container {

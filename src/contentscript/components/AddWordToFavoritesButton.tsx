@@ -4,18 +4,18 @@ import { AiOutlineStar } from '@react-icons/all-files/ai/AiOutlineStar'
 import toast from 'react-hot-toast'
 import { favoriteWord } from '../../api'
 import { useIsSignedIn } from '../../lib/hooks'
+import { useDataStore } from '../datastore'
 
 const AddWordToFavoritesButton = ({
   word,
-  favorites,
-  onChange,
 }: {
   word: string
-  favorites: Record<string, boolean>
-  onChange: (favorite: boolean) => void
 }) => {
+  const [favorites, setFavorite] = useDataStore(s => [s.favoriteWords, s.setFavorite])
   const isFavorite = !!favorites[word]
   const isSignedIn = useIsSignedIn()
+
+  const onChange = f => setFavorite(word, f)
 
   return (
     <button

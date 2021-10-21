@@ -148,8 +148,8 @@ export interface RewritePhraseResponse {
 export const rewritePhrase = (text: string): Promise<RewritePhraseResponse> =>
   sendRequestToBackground('rewritePhrase', { text })
 
-  export interface GetAccountStatusResponse {
-    premiumActive: boolean
-  }
-  export const getAccountStatus = (): Promise<GetAccountStatusResponse> =>
-    sendRequestToBackground('getAccountStatus')
+export interface GetAccountStatusResponse {
+  premiumActive: boolean
+}
+export const getAccountStatus = (): Promise<GetAccountStatusResponse> =>
+  sendRequestToBackground('getAccountStatus')

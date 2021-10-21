@@ -1,0 +1,40 @@
+@use '../../styles/theme';
+
+@mixin homeTab {
+  .home-tabs {
+    margin: 12px 0;
+    border-radius: 10px;
+    background: #f0f0f0;
+    border: 1px solid #dadada;
+    display: flex;
+    overflow: hidden;
+
+    button {
+      flex: 1 1 0%;
+      padding: 10px 4px;
+      font-weight: 600;
+    }
+
+    button.active {
+      background: rgba(0, 255, 149, 0.3);
+    }
+  }
+
+  .collections-search-bar {
+    display: flex;
+    gap: 10px;
+
+    button {
+      color: theme.$gray;
+      flex-basis: 1;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 10px 10px;
+      border: 1px solid theme.$gray;
+      border-radius: 10px;
+      // font-size: 1.05rem;
+      font-weight: 600;
+    }
+  }
+}

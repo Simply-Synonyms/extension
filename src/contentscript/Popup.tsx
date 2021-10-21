@@ -10,24 +10,19 @@ import { LoaderIcon, toast } from 'react-hot-toast'
 import { useSpring, animated } from 'react-spring'
 import Definitions from './components/Definitions'
 import AddWordToFavoritesButton from './components/AddWordToFavoritesButton'
-import MoreTab from './tabs/MoreTab'
+import HomeTab from './tabs/HomeTab'
 import LoadingSpinner from './components/LoadingSpinner'
 import ThesaurusTabs from './tabs/ThesaurusTabs'
 import WordDetailsOverlay from './components/WordDetailsOverlay'
 import PhraseTab from './tabs/PhraseTab'
 import SearchTab from './tabs/SearchTab'
-import { useAsyncRequest } from '../lib/hooks'
+import browser from 'browserApi'
+import { AiFillHome } from '@react-icons/all-files/ai/AiFillHome'
+import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch'
+import { useDataStore } from './datastore'
+import { useAnimatedPosition } from './positioning'
 
-// Minimum spacing between popup and edges of window
-const WINDOW_MARGIN = 20
-// Horizontal spacing between target and popup when adjusting position
-const TARGET_MARGIN = 50
-
-// Initial vertical spacing between target and top of popup
-const TARGET_VERTICAL_PADDING = 20
-
-const POPUP_WIDTH = 350
-const MIN_POPUP_HEIGHT = 300
+const LOGO_URL = browser.runtime.getURL('/assets/logo.svg')
 
 const AppPopup = forwardRef<
   HTMLDivElement,
@@ -41,11 +36,13 @@ const AppPopup = forwardRef<
   }
 >(
   (
-    { text, position: initialPosition, open, onClose, targetType, targetEl },
+    { text, position: clickPosition, open, onClose, targetType, targetEl },
     ref
   ) => {
     const word = text && text.includes(' ') ? null : text
     const phrase = text?.includes(' ') ? text : null
+
+    useDataStore.setState({ text })
 
     const [expanded, setExpanded] = useState(false)
 
@@ -55,7 +52,7 @@ const AppPopup = forwardRef<
       | 'definition'
       | 'phrase'
       | 'search'
-      | 'more'
+      | 'home'
     const [tab, _setTab] = useState<Tab>('synonyms')
 
     const setTab = (tab: Tab) => {
@@ -71,15 +68,8 @@ const AppPopup = forwardRef<
       }
     }, [open])
 
-    // const [thesaurusLoading, setThesaurusLoading] = useState(true)
-    // const [thesaurusData, setThesaurusData] =
-    //   useState<GetThesaurusDataResponse>(null)
-
-    const [thesaurusData, thesaurusLoading, loadThesaurus, resetThesaurus] =
-      useAsyncRequest<GetThesaurusDataResponse>(
-        () => getThesaurusData(word),
-        `We couldn't reach our servers. Please try again.`
-      )
+    const [thesaurusData, thesaurusLoading] = useDataStore((s) => s.thesaurus)
+    const loadThesaurus = useDataStore((s) => s.loadThesaurusData)
 
     useEffect(() => {
       if (word && expanded && tab !== 'definition' && !thesaurusData) {
@@ -89,101 +79,23 @@ const AppPopup = forwardRef<
 
     const [exploringWord, setExploringWord] = useState<string | null>(null)
 
-    const [position, setPosition] = useState(null)
+    // const [position, setPosition] = useState(null)
+
+    const resetDatastore = useDataStore((s) => s.resetStore)
 
     const reset = () => {
       setExpanded(false)
-      setPosition(null)
-      resetThesaurus()
+      // setPosition(null)
+      resetDatastore()
       setTab(targetType ? 'synonyms' : 'definition')
     }
 
-    // TODO figure out this positioning nightmare
-    // alert(position &&
-    //   initialPosition[0] + POPUP_WIDTH <= window.innerWidth - WINDOW_MARGIN &&
-    //   Math.max(WINDOW_MARGIN, position[0]))
-
-    /* Animated popup positioning */
-    const popupStyles = useSpring({
-      immediate: !open,
-      config: {
-        tension: 300,
-      },
-      left: `${
-        position &&
-        // initialPosition[0] + POPUP_WIDTH <= window.innerWidth - WINDOW_MARGIN &&
-        Math.max(WINDOW_MARGIN, position[0])
-      }px`,
-      // right: `${
-      //   position &&
-      //   initialPosition[0] + POPUP_WIDTH > window.innerWidth - WINDOW_MARGIN &&
-      //   window.innerWidth -
-      //     position[0] -
-      //     (expanded ? POPUP_WIDTH : (ref.current?.offsetWidth))
-      // }px`,
-      top: `${
-        position &&
-        initialPosition[1] + MIN_POPUP_HEIGHT <=
-          window.innerHeight - WINDOW_MARGIN &&
-        Math.max(WINDOW_MARGIN, position[1])
-      }px`,
-      bottom: `${
-        position &&
-        initialPosition[1] + MIN_POPUP_HEIGHT >
-          window.innerHeight - WINDOW_MARGIN &&
-        Math.max(
-          WINDOW_MARGIN,
-          window.innerHeight - position[1] - ref.current.scrollHeight
-        )
-      }px`,
-      height: expanded
-        ? Math.min(
-            Math.max(MIN_POPUP_HEIGHT, ref.current.scrollHeight),
-            window.innerHeight - WINDOW_MARGIN * 2
-          ) + 'px'
-        : '30px',
-      width: expanded ? POPUP_WIDTH + 'px' : '150px',
-    })
-
-    /* Automatic repositioning */
-    const reposition = () => {
-      // Ensure that the popup doesn't overlap the target position, or the margin around the edge of the window
-      if (ref.current && open) {
-        const el = ref.current
-
-        // If there isn't room at bottom of window, move popup above target
-        const above =
-          initialPosition[1] + el.scrollHeight + TARGET_VERTICAL_PADDING >
-          window.innerHeight - WINDOW_MARGIN
-        let newY = above
-          ? (expanded
-              ? window.innerHeight - WINDOW_MARGIN
-              : initialPosition[1] - TARGET_VERTICAL_PADDING) - el.scrollHeight
-          : initialPosition[1] + TARGET_VERTICAL_PADDING
-
-        // If there isn't room at right side of window, move popup to left of target
-        const atLeft =
-          initialPosition[0] + POPUP_WIDTH + TARGET_MARGIN >
-          window.innerWidth - WINDOW_MARGIN
-        let newX = atLeft
-          ? initialPosition[0] - (expanded ? POPUP_WIDTH : el.scrollWidth)
-          : initialPosition[0]
-
-        if (expanded && initialPosition[1] + TARGET_VERTICAL_PADDING > newY) {
-          // Move left/right to leave horizontal spacing between target and edge of popup if needed
-          newX += atLeft ? -TARGET_MARGIN : TARGET_MARGIN
-        }
-
-        // If it's collapsed center it under the target
-        if (!expanded) newX += atLeft ? el.offsetWidth / 2 : -el.offsetWidth / 2
-
-        // Clamp values at top and left:
-        setPosition([
-          Math.max(WINDOW_MARGIN, newX),
-          Math.max(WINDOW_MARGIN, newY),
-        ])
-      }
-    }
+    const [popupStyles, positionLoaded, reposition] = useAnimatedPosition(
+      ref.current,
+      !!open,
+      clickPosition,
+      expanded
+    )
 
     /* Reposition when any of the following changes */
     useEffect(reposition, [open, expanded, ref.current, thesaurusData, tab])
@@ -195,8 +107,8 @@ const AppPopup = forwardRef<
 
     // Auto-expand popup when needed
     useEffect(() => {
-      if (open === 'expand' && position) setExpanded(true)
-    }, [open, position])
+      if (open === 'expand' && positionLoaded) setExpanded(true)
+    }, [open, positionLoaded])
 
     useEffect(() => {
       const func = (e) => {
@@ -241,10 +153,6 @@ const AppPopup = forwardRef<
       onClose()
     }
 
-    const [favoriteWords, setFavoriteWords] = useState<Record<string, boolean>>(
-      {}
-    )
-
     const isThesaurusTab = tab === 'synonyms' || tab === 'antonyms'
 
     return (
@@ -264,7 +172,7 @@ const AppPopup = forwardRef<
                   setExpanded(true)
                 }}
               >
-                Simply Synonyms
+                <img src={LOGO_URL} class={'mini-logo'} />
               </button>
             )}
             {expanded && (
@@ -275,6 +183,21 @@ const AppPopup = forwardRef<
                   </button>
                   {
                     <div class="tabs">
+                      <button
+                        class={tab === 'home' && 'active'}
+                        onClick={() => setTab('home')}
+                      >
+                        <AiFillHome size={18} />
+                      </button>
+                      <button
+                        class={tab === 'search' && 'active'}
+                        onClick={() => setTab('search')}
+                        style={{
+                          strokeWidth: '2px',
+                        }}
+                      >
+                        <AiOutlineSearch size={18} />
+                      </button>
                       {phrase && (
                         <>
                           <button
@@ -282,16 +205,6 @@ const AppPopup = forwardRef<
                             onClick={() => setTab('phrase')}
                           >
                             Phrase
-                          </button>
-                        </>
-                      )}
-                      {!word && (
-                        <>
-                          <button
-                            class={tab === 'search' && 'active'}
-                            onClick={() => setTab('search')}
-                          >
-                            Search
                           </button>
                         </>
                       )}
@@ -317,14 +230,6 @@ const AppPopup = forwardRef<
                           </button>
                         </>
                       )}
-                      {targetType && (
-                        <button
-                          class={tab === 'more' && 'active'}
-                          onClick={() => setTab('more')}
-                        >
-                          My words
-                        </button>
-                      )}
                     </div>
                   }
                 </div>
@@ -347,43 +252,27 @@ const AppPopup = forwardRef<
                       <h2 class="flex-middle">
                         <span>{word}</span>
                         <AddWordToFavoritesButton
-                          onChange={(f) =>
-                            setFavoriteWords((favs) => ({
-                              ...favs,
-                              [word]: f,
-                            }))
-                          }
                           word={word}
-                          favorites={favoriteWords}
                         />
                       </h2>
                       <Definitions
                         word={word}
                         onLoad={() => reposition()}
-                        setIsFavorite={(f) => (favoriteWords[word] = f)}
                       />
                     </>
                   )}
                   {/* END word tabs */}
 
                   <WordDetailsOverlay
-                    favoriteWords={favoriteWords}
-                    onFavoriteChange={(f) => {
-                      setFavoriteWords((favs) => ({
-                        ...favs,
-                        [exploringWord]: f,
-                      }))
-                    }}
                     onClose={() => setExploringWord(null)}
                     onLoad={() => reposition()}
-                    targetEl={targetEl}
                     targetType={targetType}
                     word={exploringWord}
                     replaceText={replaceText}
                   />
 
-                  {tab === 'more' && (
-                    <MoreTab
+                  {tab === 'home' && (
+                    <HomeTab
                       onWordClick={(w) => setExploringWord(w)}
                       isExploringWord={!!exploringWord}
                     />

@@ -19,7 +19,6 @@ const config = {
     background: p('src/background/index.ts'),
     content: p('src/contentscript/index.tsx'),
     embeddedScript: p('src/contentscript/embeddedPageScript.js'),
-    internalPage: p('src/pages/extensionPage.js'),
   },
   output: {
     path: p('build'),
@@ -128,25 +127,24 @@ const config = {
       chunks: ['background'],
       cache: false,
     }),
-    ...generateInternalPageHtmlPlugins(),
   ],
 }
 
-function generateInternalPageHtmlPlugins() {
-  const templateFiles = fs.readdirSync(p('src/pages'))
-  return templateFiles
-    .filter((item) => item.endsWith('.html'))
-    .map((item) => {
-      console.log(item)
-      const name = item.split('.')[0]
-      return new HtmlWebpackPlugin({
-        template: p(`src/pages/${name}.html`),
-        filename: `page/${name}.html`,
-        chunks: ['internalPage'],
-        cache: false,
-      })
-    })
-}
+// function generateInternalPageHtmlPlugins() {
+//   const templateFiles = fs.readdirSync(p('src/pages'))
+//   return templateFiles
+//     .filter((item) => item.endsWith('.html'))
+//     .map((item) => {
+//       console.log(item)
+//       const name = item.split('.')[0]
+//       return new HtmlWebpackPlugin({
+//         template: p(`src/pages/${name}.html`),
+//         filename: `page/${name}.html`,
+//         chunks: ['internalPage'],
+//         cache: false,
+//       })
+//     })
+// }
 
 if (devMode) {
   config.devtool = 'eval-cheap-module-source-map'

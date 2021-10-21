@@ -27,10 +27,11 @@ browser.runtime.onMessage.addListener((msg, sender, respond) => {
     case 'checkIsLoggedIn':
       respond(!!getAuth().currentUser)
       break
-    case 'getUser':{
+    case 'getUser': {
       const user: User | null = getAuth().currentUser
       respond(user?.toJSON())
-      break}
+      break
+    }
     case 'signOut':
       browser.tabs.create({
         url:

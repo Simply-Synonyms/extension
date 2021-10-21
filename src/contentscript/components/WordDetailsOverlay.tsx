@@ -4,28 +4,24 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Preact from 'preact'
 import toast from 'react-hot-toast'
 import { TargetType } from '../App'
+import { useDataStore } from '../datastore'
 import AddWordToFavoritesButton from './AddWordToFavoritesButton'
 import Definitions from './Definitions'
 
 const WordDetailsOverlay: Preact.FunctionComponent<{
   word: string
   targetType: TargetType
-  targetEl: HTMLElement
-  favoriteWords: Record<string, boolean>
   onLoad: () => void
-  onFavoriteChange: (f: boolean) => void
   onClose: () => void
   replaceText: (t: string) => void
 }> = ({
   word,
   onClose,
   targetType,
-  targetEl,
-  onFavoriteChange,
-  favoriteWords,
   onLoad,
   replaceText,
 }) => {
+
   return (
     <AnimatePresence>
       {word && (
@@ -75,9 +71,7 @@ const WordDetailsOverlay: Preact.FunctionComponent<{
               <HiOutlineClipboardCopy size={20} />
             </button>
             <AddWordToFavoritesButton
-              onChange={onFavoriteChange}
               word={word}
-              favorites={favoriteWords}
             />
           </h2>
           <h6>Definitions</h6>
@@ -85,7 +79,6 @@ const WordDetailsOverlay: Preact.FunctionComponent<{
             animateDefinitions
             word={word}
             onLoad={onLoad}
-            setIsFavorite={(f) => (favoriteWords[word] = f)}
           />
         </motion.div>
       )}

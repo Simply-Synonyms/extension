@@ -34,46 +34,57 @@ const PhraseTab: React.FunctionComponent<{
     onLoad()
   }, [rewriteData])
 
-  return <div class="relative">
-      {!account?.premiumActive && <div class="authwall-overlay">
-        You need premium to access this feature
-        <a class='button' target='_blank' rel='noopener noreferrer' href={WEBSITE_URL + '/premium'}>Learn more</a>
-      </div>}
-       <div>
-         
-      <div class="text-box">{phrase}</div>
-      <button
-        class="button flex-middle"
-        style={{ gap: '6px' }}
-        onClick={(e) => {
-          e.stopPropagation()
-          rewrite()
-        }}
-      >
-        <span class={rewriting && 'animate-spin'}>
-          <FiRotateCw size={20} />
-        </span>
-        <span>Rewrite {rewriteData ? 'this again' : 'this'}</span>
-      </button>
-
-      {rewriteData?.newPhrases.map((r) => (
-        <div
-          className="text-box clickable"
-          key={r.index}
-          onClick={() => { replaceText(r.text) }}
-        >
-          {r.text}
-        </div>
-      ))}
-
-      {rewriting && (
-        <div class="text-box">
-          <strong>thinking...</strong>
+  return (
+    <div class="relative">
+      {!account?.premiumActive && (
+        <div class="authwall-overlay">
+          You need premium to access this feature
+          <a
+            class="button"
+            target="_blank"
+            rel="noopener noreferrer"
+            href={WEBSITE_URL + '/premium'}
+          >
+            Learn more
+          </a>
         </div>
       )}
-       </div>
+      <div>
+        <div class="text-box">{phrase}</div>
+        <button
+          class="button flex-middle"
+          style={{ gap: '6px' }}
+          onClick={(e) => {
+            e.stopPropagation()
+            rewrite()
+          }}
+        >
+          <span class={rewriting && 'animate-spin'}>
+            <FiRotateCw size={20} />
+          </span>
+          <span>Rewrite {rewriteData ? 'this again' : 'this'}</span>
+        </button>
+
+        {rewriteData?.newPhrases.map((r) => (
+          <div
+            className="text-box clickable"
+            key={r.index}
+            onClick={() => {
+              replaceText(r.text)
+            }}
+          >
+            {r.text}
+          </div>
+        ))}
+
+        {rewriting && (
+          <div class="text-box">
+            <strong>thinking...</strong>
+          </div>
+        )}
+      </div>
     </div>
-  
+  )
 }
 
 export default PhraseTab

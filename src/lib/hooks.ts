@@ -1,27 +1,31 @@
 import browser from 'browserApi'
 import { useEffect, useState } from 'preact/hooks'
 import toast from 'react-hot-toast'
-import { getAccountStatus, GetAccountStatusResponse, RewritePhraseResponse } from '../api'
+import {
+  getAccountStatus,
+  GetAccountStatusResponse,
+  RewritePhraseResponse,
+} from '../api'
 import create from 'zustand'
 
 export const useUserStore = create<{
   isSignedIn: boolean
   account: GetAccountStatusResponse
-}>(set => ({
+}>((set) => ({
   isSignedIn: false,
-  account: null
+  account: null,
 }))
 
 export function useIsSignedIn(): boolean {
-  const is = useUserStore(s => s.isSignedIn)
+  const is = useUserStore((s) => s.isSignedIn)
 
   browser.runtime.sendMessage(
     {
       action: 'checkIsLoggedIn',
     },
-    r => {
+    (r) => {
       useUserStore.setState({
-        isSignedIn: r
+        isSignedIn: r,
       })
     }
   )
@@ -29,7 +33,7 @@ export function useIsSignedIn(): boolean {
   return is
 }
 
-export const useAccountStatus = () => useUserStore(s => s.account)
+export const useAccountStatus = () => useUserStore((s) => s.account)
 
 export function useAsyncRequest<T extends unknown>(
   /** A function that should return a promise that resolves to the API data */

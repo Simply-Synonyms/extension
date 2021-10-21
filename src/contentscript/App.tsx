@@ -15,11 +15,12 @@ const App: Preact.FunctionComponent<{
   // Get the account status whenever we are authenticated
   const isSignedIn = useIsSignedIn()
   useEffect(() => {
-    if (isSignedIn) getAccountStatus().then(account => {
-      useUserStore.setState({
-        account
+    if (isSignedIn)
+      getAccountStatus().then((account) => {
+        useUserStore.setState({
+          account,
+        })
       })
-    })  
   }, [isSignedIn])
 
   const popupRef = useRef<HTMLDivElement>()
