@@ -18,7 +18,7 @@ const config = {
     popup: p('src/popup/index.tsx'),
     background: p('src/background/index.ts'),
     content: p('src/contentscript/index.tsx'),
-    embeddedScript: p('src/contentscript/embeddedPageScript.js'),
+    embeddedScript: p('src/contentscript/embedded/embeddedPageScript.ts'),
   },
   output: {
     path: p('build'),

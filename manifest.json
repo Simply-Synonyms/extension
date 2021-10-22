@@ -19,8 +19,10 @@
   "permissions": [
     "storage",
     "tabs",
-    "contextMenus"
+    "contextMenus",
+    "clipboardWrite"
   ],
+  "omnibox": { "keyword" : "s:" },
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'; media-src https://media.merriam-webster.com/",
   "web_accessible_resources": [
     "embeddedScript.bundle.js",

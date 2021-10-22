@@ -7,6 +7,7 @@ import { resetSettings } from '../lib/settings'
 import { processApiRequest } from '../api'
 import { getIdToken, getAuth } from '@firebase/auth'
 import { WEBSITE_URL } from '../config'
+import initializeOmniboxShortcut from './omnibox'
 
 initializeApp(firebaseConfig)
 
@@ -36,6 +37,7 @@ browser.runtime.onInstalled.addListener((details) => {
 
 createContextMenus()
 initializeAuth()
+initializeOmniboxShortcut()
 
 browser.runtime.onMessage.addListener((msg, sender, respond) => {
   switch (msg.action) {

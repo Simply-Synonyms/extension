@@ -24,14 +24,14 @@ const AppPopup = forwardRef<
   {
     text: string
     targetType: TargetType
-    targetEl: HTMLElement
     open: boolean | 'expand'
     position: [x: number, y: number] | null
     onClose: () => void
+    replaceText: (t: string) => void
   }
 >(
   (
-    { text, position: clickPosition, open, onClose, targetType, targetEl },
+    { text, position: clickPosition, open, onClose, targetType, replaceText },
     ref
   ) => {
     const word = text && text.includes(' ') ? null : text
@@ -122,28 +122,6 @@ const AppPopup = forwardRef<
       // setLoadingStatus('This is taking longer than usual...')
       // await waitMs(10000)
       // setLoadingStatus(`We're having trouble getting a response. Please try again.`)
-    }
-
-    const replaceText = (newWord: string) => {
-      switch (targetType) {
-        case 'input':
-          const el = targetEl as HTMLInputElement
-          // Replace input text with a new string containing the new word
-          el.value =
-            el.value.slice(0, el.selectionStart) +
-            newWord +
-            el.value.slice(el.selectionEnd)
-          break
-        case 'gdoc':
-          // Replace selected word by typing out letters in new word
-          // for (let i = 0; i < wordChosen.length; i++) {
-          //   sendPageInterfaceMessage('simulateGoogleDocKeypress', {
-          //     key: wordChosen[i],
-          //   })
-          // }
-          break
-      }
-      onClose()
     }
 
     const isThesaurusTab = tab === 'synonyms' || tab === 'antonyms'

@@ -107,10 +107,16 @@ export const useDataStore = create<
       )
     else if (!get().entries[w].definition[0])
       set(
-        mergeEntry({
-          definition: [{ homographs: [], isFavorite: res?.isFavorite }, false],
-          isFavorite: res.isFavorite
-        }, w)
+        mergeEntry(
+          {
+            definition: [
+              { homographs: [], isFavorite: res?.isFavorite },
+              false,
+            ],
+            isFavorite: res.isFavorite,
+          },
+          w
+        )
       )
   },
   setFavorite(w, f) {

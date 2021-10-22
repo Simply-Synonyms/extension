@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Benjamin Ashbaugh
 // Licensed under GPL-3 at /LICENSE
 
-import injectPageScript from './embeddedScriptInterface'
+import { injectPageScript } from './embedded/scriptInterface'
 import './css/styles.scss'
 import { getSettings, saveSettings } from '../lib/settings'
 import { render } from 'preact'

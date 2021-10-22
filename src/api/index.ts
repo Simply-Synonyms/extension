@@ -14,8 +14,10 @@ type ApiEndpointName =
   | 'getFavoriteWords'
   | 'rewritePhrase'
   | 'getAccountStatus'
+  | 'autocompleteSearch'
 
-const apiRequest = (
+/** Only use from background script */
+export const apiRequest = (
   method: 'GET' | 'POST',
   endpoint: string,
   idToken?: string,
@@ -33,16 +35,26 @@ const apiRequest = (
 }
 
 function sendRequestToBackground(endpoint: ApiEndpointName, data: any = {}) {
-  return new Promise((resolve, reject) => {
-    browser.runtime.sendMessage(
-      {
-        action: 'processApiRequest',
-        endpoint,
-        ...data,
-      },
-      resolve
-    )
-  }) as Promise<any>
+  const thisIsBackground =
+    browser.extension.getBackgroundPage &&
+    window === browser.extension.getBackgroundPage()
+  if (thisIsBackground)
+    return processApiRequest({
+      action: 'processApiRequest',
+      endpoint,
+      ...data,
+    })
+  else
+    return new Promise((resolve, reject) => {
+      browser.runtime.sendMessage(
+        {
+          action: 'processApiRequest',
+          endpoint,
+          ...data,
+        },
+        resolve
+      )
+    }) as Promise<any>
 }
 
 export function processApiRequest(
@@ -91,6 +103,8 @@ export function processApiRequest(
     case 'getAccountStatus': {
       return apiRequest('GET', `account`, idToken)
     }
+    case 'autocompleteSearch':
+      return apiRequest('GET', `autocomplete-search?text=${msg.text}`)
   }
 }
 
@@ -153,3 +167,11 @@ export interface GetAccountStatusResponse {
 }
 export const getAccountStatus = (): Promise<GetAccountStatusResponse> =>
   sendRequestToBackground('getAccountStatus')
+
+export interface AutocompleteSearchResponse {
+  suggestions: string[]
+}
+export const autocompleteSearch = (
+  text: string
+): Promise<AutocompleteSearchResponse> =>
+  sendRequestToBackground('autocompleteSearch', { text })
