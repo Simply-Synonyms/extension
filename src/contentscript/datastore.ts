@@ -1,3 +1,4 @@
+import { loadavg } from 'os'
 import toast from 'react-hot-toast'
 import create from 'zustand'
 import {
@@ -6,6 +7,8 @@ import {
   GetThesaurusDataResponse,
   getWordData,
   GetWordDataResponse,
+  CollectionsTree,
+  getCollections,
 } from '../api'
 // TODO REMOVE DEVTOOLS FOR PROD
 // import { devtools } from "zustand/middleware"
@@ -24,12 +27,22 @@ interface StoreDataType {
     [text: string]: EntryDataType
   }
 
+  collections: {
+    tree: CollectionsTree
+    loading: boolean
+    // Map of collection IDs and items
+    // data: Record<string,
+  }
   // favoriteWords: { [word: string]: boolean }
 }
 
 const initialData: StoreDataType = {
   activeEntry: null,
   entries: {},
+  collections: {
+    tree: [],
+    loading: true,
+  },
 }
 
 const initialEntryData: EntryDataType = {
@@ -67,6 +80,7 @@ export const useDataStore = create<
     loadWordData: (word?: string) => Promise<void>
     setFavorite: (word: string, favorite: boolean) => void
     getFavorites: () => Promise<void>
+    loadCollectionsTree: () => Promise<void>
   }
 >((set, get) => ({
   ...initialData,
@@ -119,6 +133,7 @@ export const useDataStore = create<
         )
       )
   },
+  /** Update the favorite status of a word in the store (does NOT call API) */
   setFavorite(w, f) {
     set(
       mergeEntry(
@@ -129,6 +144,7 @@ export const useDataStore = create<
       )
     )
   },
+  /** Gets the list of favorite words and updates each associated entry */
   async getFavorites() {
     const res = await getFavoriteWords().catch(
       withToast(`Couldn't find your favorite words`)
@@ -151,6 +167,20 @@ export const useDataStore = create<
         },
       }))
     }
+  },
+  /** Loads the tree array of collection IDs and names */
+  async loadCollectionsTree() {
+    const res = await getCollections().catch(
+      withToast(`We couldn't find the list of your collections.`)
+    )
+
+    set((d) => ({
+      collections: {
+        ...d.collections,
+        loading: false,
+        tree: res ? res.collectionsTree : null,
+      },
+    }))
   },
 }))
 

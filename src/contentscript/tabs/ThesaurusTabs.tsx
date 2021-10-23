@@ -1,3 +1,4 @@
+import React from 'preact'
 import { GetThesaurusDataResponse } from '../../api'
 import Preact from 'preact'
 import browser from 'browserApi'

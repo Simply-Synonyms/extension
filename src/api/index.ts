@@ -1,10 +1,9 @@
 import browser from 'browserApi'
 
 // Set this env var if you're working on the API locally with a firebase emulator
-const baseURL =
-  (process.env.DEV_API
-    ? process.env.DEV_API
-    : 'https://us-central1-simply-synonyms-apiv1.cloudfunctions.net/extension')
+const baseURL = process.env.DEV_API
+  ? process.env.DEV_API
+  : 'https://us-central1-simply-synonyms-apiv1.cloudfunctions.net/extension'
 
 type ApiEndpointName =
   | 'getThesaurusData'
@@ -192,20 +191,21 @@ type GetCollectionsResponseTreeCollectionType = {
   parentId?: string
   children: GetCollectionsResponseTreeCollectionType[]
 }
+export type CollectionsTree = GetCollectionsResponseTreeCollectionType[]
 export interface GetCollectionsResponse {
-  collectionTree: GetCollectionsResponseTreeCollectionType[]
+  collectionsTree: CollectionsTree
 }
 export const getCollections = (): Promise<GetCollectionsResponse> =>
   sendRequestToBackground('getCollections')
 
 export interface CreateCollectionItemResponse {
-  success: boolean,
+  success: boolean
   collection: {
     id: string
   }
   item: {
     id: string
-  },
+  }
 }
 
 export const createCollectionItem = (

@@ -37,4 +37,19 @@
       font-weight: 600;
     }
   }
+
+  .collections {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 10px 0;
+  }
+
+  .collection {
+    cursor: pointer;
+    @include theme.util-flex-middle;
+    gap: 8px;
+    font-weight: 500;
+  }
 }
