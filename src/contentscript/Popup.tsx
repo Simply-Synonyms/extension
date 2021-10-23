@@ -9,7 +9,7 @@ import HomeTab from './tabs/HomeTab'
 import LoadingSpinner from './components/LoadingSpinner'
 import ThesaurusTabs from './tabs/ThesaurusTabs'
 import WordDetailsOverlay from './components/WordDetailsOverlay'
-import PhraseTab from './tabs/PhraseTab'
+import TextTab from './tabs/TextTab'
 import SearchTab from './tabs/SearchTab'
 import browser from 'browserApi'
 import { AiFillHome } from '@react-icons/all-files/ai/AiFillHome'
@@ -58,7 +58,7 @@ const AppPopup = forwardRef<
     useEffect(() => {
       if (open) {
         _setTab('search')
-        if (phrase && targetType) _setTab('phrase')
+        if (phrase) _setTab('phrase')
         if (word) _setTab(targetType ? 'synonyms' : 'definition')
       }
     }, [open])
@@ -175,7 +175,7 @@ const AppPopup = forwardRef<
                             class={tab === 'phrase' && 'active'}
                             onClick={() => setTab('phrase')}
                           >
-                            Phrase
+                            Text
                           </button>
                         </>
                       )}
@@ -245,8 +245,8 @@ const AppPopup = forwardRef<
                   )}
 
                   {tab === 'phrase' && (
-                    <PhraseTab
-                      phrase={phrase}
+                    <TextTab
+                      text={phrase}
                       onLoad={() => reposition()}
                       replaceText={replaceText}
                     />

@@ -8,16 +8,16 @@ import { WEBSITE_URL } from '../../config'
 
 // TODO paid functionality
 
-const PhraseTab: React.FunctionComponent<{
-  phrase: string
+const TextTab: React.FunctionComponent<{
+  text: string
   onLoad: () => void
   replaceText: (t: string) => void
-}> = ({ phrase, onLoad, replaceText }) => {
+}> = ({ text, onLoad, replaceText }) => {
   const account = useAccountStatus()
 
   const [rewriteData, rewriting, loadRewrite] =
     useAsyncRequest<RewritePhraseResponse>(
-      () => rewritePhrase(phrase),
+      () => rewritePhrase(text),
       `We couldn't rewrite that phrase for you`,
       (res: RewritePhraseResponse, oldData) => {
         return oldData
@@ -50,7 +50,7 @@ const PhraseTab: React.FunctionComponent<{
         </div>
       )}
       <div>
-        <div class="text-box">{phrase}</div>
+        <div class="text-box">{text}</div>
         <button
           class="button flex-middle"
           style={{ gap: '6px' }}
@@ -87,4 +87,4 @@ const PhraseTab: React.FunctionComponent<{
   )
 }
 
-export default PhraseTab
+export default TextTab
