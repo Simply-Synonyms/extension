@@ -11,26 +11,26 @@ import { sendPageInterfaceMessage } from './embedded/scriptInterface'
 export type TargetType = 'gdoc' | 'contenteditable' | 'input'
 
 // https://stackoverflow.com/a/66291608
-function getUniqueElementSelector(targetEl: HTMLElement) {
-  let el = targetEl
-  if (el.tagName === 'BODY') return 'BODY'
+// function getUniqueElementSelector(targetEl: HTMLElement) {
+//   let el = targetEl
+//   if (el.tagName === 'BODY') return 'BODY'
 
-  const ancestry = []
-  while (el.parentElement && el.tagName !== 'BODY') {
-    if (el.id) {
-      ancestry.unshift('#' + el.getAttribute('id'))
-      // break
-    } else {
-      // Count which sibling element is
-      let c = 1
-      for (let e = el; e.previousElementSibling; e = e.previousElementSibling as any, c++) {}
-      ancestry.unshift(el.tagName + ':nth-child(' + c + ')')
-    }
-    el = el.parentElement
-  }
+//   const ancestry = []
+//   while (el.parentElement && el.tagName !== 'BODY') {
+//     if (el.id) {
+//       ancestry.unshift('#' + el.getAttribute('id'))
+//       // break
+//     } else {
+//       // Count which sibling element is
+//       let c = 1
+//       for (let e = el; e.previousElementSibling; e = e.previousElementSibling as any, c++) {}
+//       ancestry.unshift(el.tagName + ':nth-child(' + c + ')')
+//     }
+//     el = el.parentElement
+//   }
 
-  return ancestry.join('>')
-}
+//   return ancestry.join('>')
+// }
 
 const App: Preact.FunctionComponent<{
   settings: UserSettings
@@ -61,13 +61,15 @@ const App: Preact.FunctionComponent<{
 
   const openPopup = (expandImmediate?: boolean, targetEl?: HTMLElement) => {
     if (popupOpen) return
-    targetRangeRef.current = window.getSelection().getRangeAt(0)
+    try {
+      targetRangeRef.current = window.getSelection().getRangeAt(0)
+    } catch {}
     targetElRef.current = targetEl
     setPopupOpen(expandImmediate ? 'expand' : true)
   }
 
   // Function to find selected word and open synonym popup.
-  function processEvent(e: Event) {
+  async function processEvent(e: Event) {
     if (!enableOnSite) return
 
     // Don't open popup again if user selected a word within popup
@@ -80,8 +82,17 @@ const App: Preact.FunctionComponent<{
     if (window.location.hostname === 'docs.google.com') {
       targetType = 'gdoc'
 
-      // TODO handle google doc
-      return
+      // document.execCommand('copy')
+      // text = await new Promise((resolve) =>
+      //   browser.runtime.sendMessage({ action: 'getClipboardText' }, resolve)
+      // )
+
+      // console.log(text, window.getSelection().toString(), 'aa')
+
+      // TODO
+      text = 'amazing'
+
+      // return
     } else {
       if ((e.target as any).isContentEditable) targetType = 'contenteditable'
       if (
@@ -94,15 +105,15 @@ const App: Preact.FunctionComponent<{
 
       const sel = window.getSelection()
       text = sel.toString()
-
-      if (text.length < 3) text = ''
     }
+
+    if (text.length < 3) text = ''
 
     positionRef.current = [(e as any).clientX, (e as any).clientY]
     textRef.current = text.trim()
     targetTypeRef.current = targetType
     // Open the popup immediately if this was a double click of a single word
-    if (text && e.type === 'dblclick' && !text.includes(' '))
+    if (text && e.type === 'dblclick' && !text.trim().includes(' '))
       openPopup(false, e.target as any)
   }
 
@@ -134,7 +145,13 @@ const App: Preact.FunctionComponent<{
     document.addEventListener('keyup', processEvent)
   }, [])
 
-  const replaceText = (newText: string) => {
+  const replaceText = async (newTextRaw: string) => {
+    let newText = newTextRaw
+    const oldText = textRef.current
+    if (oldText === oldText.toUpperCase()) newText = newText.toUpperCase()
+    else if (oldText[0] === oldText[0].toUpperCase())
+      newText = newText[0].toUpperCase() + newText.slice(1)
+
     switch (targetTypeRef.current) {
       case 'input': {
         const el = targetElRef.current as HTMLInputElement
@@ -146,32 +163,32 @@ const App: Preact.FunctionComponent<{
         break
       }
       case 'contenteditable': {
-        // const range = targetRangeRef.current
-        // range.deleteContents()
-        // range.insertNode(document.createTextNode(newText))
-        // Replace selected word by typing out letters in new word
+        // This is a VERY hacky, not to mention deprecated, way of replacing the text, but it's the only way that seems to work reliably.
+        // Reselect the range we need to change
+        const range = targetRangeRef.current
         const sel = window.getSelection()
         sel.removeAllRanges()
-        sel.addRange(targetRangeRef.current)
-        setTimeout(() => {for (let i = 0; i < newText.length; i++) {
-          sendPageInterfaceMessage('dispatchKeypressEvent', {
-            key: newText[i],
-            selector: getUniqueElementSelector(targetElRef.current),
-          })
-        }}, 500)
-        
+        sel.addRange(range)
+
+        // Store the current clipboard and replace it with the new text
+        const oldClipboard = await navigator.clipboard.read()
+        await navigator.clipboard.writeText(newText)
+        // Paste the new text into the document, then write the old content back to the clipboard.
+        document.execCommand('paste')
+        await navigator.clipboard.write(oldClipboard)
         break
       }
-      case 'gdoc':
+      case 'gdoc': {
         // Replace selected word by typing out letters in new word
-        // for (let i = 0; i < wordChosen.length; i++) {
-        //   sendPageInterfaceMessage('simulateGoogleDocKeypress', {
-        //     key: wordChosen[i],
-        //   })
-        // }
+        for (let i = 0; i < newText.length; i++) {
+          sendPageInterfaceMessage('simulateGoogleDocKeypress', {
+            key: newText[i],
+          })
+        }
         break
+      }
     }
-    // setPopupOpen(false)
+    setPopupOpen(false)
   }
 
   return (

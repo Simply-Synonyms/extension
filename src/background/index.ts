@@ -51,6 +51,24 @@ browser.runtime.onMessage.addListener((msg, sender, respond) => {
       // We have to play audio files from the background so that websites' CSP headers don't interfere
       new Audio(msg.url).play()
       break
+    // case 'getTabId':
+    //   respond(sender.tab.id)
+    // case 'pasteIntoPage':
+    //   browser.tabs.executeScript(sender.tab.id, {/*frameId:,*/ matchAboutBlank: true, code:
+    //     ";"
+    //   })
+    //   break
+    // case 'getClipboardText': {
+    //   // Create a temp div to paste clipboard value into
+    //   const tempInput = document.createElement('input')
+    //   document.body.appendChild(tempInput)
+    //   tempInput.focus()
+    //   document.execCommand('paste')
+    //   const text = tempInput.value
+    //   document.body.removeChild(tempInput)
+    //   respond(text)
+    //   break
+    // }
     case 'doQuickSearch':
       let searchUrl
       switch (msg.dictionaryProvider) {

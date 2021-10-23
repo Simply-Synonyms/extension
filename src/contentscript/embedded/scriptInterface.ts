@@ -5,9 +5,11 @@ import browser from 'browserApi'
 
 const CUSTOM_EVENT_NAME = 'SSYNE_EVT'
 
+type ActionType = 'dispatchKeypressEvent' | 'simulateGoogleDocKeypress' | 'googleDocsClipboardCopy'
+
 // Function to send a jsonified message to either the content script or injected function
 export function sendPageInterfaceMessage(
-  type: 'dispatchKeypressEvent',
+  type: ActionType,
   data: Record<string, any> = {}
 ) {
   document.dispatchEvent(
@@ -19,7 +21,7 @@ export function sendPageInterfaceMessage(
 
 // Function to register a callback listener
 export function onPageInterfaceMessage(
-  type: string,
+  type: ActionType,
   callback: (data: Record<string, any>) => void
 ) {
   document.addEventListener(CUSTOM_EVENT_NAME, ((e: CustomEvent) => {
