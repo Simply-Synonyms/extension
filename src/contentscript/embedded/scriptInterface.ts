@@ -5,7 +5,10 @@ import browser from 'browserApi'
 
 const CUSTOM_EVENT_NAME = 'SSYNE_EVT'
 
-type ActionType = 'dispatchKeypressEvent' | 'simulateGoogleDocKeypress' | 'googleDocsClipboardCopy'
+type ActionType =
+  | 'dispatchKeypressEvent'
+  | 'simulateGoogleDocKeypress'
+  | 'googleDocsClipboardCopy'
 
 // Function to send a jsonified message to either the content script or injected function
 export function sendPageInterfaceMessage(

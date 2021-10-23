@@ -4,8 +4,7 @@ import browser from 'browserApi'
 const baseURL =
   (process.env.DEV_API
     ? process.env.DEV_API
-    : 'https://us-central1-simply-synonyms-apiv1.cloudfunctions.net/extension') +
-  '/'
+    : 'https://us-central1-simply-synonyms-apiv1.cloudfunctions.net/extension')
 
 type ApiEndpointName =
   | 'getThesaurusData'
@@ -15,6 +14,9 @@ type ApiEndpointName =
   | 'rewritePhrase'
   | 'getAccountStatus'
   | 'autocompleteSearch'
+  | 'getCollections'
+  | 'createCollection'
+  | 'createCollectionItem'
 
 /** Only use from background script */
 export const apiRequest = (
@@ -23,7 +25,7 @@ export const apiRequest = (
   idToken?: string,
   body?: Record<string, any>
 ) => {
-  return fetch(baseURL + endpoint, {
+  return fetch(baseURL + '/' + endpoint, {
     method,
     headers: {
       Authorization: idToken && `Bearer ${idToken}`,
@@ -105,6 +107,14 @@ export function processApiRequest(
     }
     case 'autocompleteSearch':
       return apiRequest('GET', `autocomplete-search?text=${msg.text}`)
+    case 'getCollections':
+      return apiRequest('GET', `collection/get-all`, idToken)
+    case 'createCollectionItem':
+      return apiRequest('POST', 'collection/create-item', idToken, {
+        text: msg.text,
+        cid: msg.cid,
+        cname: msg.cname,
+      })
   }
 }
 
@@ -175,3 +185,36 @@ export const autocompleteSearch = (
   text: string
 ): Promise<AutocompleteSearchResponse> =>
   sendRequestToBackground('autocompleteSearch', { text })
+
+type GetCollectionsResponseTreeCollectionType = {
+  id: string
+  name: string
+  parentId?: string
+  children: GetCollectionsResponseTreeCollectionType[]
+}
+export interface GetCollectionsResponse {
+  collectionTree: GetCollectionsResponseTreeCollectionType[]
+}
+export const getCollections = (): Promise<GetCollectionsResponse> =>
+  sendRequestToBackground('getCollections')
+
+export interface CreateCollectionItemResponse {
+  success: boolean,
+  collection: {
+    id: string
+  }
+  item: {
+    id: string
+  },
+}
+
+export const createCollectionItem = (
+  text: string,
+  cid?: string,
+  cname?: string
+): Promise<CreateCollectionItemResponse> =>
+  sendRequestToBackground('createCollectionItem', {
+    text,
+    cid,
+    cname,
+  })
