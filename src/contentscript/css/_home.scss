@@ -48,29 +48,29 @@
       gap: 6px;
     }
 
-    & .branch {
+    &.branch {
       margin: 8px 0;
       overflow: hidden;
     }
-  }
 
-  .collection {
-    @include theme.util-flex-middle;
-    gap: 8px;
-    font-weight: 500;
-    
-    &.bold {
-      font-weight: 800;
-    }
-
-    .caret {
-      @include theme.util-transition;
-    }
-
-    &.expanded {
+    .collection {
+      @include theme.util-flex-middle;
+      gap: 8px;
+      font-weight: 500;
+      
+      &.bold {
+        font-weight: 800;
+      }
+  
       .caret {
-        transform: rotate(90deg);
-        transform-origin: center;
+        @include theme.util-transition;
+      }
+  
+      &.expanded {
+        .caret {
+          transform: rotate(90deg);
+          transform-origin: center;
+        }
       }
     }
   }

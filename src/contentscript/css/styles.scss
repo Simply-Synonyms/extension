@@ -48,6 +48,7 @@
     .content {
         margin: 10px 20px;
         position: relative;
+        // min-height: 100%;
     }
 
     &.collapsed {
@@ -255,27 +256,27 @@
         .top {
             @include theme.util-flex-middle;
 
-            .back {
-                @include theme.util-flex-middle;
-                @include theme.util-transition;
-                cursor: pointer;
-                font-size: 0.8em;
-                font-weight: 300;
-                color: theme.$text-gray;
-                margin-left: -6px;
-        
-                svg {
-                    stroke-width: 1px;
-                }
-
-                &:hover {
-                    color: black;
-                    transform: translateX(-3px);
-                }
-            }
-
             .space {
                 flex-grow: 1;
+            }
+        }
+
+        .back {
+            @include theme.util-flex-middle;
+            @include theme.util-transition;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 300;
+            color: theme.$text-gray;
+            margin-left: -6px;
+    
+            svg {
+                stroke-width: 1px;
+            }
+    
+            &:hover {
+                color: black;
+                transform: translateX(-3px);
             }
         }
     }
@@ -391,6 +392,44 @@
         width: 100%;
         min-height: 100%;
         background: white;
+        display: flex;
+        flex-direction: column;
+
+        .back {
+            display: block;
+            margin: 0 auto;
+            @include theme.util-flex-middle;
+            @include theme.util-transition;
+            cursor: pointer;
+            font-weight: 300;
+            font-size: 0.9em;
+            padding: 3px 5px;
+            border-radius: 6px;
+    
+            svg {
+                stroke-width: 1px;
+            }
+    
+            &:hover {
+                color: black;
+                background: rgb(240, 240, 240);
+            }
+        }
+
+        .instruction {
+            color: theme.$muted;
+            font-size: 0.8em;
+        }
+
+        .collection {
+            margin: 3px 0;
+            font-weight: 600;
+            @include theme.util-transition;
+
+            &:hover {
+                color: theme.$primary-color;
+            }
+        }
     }
 
     // .word-details-hover-container {

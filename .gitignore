@@ -1,7 +1,7 @@
 .idea
 node_modules
 test.html
-*/yarn-error.log
+yarn-error.log
 **/.DS_Store
 
 build
