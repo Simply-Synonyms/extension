@@ -8,6 +8,7 @@ import Collections from './home/Collections'
 export interface SubTabProps {
   onWordClick: (word: string) => void
   isExploringWord: boolean
+  reposition: () => void
 }
 
 const HomeTab: React.FunctionComponent<{} & SubTabProps> = ({

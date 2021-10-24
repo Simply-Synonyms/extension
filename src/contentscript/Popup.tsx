@@ -1,8 +1,8 @@
 import React from 'preact'
-import { forwardRef } from 'preact/compat'
+import { forwardRef, createPortal } from 'preact/compat'
 import { useEffect, useState } from 'preact/hooks'
 import { TargetType } from './App'
-import { useSpring, animated } from 'react-spring'
+import { animated } from 'react-spring'
 import Definitions from './components/Definitions'
 import AddWordToFavoritesButton from './components/AddWordToFavoritesButton'
 import HomeTab from './tabs/HomeTab'
@@ -16,6 +16,7 @@ import { AiFillHome } from '@react-icons/all-files/ai/AiFillHome'
 import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch'
 import { initializeDataStore, useDataStore } from './datastore'
 import { useAnimatedPosition } from './positioning'
+import SaveTextButton from './components/SaveTextButton'
 
 const LOGO_URL = browser.runtime.getURL('/assets/logo.svg')
 
@@ -207,7 +208,7 @@ const AppPopup = forwardRef<
 
                 {isThesaurusTab && thesaurusLoading && <LoadingSpinner />}
 
-                <div class="content">
+                <div class="content" id="ssyn-popup-content-div">
                   {/* Word tabs */}
                   {thesaurusData && isThesaurusTab && (
                     <ThesaurusTabs
@@ -223,6 +224,7 @@ const AppPopup = forwardRef<
                       <h2 class="flex-middle">
                         <span>{word}</span>
                         <AddWordToFavoritesButton word={word} />
+                        <SaveTextButton text={word} />
                       </h2>
                       <Definitions word={word} onLoad={() => reposition()} />
                     </>
@@ -241,6 +243,7 @@ const AppPopup = forwardRef<
                     <HomeTab
                       onWordClick={(w) => setExploringWord(w)}
                       isExploringWord={!!exploringWord}
+                      reposition={reposition}
                     />
                   )}
 
@@ -265,3 +268,11 @@ const AppPopup = forwardRef<
 )
 
 export default AppPopup
+
+export function PopupContentPortal({ children }) {
+  const div = document.getElementById('ssyn-popup-content-div')
+  return div && createPortal(
+    children,
+    div
+  )
+}

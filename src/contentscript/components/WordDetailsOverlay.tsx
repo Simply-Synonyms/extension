@@ -1,3 +1,4 @@
+import React from 'preact'
 import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft'
 import { HiOutlineClipboardCopy } from '@react-icons/all-files/hi/HiOutlineClipboardCopy'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -7,6 +8,8 @@ import { TargetType } from '../App'
 import { useDataStore } from '../datastore'
 import AddWordToFavoritesButton from './AddWordToFavoritesButton'
 import Definitions from './Definitions'
+import { BsBookmarkPlus } from '@react-icons/all-files/bs/BsBookmarkPlus'
+import SaveTextButton from './SaveTextButton'
 
 const WordDetailsOverlay: Preact.FunctionComponent<{
   word: string
@@ -64,6 +67,7 @@ const WordDetailsOverlay: Preact.FunctionComponent<{
               <HiOutlineClipboardCopy size={20} />
             </button>
             <AddWordToFavoritesButton word={word} />
+            <SaveTextButton text={word} />
           </h2>
           <h6>Definitions</h6>
           <Definitions animateDefinitions word={word} onLoad={onLoad} />

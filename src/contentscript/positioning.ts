@@ -10,7 +10,7 @@ const TARGET_MARGIN = 50
 // Initial vertical spacing between target and top of popup
 const TARGET_VERTICAL_PADDING = 20
 
-const POPUP_WIDTH = 350
+export const POPUP_WIDTH = 350
 const MIN_POPUP_HEIGHT = 300
 
 const MINI_POPUP_BUTTON_SIZE = 45

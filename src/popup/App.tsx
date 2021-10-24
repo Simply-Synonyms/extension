@@ -102,7 +102,7 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
       </div>
 
       <motion.div
-        class="settings-container"
+        className="settings-container"
         variants={{
           open: (height = 300) => ({
             clipPath: `circle(${height * 2 + 200}px at 100% 0px)`,
@@ -138,7 +138,7 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
       {user && (
         <div class="relative">
           <motion.div
-            class="user-menu-container"
+            className="user-menu-container"
             ref={userMenuRef}
             variants={{
               open: () => ({

@@ -9,7 +9,7 @@
     "build": "webpack --progress --config ./config/webpack.config.js",
     "build-prod": "NODE_ENV=production yarn build",
     "build-zip": "rm -rf build && yarn build-prod && node utils/zip-build.js",
-    "format": "prettier --write \"**/*.{js,ts,tsx}\" --config ./config/prettier.config.js"
+    "format": "prettier --write \"src/**/*.{js,ts,tsx}\" --config ./config/prettier.config.js"
   },
   "dependencies": {
     "@react-icons/all-files": "^4.1.0",
