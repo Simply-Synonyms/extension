@@ -27,6 +27,7 @@ const CollectionsTreeNode: React.FunctionComponent<{
   collections: StoreDataType['collections']['data']
   onClick: (path: string[]) => void
   onAnimation: () => void
+  onItemClick: (id: string) => void
 }> = ({
   expandedPath,
   collection: c,
@@ -34,6 +35,7 @@ const CollectionsTreeNode: React.FunctionComponent<{
   onClick,
   onAnimation,
   collections,
+  onItemClick
 }) => {
   const ref = useRef<HTMLDivElement>()
 
@@ -91,6 +93,7 @@ const CollectionsTreeNode: React.FunctionComponent<{
               <div class="branch">
                 {c.children.map(c2 => (
                   <CollectionsTreeNode
+                    onItemClick={onItemClick}
                     expandedPath={expandedPath}
                     collection={c2}
                     path={path.concat([c2.id])}
@@ -102,12 +105,18 @@ const CollectionsTreeNode: React.FunctionComponent<{
               </div>
             )}
             <div class="items">
+              <div class="container">
+                <span class="item add-btn">
+                  <FiPlus size={14} />
+                  <span>Add</span>
+                </span>
+              </div>
               {items?.map(i => (
                 <div class="container">
                   <span
                     class="item"
                     onClick={e => {
-                      // onClickWord(w)
+                      onItemClick(i.text)
                       e.stopPropagation()
                     }}
                   >
@@ -148,6 +157,10 @@ const Collections: React.FunctionComponent<SubTabProps> = ({
     }
   }
 
+  const onItemClick = (text: string) => {
+    onWordClick(text)
+  }
+
   useEffect(() => {
     loadCollections()
   }, [])
@@ -175,6 +188,7 @@ const Collections: React.FunctionComponent<SubTabProps> = ({
               path={[c.id]}
               onClick={onClick}
               onAnimation={reposition}
+              onItemClick={onItemClick}
               collections={collections}
             />
           ))}

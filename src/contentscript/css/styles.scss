@@ -236,6 +236,7 @@
 
     .word-details {
         position: absolute;
+        z-index: 30;
         top: 0;
         width: 100%;
         min-height: 100%;
@@ -378,6 +379,7 @@
 
     .text-save-dialog {
         position: absolute;
+        z-index: 50;
         top: 0;
         left: 0;
         width: 100%;

@@ -26,7 +26,6 @@
 
     button {
       color: theme.$gray;
-      flex-basis: 1;
       display: flex;
       align-items: center;
       gap: 4px;
@@ -81,6 +80,17 @@
 
     .items {
       margin: 5px 10px;
+    }
+
+    .item.add-btn {
+      color: theme.$primary-color;
+      @include theme.util-flex-middle;
+      gap: 6px;
+
+      svg {
+        display: inline;
+        margin: 0;
+      }
     }
   }
 }
