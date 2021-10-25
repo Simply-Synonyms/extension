@@ -13,7 +13,7 @@ browser.runtime.onMessageExternal.addListener((msg, sender, respond) => {
   const auth = getAuth()
   switch (msg.action) {
     case 'signInWithToken':
-      signInWithCustomToken(auth, msg.token).catch((error) => {
+      signInWithCustomToken(auth, msg.token).catch(error => {
         console.log('Error authenticating', error)
       })
     case 'signOutExtension':
@@ -46,7 +46,7 @@ browser.runtime.onMessage.addListener((msg, sender, respond) => {
 })
 
 export default function initializeAuth() {
-  onAuthStateChanged(getAuth(), (user) => {
+  onAuthStateChanged(getAuth(), user => {
     if (user) {
       console.log('Authenticated', user)
     } else {

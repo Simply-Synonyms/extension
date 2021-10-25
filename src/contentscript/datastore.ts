@@ -1,4 +1,3 @@
-import { loadavg } from 'os'
 import toast from 'react-hot-toast'
 import create from 'zustand'
 import {
@@ -9,6 +8,9 @@ import {
   GetWordDataResponse,
   CollectionsTree,
   getCollections,
+  CollectionObjectType,
+  CollectionItemObjectType,
+  getCollectionItems,
 } from '../api'
 // TODO REMOVE DEVTOOLS FOR PROD
 // import { devtools } from "zustand/middleware"
@@ -20,7 +22,11 @@ interface EntryDataType {
   isFavorite: boolean
 }
 
-interface StoreDataType {
+type CollectionDataType = CollectionObjectType & {
+  items?: CollectionItemObjectType[]
+}
+
+export interface StoreDataType {
   /** The entry that is currently active in the popup */
   activeEntry: string
   entries: {
@@ -31,7 +37,7 @@ interface StoreDataType {
     tree: CollectionsTree
     loading: boolean
     // Map of collection IDs and items
-    // data: Record<string,
+    data: Record<string, CollectionDataType>
   }
   // favoriteWords: { [word: string]: boolean }
 }
@@ -42,6 +48,7 @@ const initialData: StoreDataType = {
   collections: {
     tree: [],
     loading: true,
+    data: {},
   },
 }
 
@@ -52,7 +59,7 @@ const initialEntryData: EntryDataType = {
 }
 
 // Error handler
-const withToast = (t: string) => (err) => {
+const withToast = (t: string) => err => {
   toast.error(t)
 }
 
@@ -69,6 +76,21 @@ const mergeEntry =
     },
   })
 
+/** Utility set function to merge data about a single collection */
+const mergeCollection =
+  (o: Partial<CollectionDataType>, cid: string) => (d: StoreDataType) => ({
+    collections: {
+      ...d.collections,
+      data: {
+        ...d.collections.data,
+        [cid]: {
+          ...d.collections.data[cid],
+          ...o,
+        },
+      },
+    },
+  })
+
 export const useDataStore = create<
   StoreDataType & {
     // readonly thesaurus: [data: GetThesaurusDataResponse, loading: boolean]
@@ -80,7 +102,8 @@ export const useDataStore = create<
     loadWordData: (word?: string) => Promise<void>
     setFavorite: (word: string, favorite: boolean) => void
     getFavorites: () => Promise<void>
-    loadCollectionsTree: () => Promise<void>
+    loadCollections: () => Promise<void>
+    loadCollectionItems: (collectionId: string) => Promise<void>
   }
 >((set, get) => ({
   ...initialData,
@@ -89,7 +112,7 @@ export const useDataStore = create<
     set(initialData)
   },
   setActiveText(t) {
-    set((d) => ({
+    set(d => ({
       activeEntry: t,
       ...mergeEntry({}, t),
     }))
@@ -152,11 +175,11 @@ export const useDataStore = create<
 
     if (res) {
       // Map favorites to an object of entries that are merged with any preexisting entries
-      set((d) => ({
+      set(d => ({
         entries: {
           ...d.entries,
           ...Object.fromEntries(
-            res.favoriteWords.map((w) => [
+            res.favoriteWords.map(w => [
               w.word,
               {
                 ...(d.entries[w.word] || initialEntryData),
@@ -169,18 +192,34 @@ export const useDataStore = create<
     }
   },
   /** Loads the tree array of collection IDs and names */
-  async loadCollectionsTree() {
+  async loadCollections() {
     const res = await getCollections().catch(
       withToast(`We couldn't find the list of your collections.`)
     )
 
-    set((d) => ({
+    set(d => ({
       collections: {
         ...d.collections,
         loading: false,
         tree: res ? res.collectionsTree : null,
+        data: res ? res.collections : null,
       },
     }))
+  },
+  /** Load the items of a single collection */
+  async loadCollectionItems(cid) {
+    const res = await getCollectionItems(cid).catch(
+      withToast(`Error loading that collection`)
+    )
+
+    set(
+      mergeCollection(
+        {
+          items: res ? res.items : [],
+        },
+        cid
+      )
+    )
   },
 }))
 

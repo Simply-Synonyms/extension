@@ -15,7 +15,7 @@ const Definitions: Preact.FunctionComponent<{
   onLoad: () => void
   animateDefinitions?: boolean
 }> = ({ word, onLoad, animateDefinitions }) => {
-  const [[data, loading], loadData] = useDataStore((s) => [
+  const [[data, loading], loadData] = useDataStore(s => [
     s.entries[word]?.definition || [null],
     s.loadWordData,
   ])
@@ -67,7 +67,7 @@ const Definitions: Preact.FunctionComponent<{
                     <span class="word">{hg.word}</span>
                     <button
                       title="Copy word to clipboard"
-                      onClick={async (e) => {
+                      onClick={async e => {
                         e.stopPropagation()
                         const withoutAsterisks = hg.word.replace(/\*/g, '')
                         await navigator.clipboard.writeText(withoutAsterisks)
@@ -84,7 +84,7 @@ const Definitions: Preact.FunctionComponent<{
                     {hg.audio && (
                       <button
                         class="pronunciation bounce-button"
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation()
                           browser.runtime.sendMessage(null, {
                             action: 'playAudio',
@@ -119,7 +119,7 @@ const Definitions: Preact.FunctionComponent<{
           )}
           <button
             class="button flex-middle"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation()
               browser.runtime.sendMessage(null, {
                 action: 'doQuickSearch',

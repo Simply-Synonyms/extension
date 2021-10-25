@@ -22,23 +22,18 @@ const CollectionsTreeNode: React.FunctionComponent<{
         paddingLeft: `${(path.length - 1) * 4}px`,
       }}
     >
-      <button
-        class={'collection'}
-        onClick={() => onClick(c.id)}
-        key={c.id}
-      >
+      <button class={'collection'} onClick={() => onClick(c.id)} key={c.id}>
         <span>{c.name}</span>
       </button>
-      <div
-          >
-            {c.children.map((c2) => (
-              <CollectionsTreeNode
-                collection={c2}
-                path={path.concat([c2.id])}
-                onClick={onClick}
-              />
-            ))}
-          </div>
+      <div>
+        {c.children.map(c2 => (
+          <CollectionsTreeNode
+            collection={c2}
+            path={path.concat([c2.id])}
+            onClick={onClick}
+          />
+        ))}
+      </div>
     </div>
   )
 }
@@ -47,9 +42,9 @@ const SaveTextButton = ({ text }: { text: string }) => {
   const isSignedIn = useIsSignedIn()
   const [open, setOpen] = useState(false)
 
-  const [tree, loadTree] = useDataStore((s) => [
+  const [tree, loadTree] = useDataStore(s => [
     s.collections.tree,
-    s.loadCollectionsTree,
+    s.loadCollections,
   ])
 
   useEffect(() => {
@@ -65,15 +60,14 @@ const SaveTextButton = ({ text }: { text: string }) => {
       }
       toast.success('Saved 🗄')
       setOpen(false)
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   return (
     <>
       <button
         title="Save to my collection"
-        onClick={async (e) => {
+        onClick={async e => {
           e.stopPropagation()
 
           setOpen(true)
@@ -105,28 +99,35 @@ const SaveTextButton = ({ text }: { text: string }) => {
       <PopupContentPortal>
         <AnimatePresence>
           {open && (
-            <motion.div initial={{
-              // left: POPUP_WIDTH,
-              opacity: 0
-            }} animate={{
-              // left: 0,
-              opacity: 1
-            }} exit={{
-              // left: POPUP_WIDTH,
-              opacity: 0
-            }} className="text-save-dialog">
-              <button onClick={() => setOpen(false)} class="back">Cancel</button>
-             
+            <motion.div
+              initial={{
+                // left: POPUP_WIDTH,
+                opacity: 0,
+              }}
+              animate={{
+                // left: 0,
+                opacity: 1,
+              }}
+              exit={{
+                // left: POPUP_WIDTH,
+                opacity: 0,
+              }}
+              className="text-save-dialog"
+            >
+              <button onClick={() => setOpen(false)} class="back">
+                Cancel
+              </button>
+
               <p class="instruction">Select a collection to save this to</p>
 
               {tree &&
-          tree.map((c) => (
-            <CollectionsTreeNode
-              collection={c}
-              path={[c.id]}
-              onClick={onClick}
-            />
-          ))}
+                tree.map(c => (
+                  <CollectionsTreeNode
+                    collection={c}
+                    path={[c.id]}
+                    onClick={onClick}
+                  />
+                ))}
             </motion.div>
           )}
         </AnimatePresence>

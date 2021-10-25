@@ -50,7 +50,7 @@ export default function initializeOmniboxShortcut() {
     }
 
     suggest(
-      suggestions.map((w) => ({
+      suggestions.map(w => ({
         content: w,
         description: w,
       }))
@@ -61,19 +61,16 @@ export default function initializeOmniboxShortcut() {
     if (text.trim().endsWith('>c')) {
       clipboardWriteText(text.split('>c')[0])
     } else
-      browser.tabs.query(
-        { active: true, currentWindow: true },
-        async (tabs) => {
-          if (tabs[0].url == 'chrome://newtab/')
-            await browser.tabs.update(tabs[0].id, {
-              url: WEBSITE_URL,
-            })
-          else
-            browser.tabs.sendMessage(tabs[0].id, {
-              action: 'startSearch',
-              query: text,
-            })
-        }
-      )
+      browser.tabs.query({ active: true, currentWindow: true }, async tabs => {
+        if (tabs[0].url == 'chrome://newtab/')
+          await browser.tabs.update(tabs[0].id, {
+            url: WEBSITE_URL,
+          })
+        else
+          browser.tabs.sendMessage(tabs[0].id, {
+            action: 'startSearch',
+            query: text,
+          })
+      })
   })
 }

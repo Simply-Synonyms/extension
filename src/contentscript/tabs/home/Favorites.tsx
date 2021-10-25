@@ -7,7 +7,7 @@ import { SubTabProps } from '../HomeTab'
 
 /** Map entries to a list of words filtered to favorites */
 export const useFavoriteWords = () =>
-  useDataStore((s) =>
+  useDataStore(s =>
     Object.entries(s.entries)
       .filter(([_, e]) => e.isFavorite)
       .map(([t]) => t)
@@ -20,7 +20,7 @@ const Favorites: React.FunctionComponent<SubTabProps> = ({
   const isLoggedIn = useIsSignedIn()
   const favorites = useFavoriteWords()
   const [loading, setLoading] = useState(false)
-  const loadFavorites = useDataStore((s) => s.getFavorites)
+  const loadFavorites = useDataStore(s => s.getFavorites)
 
   useEffect(() => {
     // Need to refresh data when we stop exploring a word as it might have changed
@@ -33,11 +33,11 @@ const Favorites: React.FunctionComponent<SubTabProps> = ({
     <>
       {loading && <LoadingSpinner />}
       <div class="words">
-        {favorites.map((w) => (
+        {favorites.map(w => (
           <div class="container" key={w}>
             <span
               class="word"
-              onClick={(e) => {
+              onClick={e => {
                 onWordClick(w)
                 e.stopPropagation()
               }}

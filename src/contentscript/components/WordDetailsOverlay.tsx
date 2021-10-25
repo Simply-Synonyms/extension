@@ -30,7 +30,7 @@ const WordDetailsOverlay: Preact.FunctionComponent<{
           <div class="top">
             <a
               class="back"
-              onClick={(e) => {
+              onClick={e => {
                 onClose()
                 e.stopPropagation()
               }}
@@ -43,7 +43,7 @@ const WordDetailsOverlay: Preact.FunctionComponent<{
               <div>
                 <button
                   class="button"
-                  onClick={(e) => {
+                  onClick={e => {
                     replaceText(word)
                   }}
                 >
@@ -58,7 +58,7 @@ const WordDetailsOverlay: Preact.FunctionComponent<{
             <button
               class="bounce-button"
               title="Copy word to clipboard"
-              onClick={async (e) => {
+              onClick={async e => {
                 e.stopPropagation()
                 await navigator.clipboard.writeText(word)
                 toast.success(`Copied "${word}" to clipboard`)

@@ -48,15 +48,15 @@
       gap: 6px;
     }
 
-    &.branch {
+    & .branch {
       margin: 8px 0;
-      overflow: hidden;
     }
 
-    .collection {
+    .name {
       @include theme.util-flex-middle;
       gap: 8px;
       font-weight: 500;
+      padding: 0;
       
       &.bold {
         font-weight: 800;
@@ -72,6 +72,15 @@
           transform-origin: center;
         }
       }
+    }
+
+    .contents {
+      border-left: 1px solid #d1d1d1;
+      overflow: hidden;
+    }
+
+    .items {
+      margin: 5px 10px;
     }
   }
 }

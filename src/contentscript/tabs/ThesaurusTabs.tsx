@@ -33,11 +33,11 @@ const ThesaurusTabs: Preact.FunctionComponent<{
                 <span class="muted">{groupIndex + 1}. </span>
                 {thesaurusData.shortdefs[groupIndex]}
               </h4>
-              {wordGroup.map((w) => (
+              {wordGroup.map(w => (
                 <div class="container">
                   <span
                     class="word"
-                    onClick={(e) => {
+                    onClick={e => {
                       onClickWord(w)
                       e.stopPropagation()
                     }}

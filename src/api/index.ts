@@ -16,6 +16,7 @@ type ApiEndpointName =
   | 'getCollections'
   | 'createCollection'
   | 'createCollectionItem'
+  | 'getCollectionItems'
 
 /** Only use from background script */
 export const apiRequest = (
@@ -32,7 +33,7 @@ export const apiRequest = (
       'Content-Type': 'application/json',
     },
     body: body && JSON.stringify(body),
-  }).then((r) => r.json())
+  }).then(r => r.json())
 }
 
 function sendRequestToBackground(endpoint: ApiEndpointName, data: any = {}) {
@@ -114,6 +115,8 @@ export function processApiRequest(
         cid: msg.cid,
         cname: msg.cname,
       })
+    case 'getCollectionItems':
+      return apiRequest('GET', `collection/get-items?cid=${msg.cid}`, idToken)
   }
 }
 
@@ -192,8 +195,15 @@ type GetCollectionsResponseTreeCollectionType = {
   children: GetCollectionsResponseTreeCollectionType[]
 }
 export type CollectionsTree = GetCollectionsResponseTreeCollectionType[]
+export type CollectionObjectType = {
+  id: string
+  name: string
+  parentId?: string
+  childIds: string[]
+}
 export interface GetCollectionsResponse {
   collectionsTree: CollectionsTree
+  collections: Record<string, CollectionObjectType>
 }
 export const getCollections = (): Promise<GetCollectionsResponse> =>
   sendRequestToBackground('getCollections')
@@ -217,4 +227,19 @@ export const createCollectionItem = (
     text,
     cid,
     cname,
+  })
+
+export type CollectionItemObjectType = {
+  id: string
+  text: string
+  savedTime: Date
+}
+export interface GetCollectionItemsResponse {
+  items: CollectionItemObjectType[]
+}
+export const getCollectionItems = (
+  cid: string
+): Promise<GetCollectionItemsResponse> =>
+  sendRequestToBackground('getCollectionItems', {
+    cid,
   })

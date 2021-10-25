@@ -11,6 +11,6 @@ import { getSettings } from '../lib/settings'
 
 // firebase.initializeApp(firebaseConfig)
 
-getSettings().then((s) => {
+getSettings().then(s => {
   render(<PopupApp settings={s} />, document.getElementById('app'))
 })

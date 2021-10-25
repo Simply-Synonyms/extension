@@ -39,12 +39,12 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
   const [settingsOpen, _setSettingsOpen] = useState(false)
   const [userMenuOpen, _setUserMenuOpen] = useState(false)
 
-  const setSettingsOpen = (o) => {
+  const setSettingsOpen = o => {
     if (userMenuOpen && o) setUserMenuOpen(false)
     _setSettingsOpen(o)
   }
 
-  const setUserMenuOpen = (o) => {
+  const setUserMenuOpen = o => {
     if (settingsOpen && o) _setSettingsOpen(false)
     _setUserMenuOpen(o)
   }
@@ -72,7 +72,7 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
             checked={enableState}
             type="checkbox"
             id="disable_switch"
-            onChange={async (e) => {
+            onChange={async e => {
               const enable = (e.target as HTMLInputElement).checked
               await saveSettings({
                 popupDisabled: !enable,
@@ -85,16 +85,13 @@ const PopupApp = ({ settings }: { settings: UserSettings }) => {
           />
           <div class="slider"></div>
         </label>
-        <button
-          style={{ zIndex: 40 }}
-          onClick={() => setSettingsOpen((o) => !o)}
-        >
+        <button style={{ zIndex: 40 }} onClick={() => setSettingsOpen(o => !o)}>
           {settingsOpen ? <FiX size={24} /> : <FiSettings size={24} />}
         </button>
         {user && (
           <button
             style={{ zIndex: 40 }}
-            onClick={() => setUserMenuOpen((o) => !o)}
+            onClick={() => setUserMenuOpen(o => !o)}
           >
             {userMenuOpen ? <FiX size={24} /> : <FiUser size={24} />}
           </button>

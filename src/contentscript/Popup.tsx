@@ -65,9 +65,9 @@ const AppPopup = forwardRef<
     }, [open])
 
     const [thesaurusData, thesaurusLoading] = useDataStore(
-      (s) => s.entries[s.activeEntry].thesaurus
+      s => s.entries[s.activeEntry].thesaurus
     )
-    const loadThesaurus = useDataStore((s) => s.loadThesaurusData)
+    const loadThesaurus = useDataStore(s => s.loadThesaurusData)
 
     useEffect(() => {
       if (word && expanded && tab !== 'definition' && !thesaurusData) {
@@ -77,7 +77,7 @@ const AppPopup = forwardRef<
 
     const [exploringWord, setExploringWord] = useState<string | null>(null)
 
-    const resetDatastore = useDataStore((s) => s.resetStore)
+    const resetDatastore = useDataStore(s => s.resetStore)
     const reset = () => {
       setExpanded(false)
       // setPosition(null)
@@ -105,7 +105,7 @@ const AppPopup = forwardRef<
     }, [open, positionLoaded])
 
     useEffect(() => {
-      const func = (e) => {
+      const func = e => {
         // If popup isn't expanded, always close when a key is pressed
         if (!expanded || e.key === 'Escape') onClose()
       }
@@ -139,7 +139,7 @@ const AppPopup = forwardRef<
             {!expanded && (
               <button
                 class="popup-expand-button"
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation()
                   setExpanded(true)
                 }}
@@ -241,7 +241,7 @@ const AppPopup = forwardRef<
 
                   {tab === 'home' && (
                     <HomeTab
-                      onWordClick={(w) => setExploringWord(w)}
+                      onWordClick={w => setExploringWord(w)}
                       isExploringWord={!!exploringWord}
                       reposition={reposition}
                     />
@@ -271,8 +271,5 @@ export default AppPopup
 
 export function PopupContentPortal({ children }) {
   const div = document.getElementById('ssyn-popup-content-div')
-  return div && createPortal(
-    children,
-    div
-  )
+  return div && createPortal(children, div)
 }

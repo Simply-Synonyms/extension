@@ -14,7 +14,7 @@ initializeApp(firebaseConfig)
 if ('update_url' in browser.runtime.getManifest())
   browser.runtime.setUninstallURL('https://forms.gle/5eR4sC3rW9UV93hUA')
 
-browser.runtime.onInstalled.addListener((details) => {
+browser.runtime.onInstalled.addListener(details => {
   const version = browser.runtime.getManifest().version
   browser.storage.sync.get('v1_installed', ({ v1_installed }) => {
     if (!v1_installed) {

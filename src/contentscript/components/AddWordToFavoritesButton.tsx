@@ -7,7 +7,7 @@ import { useIsSignedIn } from '../../lib/hooks'
 import { useDataStore } from '../datastore'
 
 const AddWordToFavoritesButton = ({ word }: { word: string }) => {
-  const [isFavorite, setFavorite] = useDataStore((s) => [
+  const [isFavorite, setFavorite] = useDataStore(s => [
     s.entries[word]?.isFavorite,
     s.setFavorite,
   ])
@@ -18,7 +18,7 @@ const AddWordToFavoritesButton = ({ word }: { word: string }) => {
   return (
     <button
       title="Add to favorites"
-      onClick={async (e) => {
+      onClick={async e => {
         e.stopPropagation()
 
         if (!isSignedIn) {

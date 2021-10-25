@@ -60,7 +60,7 @@ import {
 //   simulateKeypress(data.key, data.selector)
 // })
 
-onPageInterfaceMessage('simulateGoogleDocKeypress', (data) => {
+onPageInterfaceMessage('simulateGoogleDocKeypress', data => {
   // https://stackoverflow.com/a/63595176/8748307
   const keyEvent = document.createEvent('Event') as any
   keyEvent.initEvent('keypress', true, true)

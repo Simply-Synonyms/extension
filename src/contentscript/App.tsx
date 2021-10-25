@@ -39,7 +39,7 @@ const App: Preact.FunctionComponent<{
   const isSignedIn = useIsSignedIn()
   useEffect(() => {
     if (isSignedIn)
-      getAccountStatus().then((account) => {
+      getAccountStatus().then(account => {
         useUserStore.setState({
           account,
         })
@@ -119,7 +119,7 @@ const App: Preact.FunctionComponent<{
 
   useEffect(() => {
     // TODO cleanup
-    browser.runtime.onMessage.addListener((msg) => {
+    browser.runtime.onMessage.addListener(msg => {
       switch (msg.action) {
         case 'startSearch':
           positionRef.current = [200, 200]
@@ -135,7 +135,7 @@ const App: Preact.FunctionComponent<{
       }
     })
 
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', e => {
       if (!popupRef.current?.contains(e.target as any)) setPopupOpen(false)
     })
 

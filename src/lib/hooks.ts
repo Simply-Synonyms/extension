@@ -11,19 +11,19 @@ import create from 'zustand'
 export const useUserStore = create<{
   isSignedIn: boolean
   account: GetAccountStatusResponse
-}>((set) => ({
+}>(set => ({
   isSignedIn: false,
   account: null,
 }))
 
 export function useIsSignedIn(): boolean {
-  const is = useUserStore((s) => s.isSignedIn)
+  const is = useUserStore(s => s.isSignedIn)
 
   browser.runtime.sendMessage(
     {
       action: 'checkIsLoggedIn',
     },
-    (r) => {
+    r => {
       useUserStore.setState({
         isSignedIn: r,
       })
@@ -33,7 +33,7 @@ export function useIsSignedIn(): boolean {
   return is
 }
 
-export const useAccountStatus = () => useUserStore((s) => s.account)
+export const useAccountStatus = () => useUserStore(s => s.account)
 
 export function useAsyncRequest<T extends unknown>(
   /** A function that should return a promise that resolves to the API data */
@@ -41,7 +41,7 @@ export function useAsyncRequest<T extends unknown>(
   /** If the request fails, create a toast with this message */
   errorToast?: string,
   /** Take the raw data from the API and map it to the returned data from the hook */
-  processResponse: (data: any, oldData: T) => T = (d) => d as T,
+  processResponse: (data: any, oldData: T) => T = d => d as T,
   /** An array of dependencies which will trigger a refresh when changed. Or, pass false to never automatically refresh */
   refreshDeps: Array<any> | false = false
 ): [
@@ -57,7 +57,7 @@ export function useAsyncRequest<T extends unknown>(
     if (!data || withLoader) setLoading(true)
 
     const res =
-      (await request().catch((err) => {
+      (await request().catch(err => {
         console.error('(Simply Synonyms error)', err)
         if (errorToast)
           toast.error(errorToast, {

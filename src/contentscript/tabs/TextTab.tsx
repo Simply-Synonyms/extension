@@ -54,7 +54,7 @@ const TextTab: React.FunctionComponent<{
         <button
           class="button flex-middle"
           style={{ gap: '6px' }}
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation()
             rewrite()
           }}
@@ -65,7 +65,7 @@ const TextTab: React.FunctionComponent<{
           <span>Rewrite {rewriteData ? 'this again' : 'this'}</span>
         </button>
 
-        {rewriteData?.newPhrases.map((r) => (
+        {rewriteData?.newPhrases.map(r => (
           <div
             className="text-box clickable"
             key={r.index}

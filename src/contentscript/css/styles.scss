@@ -66,22 +66,13 @@
         height: 100%; 
     }
 
-    .words {
+    .words, .collections {
         .container {
             display: inline-block;
             margin: 3px 6px 3px 0;
-
-            // &.clickable .word {
-            //     cursor: pointer;
-            // }
-
-            // &.clickable .word:hover {
-            //     color: white;
-            //     background: theme.$primary-color;
-            // }
         }
 
-        .word {
+        .word, .item {
             display: inline-block;
             padding: 3px 6px;
             white-space: nowrap;
@@ -91,7 +82,7 @@
             cursor: pointer;
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.01);
             @include theme.util-transition;
-
+    
             &:hover {
                 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.08);
             }

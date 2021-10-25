@@ -18,6 +18,6 @@ function addExtension(settings) {
   render(<App settings={settings} />, appContainer)
 }
 
-getSettings().then((settings) => {
+getSettings().then(settings => {
   addExtension(settings)
 })

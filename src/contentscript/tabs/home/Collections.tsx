@@ -2,7 +2,7 @@ import React from 'preact'
 import { SubTabProps } from '../HomeTab'
 import { FiSearch } from '@react-icons/all-files/fi/FiSearch'
 import { FiPlus } from '@react-icons/all-files/fi/FiPlus'
-import { useDataStore } from '../../datastore'
+import { StoreDataType, useDataStore } from '../../datastore'
 import { useEffect, useRef, useState } from 'preact/hooks'
 import { BsCaretRightFill } from '@react-icons/all-files/bs/BsCaretRightFill'
 import clsx from 'clsx'
@@ -24,12 +24,25 @@ const CollectionsTreeNode: React.FunctionComponent<{
   path: string[]
   /** This node */
   collection: CollectionsTree[0]
+  collections: StoreDataType['collections']['data']
   onClick: (path: string[]) => void
   onAnimation: () => void
-}> = ({ expandedPath, collection: c, path, onClick, onAnimation }) => {
+}> = ({
+  expandedPath,
+  collection: c,
+  path,
+  onClick,
+  onAnimation,
+  collections,
+}) => {
   const ref = useRef<HTMLDivElement>()
 
+  const items = collections[c.id].items
+
   const isExpanded = expandedPath.includes(c.id)
+
+  const animateHeight = expandedPath.slice(-1)[0] === c.id || !isExpanded
+
   return (
     <div
       class="node"
@@ -38,7 +51,7 @@ const CollectionsTreeNode: React.FunctionComponent<{
       }}
     >
       <button
-        class={clsx('collection', isExpanded ? 'expanded' : 'bold')}
+        class={clsx('name', isExpanded ? 'expanded' : 'bold')}
         onClick={() => onClick(path)}
         key={c.id}
       >
@@ -50,18 +63,18 @@ const CollectionsTreeNode: React.FunctionComponent<{
       <AnimatePresence>
         {isExpanded && (
           <motion.div
-            className="branch"
+            class="contents"
             style={{
               transformOrigin: 'top left',
             }}
             variants={{
               expanded: () => ({
-                height: ref.current?.scrollHeight,
+                maxHeight: animateHeight ? ref.current?.scrollHeight : null,
                 scale: 1,
                 opacity: 1,
               }),
               collapsed: () => ({
-                height: 0,
+                maxHeight: 0,
                 scale: 0.8,
                 opacity: 0,
               }),
@@ -70,17 +83,39 @@ const CollectionsTreeNode: React.FunctionComponent<{
             initial={'collapsed'}
             exit={'collapsed'}
             ref={ref}
-            onAnimationComplete={onAnimation}
+            onAnimationComplete={() => {
+              onAnimation()
+            }}
           >
-            {c.children.map((c2) => (
-              <CollectionsTreeNode
-                expandedPath={expandedPath}
-                collection={c2}
-                path={path.concat([c2.id])}
-                onClick={onClick}
-                onAnimation={onAnimation}
-              />
-            ))}
+            {!!c.children.length && (
+              <div class="branch">
+                {c.children.map(c2 => (
+                  <CollectionsTreeNode
+                    expandedPath={expandedPath}
+                    collection={c2}
+                    path={path.concat([c2.id])}
+                    onClick={onClick}
+                    onAnimation={onAnimation}
+                    collections={collections}
+                  />
+                ))}
+              </div>
+            )}
+            <div class="items">
+              {items?.map(i => (
+                <div class="container">
+                  <span
+                    class="item"
+                    onClick={e => {
+                      // onClickWord(w)
+                      e.stopPropagation()
+                    }}
+                  >
+                    {i.text}
+                  </span>
+                </div>
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -93,9 +128,11 @@ const Collections: React.FunctionComponent<SubTabProps> = ({
   onWordClick,
   reposition,
 }) => {
-  const [tree, loadTree] = useDataStore((s) => [
+  const [tree, collections, loadCollections, loadItems] = useDataStore(s => [
     s.collections.tree,
-    s.loadCollectionsTree,
+    s.collections.data,
+    s.loadCollections,
+    s.loadCollectionItems,
   ])
 
   const [expandedPath, setExpandedPath] = useState<string[]>([])
@@ -107,11 +144,12 @@ const Collections: React.FunctionComponent<SubTabProps> = ({
       setExpandedPath(expandedPath.slice(0, expandedPath.indexOf(lastId)))
     } else {
       setExpandedPath(path)
+      loadItems(lastId)
     }
   }
 
   useEffect(() => {
-    loadTree()
+    loadCollections()
   }, [])
 
   return (
@@ -130,13 +168,14 @@ const Collections: React.FunctionComponent<SubTabProps> = ({
       </div>
       <div class="collections">
         {tree &&
-          tree.map((c) => (
+          tree.map(c => (
             <CollectionsTreeNode
               expandedPath={expandedPath}
               collection={c}
               path={[c.id]}
               onClick={onClick}
               onAnimation={reposition}
+              collections={collections}
             />
           ))}
       </div>
