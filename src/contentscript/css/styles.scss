@@ -238,8 +238,8 @@
         position: absolute;
         z-index: 30;
         top: 0;
+        bottom: 0;
         width: 100%;
-        min-height: 100%;
         background: white;
         display: flex;
         flex-direction: column;
@@ -281,6 +281,7 @@
         color: white;
         @include theme.util-transition;
         text-decoration: none;
+        margin-bottom: 15px;
 
         &:hover {
             opacity: 0.8;
@@ -389,10 +390,10 @@
         flex-direction: column;
 
         .back {
-            display: block;
-            margin: 0 auto;
             @include theme.util-flex-middle;
             @include theme.util-transition;
+            display: block;
+            margin: 0 auto;
             cursor: pointer;
             font-weight: 300;
             font-size: 0.9em;

@@ -3,7 +3,7 @@ import browser from 'browserApi'
 // Set this env var if you're working on the API locally with a firebase emulator
 const baseURL = process.env.DEV_API
   ? process.env.DEV_API
-  : 'https://us-central1-simply-synonyms-apiv1.cloudfunctions.net/extension'
+  : 'https://us-central1-simply-synonyms.cloudfunctions.net/extension'
 
 type ApiEndpointName =
   | 'getThesaurusData'

@@ -8,8 +8,10 @@ import { processApiRequest } from '../api'
 import { getIdToken, getAuth } from '@firebase/auth'
 import { WEBSITE_URL } from '../config'
 import initializeOmniboxShortcut from './omnibox'
+import initSentry from '../lib/sentry'
 
 initializeApp(firebaseConfig)
+initSentry('background')
 
 if ('update_url' in browser.runtime.getManifest())
   browser.runtime.setUninstallURL('https://forms.gle/5eR4sC3rW9UV93hUA')

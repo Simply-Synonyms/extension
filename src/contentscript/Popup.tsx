@@ -97,7 +97,7 @@ const AppPopup = forwardRef<
     )
 
     /* Reposition when any of the following changes */
-    useEffect(reposition, [open, expanded, ref.current, thesaurusData, tab])
+    useEffect(() => { setTimeout(reposition) }, [open, expanded, ref.current, thesaurusData, tab])
 
     // Auto-expand popup when needed
     useEffect(() => {

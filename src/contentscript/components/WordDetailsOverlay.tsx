@@ -5,10 +5,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Preact from 'preact'
 import toast from 'react-hot-toast'
 import { TargetType } from '../App'
-import { useDataStore } from '../datastore'
 import AddWordToFavoritesButton from './AddWordToFavoritesButton'
 import Definitions from './Definitions'
-import { BsBookmarkPlus } from '@react-icons/all-files/bs/BsBookmarkPlus'
 import SaveTextButton from './SaveTextButton'
 
 const WordDetailsOverlay: Preact.FunctionComponent<{
