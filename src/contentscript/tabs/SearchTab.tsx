@@ -1,14 +1,16 @@
 import React from 'preact'
 import { FiSearch } from '@react-icons/all-files/fi/FiSearch'
 import { AiOutlineLoading } from '@react-icons/all-files/ai/AiOutlineLoading'
-import { useEffect, useState } from 'preact/hooks'
+import { useEffect, useRef, useState } from 'preact/hooks'
 import clsx from 'clsx'
 import { search } from '../../api'
 import { useGlobalState } from '../state'
+import { useDataStore } from '../datastore'
 
 const searchDelay = 200
 
 const SearchTab: React.FunctionComponent<{}> = ({}) => {
+  const inputRef = useRef<HTMLInputElement>()
   const [input, setInput] = useState('')
   const [searching, setSearching] = useState(false)
   const [lastCharTime, setLastCharTime] = useState<number>()
@@ -19,10 +21,13 @@ const SearchTab: React.FunctionComponent<{}> = ({}) => {
     s.setExploringWord,
   ])
 
+  const setActiveText = useDataStore(s => s.setActiveText)
+
   const doSearch = async () => {
     setSearching(true)
 
-    setResults((await search(input)).results)
+    setResults(['cheese', 'amazing', 'potatos', 'by no means', 'should not work'])
+    // setResults((await search(input)).results)
     setSearching(false)
   }
 
@@ -38,6 +43,10 @@ const SearchTab: React.FunctionComponent<{}> = ({}) => {
     }
   }, [lastCharTime])
 
+  useEffect(() => {
+    inputRef.current.focus()
+  }, [])
+
   return (
     <div class="search-tab">
       <div class="input-container">
@@ -45,6 +54,7 @@ const SearchTab: React.FunctionComponent<{}> = ({}) => {
           {searching ? <AiOutlineLoading size={22} /> : <FiSearch size={22} />}
         </span>
         <input
+          ref={inputRef}
           onInput={e => {
             setInput((e.target as any).value)
             setLastCharTime(Date.now())
@@ -55,21 +65,20 @@ const SearchTab: React.FunctionComponent<{}> = ({}) => {
       {input && (
         <div class="results">
           {results?.map(r => (
-            <div onClick={() => setExploringWord(r)}>{r}</div>
+            <div onClick={() => setActiveText(r)}>{r}</div>
           ))}
         </div>
       )}
 
       {!input && (
         <div class="hint-text">
-          <h4>Try:</h4>
           <ul>
+            <li>Start typing for suggestions</li>
             <li>
-              Searching for a word or term to get definitions, synonyms and
-              antonyms
+              Click a search result to get synonyms, antonyms and definitions
             </li>
             <li>
-              Describing something to get a list of words with a similar meaning
+              Enter a description to get a list of suggestions with similar meanings
             </li>
           </ul>
         </div>

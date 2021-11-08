@@ -9,8 +9,12 @@ const ThesaurusTabs: Preact.FunctionComponent<{
   tab: 'synonyms' | 'antonyms'
   word: string
 }> = ({ tab, word }) => {
+
   const [thesaurusData, thesaurusLoading] = useDataStore(
-    s => s.entries[s.activeEntry].thesaurus
+    s => {
+      console.log(s.entries, s.activeEntry)
+      return s.entries[s.activeEntry].thesaurus
+    }
   )
 
   const noResults =

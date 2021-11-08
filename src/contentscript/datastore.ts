@@ -111,8 +111,8 @@ export const useDataStore = create<
   },
   setActiveText(t) {
     set(d => ({
+      ...mergeEntry({}, t)(d),
       activeEntry: t,
-      ...mergeEntry({}, t),
     }))
   },
   async loadThesaurusData(text?: string) {
