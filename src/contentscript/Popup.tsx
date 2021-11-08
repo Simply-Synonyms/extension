@@ -65,18 +65,10 @@ const AppPopup = forwardRef<
       }
     }, [open])
 
-    const [thesaurusData, thesaurusLoading] = useDataStore(
-      s => s.entries[s.activeEntry].thesaurus
-    )
-    const loadThesaurus = useDataStore(s => s.loadThesaurusData)
-
-    useEffect(() => {
-      if (word && expanded && tab !== 'definition' && !thesaurusData) {
-        loadThesaurus()
-      }
-    }, [word, expanded, tab])
-
-    const [exploringWord, setExploringWord] = useGlobalState(s => [s.exploringWord, s.setExploringWord])
+    const [exploringWord, setExploringWord] = useGlobalState(s => [
+      s.exploringWord,
+      s.setExploringWord,
+    ])
 
     const resetDatastore = useDataStore(s => s.resetStore)
     const reset = () => {
@@ -99,8 +91,9 @@ const AppPopup = forwardRef<
 
     /* Reposition when any of the following changes */
     useEffect(() => {
+      // Use a timeout to reposition in the future to make sure scrollHeight is accurate
       setTimeout(reposition)
-    }, [open, expanded, ref.current, thesaurusData, tab])
+    }, [open, expanded, ref.current, tab])
 
     // Auto-expand popup when needed
     useEffect(() => {
@@ -209,17 +202,9 @@ const AppPopup = forwardRef<
                   }
                 </div>
 
-                {isThesaurusTab && thesaurusLoading && <LoadingSpinner />}
-
                 <div class="content" id="ssyn-popup-content-div">
                   {/* Word tabs */}
-                  {thesaurusData && isThesaurusTab && (
-                    <ThesaurusTabs
-                      tab={tab}
-                      thesaurusData={thesaurusData}
-                      word={word}
-                    />
-                  )}
+                  {isThesaurusTab && <ThesaurusTabs tab={tab} word={word} />}
 
                   {tab === 'definition' && (
                     <>
@@ -241,11 +226,7 @@ const AppPopup = forwardRef<
                     replaceText={replaceText}
                   />
 
-                  {tab === 'home' && (
-                    <HomeTab
-                      reposition={reposition}
-                    />
-                  )}
+                  {tab === 'home' && <HomeTab reposition={reposition} />}
 
                   {tab === 'phrase' && (
                     <TextTab
@@ -255,9 +236,7 @@ const AppPopup = forwardRef<
                     />
                   )}
 
-                  {tab === 'search' && (
-                    <SearchTab />
-                  )}
+                  {tab === 'search' && <SearchTab />}
                 </div>
                 {/* End content div */}
               </>

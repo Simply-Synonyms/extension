@@ -133,9 +133,7 @@ const CollectionsTreeNode: React.FunctionComponent<{
   )
 }
 
-const Collections: React.FunctionComponent<SubTabProps> = ({
-  reposition,
-}) => {
+const Collections: React.FunctionComponent<SubTabProps> = ({ reposition }) => {
   const [tree, collections, loadCollections, loadItems] = useDataStore(s => [
     s.collections.tree,
     s.collections.data,
@@ -143,7 +141,10 @@ const Collections: React.FunctionComponent<SubTabProps> = ({
     s.loadCollectionItems,
   ])
 
-  const [exploringWord, setExploringWord] = useGlobalState(s => [s.exploringWord, s.setExploringWord])
+  const [exploringWord, setExploringWord] = useGlobalState(s => [
+    s.exploringWord,
+    s.setExploringWord,
+  ])
 
   const [expandedPath, setExpandedPath] = useState<string[]>([])
 

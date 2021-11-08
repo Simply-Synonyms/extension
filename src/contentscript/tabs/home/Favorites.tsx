@@ -20,7 +20,10 @@ const Favorites: React.FunctionComponent<SubTabProps> = () => {
   const [loading, setLoading] = useState(false)
   const loadFavorites = useDataStore(s => s.getFavorites)
 
-  const [exploringWord, setExploringWord] = useGlobalState(s => [s.exploringWord, s.setExploringWord])
+  const [exploringWord, setExploringWord] = useGlobalState(s => [
+    s.exploringWord,
+    s.setExploringWord,
+  ])
 
   useEffect(() => {
     // Need to refresh data when we stop exploring a word as it might have changed
