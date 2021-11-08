@@ -2,16 +2,18 @@ import React from 'preact'
 import { GetThesaurusDataResponse } from '../../api'
 import Preact from 'preact'
 import browser from 'browserApi'
+import { useGlobalState } from '../state'
 
 const ThesaurusTabs: Preact.FunctionComponent<{
   tab: 'synonyms' | 'antonyms'
   word: string
   thesaurusData: GetThesaurusDataResponse
-  onClickWord: (w: string) => void
-}> = ({ tab, word, thesaurusData, onClickWord }) => {
+}> = ({ tab, word, thesaurusData }) => {
   const noResults = !(
     tab === 'synonyms' ? thesaurusData?.synonyms : thesaurusData?.antonyms
   )?.length
+
+  const [exploringWord, setExploringWord] = useGlobalState(s => [s.exploringWord, s.setExploringWord])
 
   return (
     <>
@@ -38,7 +40,7 @@ const ThesaurusTabs: Preact.FunctionComponent<{
                   <span
                     class="word"
                     onClick={e => {
-                      onClickWord(w)
+                      setExploringWord(w)
                       e.stopPropagation()
                     }}
                   >

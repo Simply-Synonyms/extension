@@ -15,6 +15,10 @@
     :where(*:not(svg):not(svg *)) {
         all: revert;
     }
+
+    * { 
+        box-sizing: border-box;
+    }
 }
 
 @mixin defaultPopupStyles {
@@ -46,7 +50,7 @@
     overflow-x: hidden;
 
     .content {
-        margin: 10px 20px;
+        padding: 10px 20px;
         position: relative;
         // min-height: 100%;
     }
@@ -237,9 +241,11 @@
     .word-details {
         position: absolute;
         z-index: 30;
+        left: 0;
         top: 0;
         bottom: 0;
         width: 100%;
+        padding: 10px 20px;
         background: white;
         display: flex;
         flex-direction: column;
@@ -366,6 +372,10 @@
             position: absolute;
             top: 10px;
             left: 8px;
+
+            &.spin svg {
+                animation: spin 0.6s linear infinite;
+            }
         }
 
         input {
@@ -384,6 +394,7 @@
         top: 0;
         left: 0;
         width: 100%;
+        padding: 20px;
         min-height: 100%;
         background: white;
         display: flex;

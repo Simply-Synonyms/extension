@@ -17,6 +17,7 @@ import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch'
 import { initializeDataStore, useDataStore } from './datastore'
 import { useAnimatedPosition } from './positioning'
 import SaveTextButton from './components/SaveTextButton'
+import { useGlobalState } from './state'
 
 const LOGO_URL = browser.runtime.getURL('/assets/logo.svg')
 
@@ -75,7 +76,7 @@ const AppPopup = forwardRef<
       }
     }, [word, expanded, tab])
 
-    const [exploringWord, setExploringWord] = useState<string | null>(null)
+    const [exploringWord, setExploringWord] = useGlobalState(s => [s.exploringWord, s.setExploringWord])
 
     const resetDatastore = useDataStore(s => s.resetStore)
     const reset = () => {
@@ -97,7 +98,9 @@ const AppPopup = forwardRef<
     )
 
     /* Reposition when any of the following changes */
-    useEffect(() => { setTimeout(reposition) }, [open, expanded, ref.current, thesaurusData, tab])
+    useEffect(() => {
+      setTimeout(reposition)
+    }, [open, expanded, ref.current, thesaurusData, tab])
 
     // Auto-expand popup when needed
     useEffect(() => {
@@ -215,7 +218,6 @@ const AppPopup = forwardRef<
                       tab={tab}
                       thesaurusData={thesaurusData}
                       word={word}
-                      onClickWord={setExploringWord}
                     />
                   )}
 
@@ -241,8 +243,6 @@ const AppPopup = forwardRef<
 
                   {tab === 'home' && (
                     <HomeTab
-                      onWordClick={w => setExploringWord(w)}
-                      isExploringWord={!!exploringWord}
                       reposition={reposition}
                     />
                   )}
@@ -255,7 +255,9 @@ const AppPopup = forwardRef<
                     />
                   )}
 
-                  {tab === 'search' && <SearchTab />}
+                  {tab === 'search' && (
+                    <SearchTab />
+                  )}
                 </div>
                 {/* End content div */}
               </>

@@ -1,11 +1,7 @@
 import browser from 'browserApi'
 import { useEffect, useState } from 'preact/hooks'
 import toast from 'react-hot-toast'
-import {
-  getAccountStatus,
-  GetAccountStatusResponse,
-  RewritePhraseResponse,
-} from '../api'
+import { GetAccountStatusResponse } from '../api'
 import create from 'zustand'
 
 export const useUserStore = create<{

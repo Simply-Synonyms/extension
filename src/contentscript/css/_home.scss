@@ -93,4 +93,35 @@
       }
     }
   }
+
+  .search-tab {
+    min-height: 500px;
+
+    .hint-text {
+      color: theme.$muted;
+    }
+
+    .results {
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin-top: 5px;
+
+      div {
+        cursor: pointer;
+        padding: 10px 20px;
+        border-bottom: 1px solid theme.$gray;
+
+        // &:first-of-type {
+        //   border-top: 1px solid theme.$gray;
+        // }
+
+        @include theme.util-transition;
+
+        &:hover {
+          background: rgb(236, 236, 236);
+        }
+      }
+    }
+  }
 }

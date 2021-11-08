@@ -3,6 +3,7 @@ import { useEffect, useState } from 'preact/hooks'
 import { useAsyncRequest, useIsSignedIn } from '../../../lib/hooks'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { useDataStore } from '../../datastore'
+import { useGlobalState } from '../../state'
 import { SubTabProps } from '../HomeTab'
 
 /** Map entries to a list of words filtered to favorites */
@@ -13,21 +14,20 @@ export const useFavoriteWords = () =>
       .map(([t]) => t)
   )
 
-const Favorites: React.FunctionComponent<SubTabProps> = ({
-  isExploringWord,
-  onWordClick,
-}) => {
+const Favorites: React.FunctionComponent<SubTabProps> = () => {
   const isLoggedIn = useIsSignedIn()
   const favorites = useFavoriteWords()
   const [loading, setLoading] = useState(false)
   const loadFavorites = useDataStore(s => s.getFavorites)
 
+  const [exploringWord, setExploringWord] = useGlobalState(s => [s.exploringWord, s.setExploringWord])
+
   useEffect(() => {
     // Need to refresh data when we stop exploring a word as it might have changed
-    if (isLoggedIn && !isExploringWord) {
+    if (isLoggedIn && !exploringWord) {
       loadFavorites().then(() => setLoading(false))
     }
-  }, [isLoggedIn, isExploringWord])
+  }, [isLoggedIn, exploringWord])
 
   return (
     <>
@@ -38,7 +38,7 @@ const Favorites: React.FunctionComponent<SubTabProps> = ({
             <span
               class="word"
               onClick={e => {
-                onWordClick(w)
+                setExploringWord(w)
                 e.stopPropagation()
               }}
             >

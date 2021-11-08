@@ -6,8 +6,6 @@ import Favorites from './home/Favorites'
 import Collections from './home/Collections'
 
 export interface SubTabProps {
-  onWordClick: (word: string) => void
-  isExploringWord: boolean
   reposition: () => void
 }
 

@@ -63,7 +63,7 @@ export const useAnimatedPosition = (
   const [position, setPosition] = useState(targetPosition)
   const [loaded, setLoaded] = useState(false)
 
-  // TODO useCallback ? 
+  // TODO useCallback ?
   const styles = useSpring({
     immediate: !expanded,
     config: {

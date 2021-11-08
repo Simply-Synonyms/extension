@@ -13,6 +13,7 @@ type ApiEndpointName =
   | 'rewritePhrase'
   | 'getAccountStatus'
   | 'autocompleteSearch'
+  | 'search'
   | 'getCollections'
   | 'createCollection'
   | 'createCollectionItem'
@@ -107,6 +108,8 @@ export function processApiRequest(
     }
     case 'autocompleteSearch':
       return apiRequest('GET', `autocomplete-search?text=${msg.text}`)
+    case 'search':
+      return apiRequest('GET', `search?q=${msg.query}`)
     case 'getCollections':
       return apiRequest('GET', `collection/get-all`, idToken)
     case 'createCollectionItem':
@@ -187,6 +190,13 @@ export const autocompleteSearch = (
   text: string
 ): Promise<AutocompleteSearchResponse> =>
   sendRequestToBackground('autocompleteSearch', { text })
+
+export interface SearchResponse {
+  query: string
+  results: string[]
+}
+export const search = (query: string): Promise<SearchResponse> =>
+  sendRequestToBackground('search', { query })
 
 type GetCollectionsResponseTreeCollectionType = {
   id: string

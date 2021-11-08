@@ -13,11 +13,15 @@ import initSentry from '../lib/sentry'
 initializeApp(firebaseConfig)
 initSentry('background')
 
-if ('update_url' in browser.runtime.getManifest())
-  browser.runtime.setUninstallURL('https://forms.gle/5eR4sC3rW9UV93hUA')
+const manifest = browser.runtime.getManifest()
+
+if ('update_url' in manifest)
+  browser.runtime.setUninstallURL(
+    `https://simplysynonyms.typeform.com/to/lWki42Kx#extension_version=${manifest.version}`
+  )
 
 browser.runtime.onInstalled.addListener(details => {
-  const version = browser.runtime.getManifest().version
+  const version = manifest.version
   browser.storage.sync.get('v1_installed', ({ v1_installed }) => {
     if (!v1_installed) {
       // Set default settings

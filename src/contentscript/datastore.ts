@@ -12,8 +12,6 @@ import {
   CollectionItemObjectType,
   getCollectionItems,
 } from '../api'
-// TODO REMOVE DEVTOOLS FOR PROD
-// import { devtools } from "zustand/middleware"
 
 /** An entry represents a single word, phrase or other piece of text that can be associated with some thesaurus data, a definition, etc. */
 interface EntryDataType {
@@ -26,6 +24,7 @@ type CollectionDataType = CollectionObjectType & {
   items?: CollectionItemObjectType[]
 }
 
+/** The primary store for managing data in the extension */
 export interface StoreDataType {
   /** The entry that is currently active in the popup */
   activeEntry: string
@@ -39,7 +38,6 @@ export interface StoreDataType {
     // Map of collection IDs and items
     data: Record<string, CollectionDataType>
   }
-  // favoriteWords: { [word: string]: boolean }
 }
 
 const initialData: StoreDataType = {
@@ -98,7 +96,7 @@ export const useDataStore = create<
     // readonly favoriteWords: string[]
     resetStore: () => void
     setActiveText: (text: string) => void
-    loadThesaurusData: () => void
+    loadThesaurusData: (word?: string) => void
     loadWordData: (word?: string) => Promise<void>
     setFavorite: (word: string, favorite: boolean) => void
     getFavorites: () => Promise<void>
@@ -117,8 +115,8 @@ export const useDataStore = create<
       ...mergeEntry({}, t),
     }))
   },
-  async loadThesaurusData() {
-    const res = await getThesaurusData(get().activeEntry).catch(
+  async loadThesaurusData(text?: string) {
+    const res = await getThesaurusData(text || get().activeEntry).catch(
       withToast(`Couldn't get thesaurus data for that word`)
     )
 

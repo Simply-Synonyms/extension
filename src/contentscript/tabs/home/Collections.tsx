@@ -8,6 +8,7 @@ import { BsCaretRightFill } from '@react-icons/all-files/bs/BsCaretRightFill'
 import clsx from 'clsx'
 import { CollectionsTree } from '../../../api'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useGlobalState } from '../../state'
 
 // /** Returns a branch given the tree and an array of node IDs */
 // const getBranch = (tree: CollectionsTree, path: string[]) => {
@@ -35,7 +36,7 @@ const CollectionsTreeNode: React.FunctionComponent<{
   onClick,
   onAnimation,
   collections,
-  onItemClick
+  onItemClick,
 }) => {
   const ref = useRef<HTMLDivElement>()
 
@@ -133,8 +134,6 @@ const CollectionsTreeNode: React.FunctionComponent<{
 }
 
 const Collections: React.FunctionComponent<SubTabProps> = ({
-  isExploringWord,
-  onWordClick,
   reposition,
 }) => {
   const [tree, collections, loadCollections, loadItems] = useDataStore(s => [
@@ -143,6 +142,8 @@ const Collections: React.FunctionComponent<SubTabProps> = ({
     s.loadCollections,
     s.loadCollectionItems,
   ])
+
+  const [exploringWord, setExploringWord] = useGlobalState(s => [s.exploringWord, s.setExploringWord])
 
   const [expandedPath, setExpandedPath] = useState<string[]>([])
 
@@ -158,7 +159,7 @@ const Collections: React.FunctionComponent<SubTabProps> = ({
   }
 
   const onItemClick = (text: string) => {
-    onWordClick(text)
+    setExploringWord(text)
   }
 
   useEffect(() => {

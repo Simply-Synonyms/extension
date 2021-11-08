@@ -3,7 +3,7 @@
 
 import { injectPageScript } from './embedded/scriptInterface'
 import './css/styles.scss'
-import { getSettings, saveSettings } from '../lib/settings'
+import { getSettings } from '../lib/settings'
 import { render } from 'preact'
 import App from './App'
 
